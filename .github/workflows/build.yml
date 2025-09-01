@@ -10,19 +10,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.x]
+    container:
+      image: mcr.microsoft.com/devcontainers/typescript-node:1-22
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Setup Node.js cache
+      uses: actions/cache@v3
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
 
     - name: Install dependencies
       run: npm ci
@@ -31,10 +31,11 @@ jobs:
       run: npx tsc --noEmit
 
     - name: Build project
-      run: npm run build
+      run: npm run build-nolog
 
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:
         name: dist
         path: dist
+        retention-days: 7
