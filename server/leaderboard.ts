@@ -1,8 +1,10 @@
+// Original Author: TJH
+
 import fs from "fs";
-import {app} from './server.ts';
+import {Express} from 'express';
 
 // Config
-const json: string = "leaderboard.json";
+const json: string = "server/data/leaderboard.json";
 
 // load file
 function loadLeaderboard(): any {
@@ -22,7 +24,7 @@ function saveLeaderboard(data: any): void {
 }
 
 // On start
-export function startLeaderboard(): void {
+export function startLeaderboard(app: Express): void {
   // [GET] Leaderboard
   app.get("/leaderboard", (_request, res) => {
     const leaderboard = loadLeaderboard();
@@ -30,7 +32,6 @@ export function startLeaderboard(): void {
     res.json(Object.fromEntries(sortedEntries));
   });
 
-  // TODO | besseren score nicht überschreiben
   // [POST] new score
   app.post("/leaderboard", (request, res) => {
     const {name, score} = request.body;
@@ -39,6 +40,11 @@ export function startLeaderboard(): void {
     }
     const leaderboard = loadLeaderboard();
     const contains: boolean = leaderboard.hasOwnProperty(name);
+    // Old score was better
+    if (contains && leaderboard[name] >= score) {
+      res.status(208).json({success: false}); // 208 = ALREADY REPORTED
+      return;
+    }
     leaderboard[name] = score;
     saveLeaderboard(JSON.stringify(leaderboard, null, 2));
     res.status(contains ? 200 : 201).json({success: true}); // 200 = OK | 201 = CREATED
