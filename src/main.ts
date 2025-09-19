@@ -1,7 +1,6 @@
-import StartGame from './game/main';
+import startGame from './game/main';
 
+// OnDOMContentLoaded: startGame
 document.addEventListener('DOMContentLoaded', () => {
-
-  StartGame('game-container');
-
+  startGame();
 });

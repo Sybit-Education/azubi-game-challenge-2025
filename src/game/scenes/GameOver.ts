@@ -1,16 +1,19 @@
-import { Scene } from 'phaser';
+import {Scene} from 'phaser';
 
-export class GameOver extends Scene
-{
+export class GameOver extends Scene {
+  // Variables
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
-  gameover_text : Phaser.GameObjects.Text;
+  gameover_text: Phaser.GameObjects.Text;
 
-  constructor () {
-    super('GameOver');
+  // Constructor
+  constructor() {
+    super('gameOver');
   }
 
-  create () {
+  // Create methode
+  create(): void {
+    // Camera
     this.camera = this.cameras.main
     this.camera.setBackgroundColor(0xff0000);
 
@@ -24,10 +27,9 @@ export class GameOver extends Scene
     });
     this.gameover_text.setOrigin(0.5);
 
+    // Onclick: MainMenu
     this.input.once('pointerdown', () => {
-
-      this.scene.start('MainMenu');
-
+      this.scene.start('mainMenu');
     });
   }
 }

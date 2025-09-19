@@ -1,15 +1,18 @@
-import { Scene, GameObjects } from 'phaser';
+import {Scene, GameObjects} from 'phaser';
 
 export class MainMenu extends Scene {
+  // Variables
   background: GameObjects.Image;
   logo: GameObjects.Image;
   title: GameObjects.Text;
 
-  constructor () {
-    super('MainMenu');
+  // Constructor
+  constructor() {
+    super('mainMenu');
   }
 
-  create () {
+  // Create methode
+  create(): void {
     this.background = this.add.image(512, 384, 'startBackground');
 
     this.logo = this.add.image(512, 300, 'logo');
@@ -20,10 +23,9 @@ export class MainMenu extends Scene {
       align: 'center'
     }).setOrigin(0.5);
 
+    // On click: start game
     this.input.once('pointerdown', () => {
-
-      this.scene.start('Game');
-
+      this.scene.start('game');
     });
   }
 }

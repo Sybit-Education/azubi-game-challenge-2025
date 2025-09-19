@@ -9,20 +9,21 @@ export class Game extends Scene {
   colisionPlayerAndGround: Phaser.Physics.Arcade.Collider;
   colisionPlayerAndObstacle: Phaser.Physics.Arcade.Collider;
   isDucked: boolean = false;
-  keyUp: Phaser.Input.Keyboard.Key;
-  keyDown: Phaser.Input.Keyboard.Key;
-  keyLeft: Phaser.Input.Keyboard.Key; //Todo: Delete later
-  keyRight: Phaser.Input.Keyboard.Key; //Todo: Delete later
+  keyUp: Phaser.Input.Keyboard.Key | null | undefined;
+  keyDown: Phaser.Input.Keyboard.Key | null | undefined;
+  keyLeft: Phaser.Input.Keyboard.Key | null | undefined; //Todo: Delete later
+  keyRight: Phaser.Input.Keyboard.Key | null | undefined; //Todo: Delete later
 
+  // Constructor
   constructor() {
-    super('Game');
+    super('game');
   }
 
+  // Create methode
   create() {//Todo: Add player movement
-    // Game over function
-    function gameOver(): void {
-      //this.scene.start("GameOver");
-      console.log("Collide");
+    // Game over "function"
+    const gameOver = () => {
+      this.scene.start("gameOver");
     }
 
     this.camera = this.cameras.main;
@@ -47,16 +48,22 @@ export class Game extends Scene {
 
     // Collision detection
     this.colisionPlayerAndGround = this.physics.add.collider(this.player, this.ground);
-    this.colisionPlayerAndObstacle = this.physics.add.collider(this.player, this.obstacle, gameOver());
+    this.colisionPlayerAndObstacle = this.physics.add.collider(this.player, this.obstacle, () => {
+    }, gameOver);
 
     // Controls
-    this.keyUp = this.input.keyboard.addKey("W");
-    this.keyDown = this.input.keyboard.addKey("S");
-    this.keyLeft = this.input.keyboard.addKey("A"); //Todo: delete later
-    this.keyRight = this.input.keyboard.addKey("D"); //Todo: delete later
+    this.keyUp = this.input.keyboard?.addKey("W");
+    this.keyDown = this.input.keyboard?.addKey("S");
+    this.keyLeft = this.input.keyboard?.addKey("A"); //Todo: delete later
+    this.keyRight = this.input.keyboard?.addKey("D"); //Todo: delete later
   }
 
+  // Update cycle
   update() {
+    // NOTE | es ist seltsam, das man beim sneaken springen kann aber im Springen nicht sneaken. Ist ja auch nur ein Proto type
+
+    // Movement
+    if (!this.keyUp || !this.keyDown || !this.keyLeft || !this.keyRight) return;
     if (this.keyDown.isDown && this.player.body?.touching.down) {  // Sneaking
       this.player.body?.setSize(32, 32, false);
       this.player.setTexture("playerDucking");
