@@ -29,26 +29,36 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
+    "javascript.nodejs.core.library.configured.version": "22.19.0",
+    "javascript.nodejs.core.library.typings.version": "22.18.6",
+    "last_opened_file_path": "C:/Users/tai/Documents/GitHub/azubi-game-challenge-2025/src/game/scenes",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "C:/Users/tai/AppData/Roaming/JetBrains/WebStorm2025.2/node/versions/22.19.0/node",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.nodejs",
     "ts.external.directory.path": "C:\\Users\\tjh\\Documents\\GitHub\\azubi-game-challenge-2025\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\tai\Documents\GitHub\azubi-game-challenge-2025\src\game\scenes" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\tai\Documents\GitHub\azubi-game-challenge-2025\public\assets" />
       <recent name="C:\Users\tjh\Documents\GitHub\azubi-game-challenge-2025\src\game\loader" />
     </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-WS-252.25557.126" />
+        <option value="bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-WS-252.26199.162" />
       </set>
     </attachedChunks>
   </component>
@@ -60,6 +70,7 @@
       <option name="presentableId" value="Default" />
       <updated>1758198658606</updated>
       <workItem from="1758198660016" duration="2156000" />
+      <workItem from="1758278058690" duration="5879000" />
     </task>
     <servers />
   </component>
