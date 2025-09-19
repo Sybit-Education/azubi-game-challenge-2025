@@ -21,6 +21,6 @@ export class Preloader extends Scene {
 
   // Loading done: start main scene
   create(): void {
-    start(this.scene)
+    start(this.scene);
   }
 }
