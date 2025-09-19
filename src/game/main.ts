@@ -2,6 +2,7 @@ import {Boot} from './loader/Boot.ts';
 import {GameOver} from './scenes/GameOver';
 import {Game as ThatGame} from './scenes/Game';
 import {MainMenu} from './scenes/MainMenu';
+import {Credits} from './scenes/Credits';
 import {AUTO, Game} from 'phaser';
 import {Preloader} from './loader/Preloader.ts';
 
@@ -22,7 +23,8 @@ const config: Phaser.Types.Core.GameConfig = {
     // Scenes
     MainMenu,
     ThatGame,
-    GameOver
+    GameOver,
+    Credits
   ]
 };
 
