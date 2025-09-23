@@ -14,8 +14,8 @@ export class Play extends Scene {
   isDucked: boolean = false;
   keyUp: Phaser.Input.Keyboard.Key | null | undefined;
   keyDown: Phaser.Input.Keyboard.Key | null | undefined;
-  keyLeft: Phaser.Input.Keyboard.Key | null | undefined; //Todo: Delete later
-  keyRight: Phaser.Input.Keyboard.Key | null | undefined; //Todo: Delete later
+  keyLeft: Phaser.Input.Keyboard.Key | null | undefined; //TODO: Delete later
+  keyRight: Phaser.Input.Keyboard.Key | null | undefined; //TODO: Delete later
 
   // Constructor
   constructor() {
@@ -57,8 +57,8 @@ export class Play extends Scene {
     // Controls
     this.keyUp = this.input.keyboard?.addKey("W");
     this.keyDown = this.input.keyboard?.addKey("S");
-    this.keyLeft = this.input.keyboard?.addKey("A"); //Todo: delete later
-    this.keyRight = this.input.keyboard?.addKey("D"); //Todo: delete later
+    this.keyLeft = this.input.keyboard?.addKey("A"); //TODO: delete later
+    this.keyRight = this.input.keyboard?.addKey("D"); //TODO: delete later
   }
 
   // Update cycle
@@ -76,14 +76,14 @@ export class Play extends Scene {
       this.player.body?.setSize(32, 64, false);
       this.player.setTexture("playerIdle");
       this.isDucked = false;
-    } else if (this.keyRight.isDown) { // Right
+    } else if (this.keyRight.isDown) { //TODO: delete later
       this.player.setVelocityX(160);
-    } else if (this.keyLeft.isDown) { // Left
+    } else if (this.keyLeft.isDown) { //TODO: delete later
       this.player.setVelocityX(-160);
     } else {
       this.player.setVelocityX(0);
     }
-    if (this.keyUp.isDown && this.player.body?.touching.down) {
+    if (this.keyUp.isDown && this.player.body?.touching.down && !this.isDucked) {//jump only if player isn't ducking and touches the ground
       this.player.setVelocityY(-330);
     }
   }

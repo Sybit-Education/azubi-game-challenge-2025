@@ -10,13 +10,15 @@ import {Credits} from './scenes/Credits.ts';
 // Config for Game
 // Docs: https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
 
-//declaring global variables (import { globalConsts } from "../main") for using the games width and height dynamically.
+//declaring global variables for using the games width and height dynamically (import { globalConsts } from "../main") 
 const gameW: number = 1024;
 const gameH: number = 768;
+
 export const globalConsts = {
   gameWidth: gameW,
   gameHeight: gameH
 };
+
 const arcade: Phaser.Types.Core.PhysicsConfig = {default: 'arcade'};
 const config: Phaser.Types.Core.GameConfig = {
   type: AUTO,
@@ -32,9 +34,9 @@ const config: Phaser.Types.Core.GameConfig = {
     // Scenes
     MainMenu,
     ThatGame,
-    Options,
+    GameOver,
     Credits,
-    GameOver
+    Options
   ]
 };
 

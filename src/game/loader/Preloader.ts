@@ -17,7 +17,7 @@ export class Preloader extends Scene {
     this.load.image("obstacle", "Obstacle_Test_Sprite.png");
     this.load.image('logo', 'logo.png');
     this.load.image("ground", "Ground_Test_Sprite.png");
-    //this.load.image('gameOverTitle', 'GameOver.png');
+    this.load.image('gameOverTitle', 'GameOver.png');
     this.load.image('button_play', 'Button_Play.png');
     this.load.image('button_options', 'Button_Options.png');
     this.load.image('button_credits', 'Button_Credits.png');
