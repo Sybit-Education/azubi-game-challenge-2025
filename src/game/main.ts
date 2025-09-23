@@ -2,6 +2,7 @@ import {Boot} from './loader/Boot.ts';
 import {GameOver} from './scenes/GameOver';
 import {Play as ThatGame} from './scenes/Play.ts';
 import {MainMenu} from './scenes/MainMenu';
+import {Credits} from './scenes/Credits';
 import {AUTO, Game} from 'phaser';
 import {Preloader} from './loader/Preloader.ts';
 import {Options} from './scenes/Options.ts';
