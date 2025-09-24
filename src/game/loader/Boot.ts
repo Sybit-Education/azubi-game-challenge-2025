@@ -9,7 +9,20 @@ export class Boot extends Scene {
 
   // Load global assets
   preload(): void {
+    // General
     this.load.image("startBackground", "assets/bg.png");
+    this.load.image("logo", "assets/logo.png");
+
+    // Hud
+    this.load.setPath('hud');
+    this.load.image('gameOverTitle', 'gameOver.png');
+
+    // Buttons
+    this.load.setPath('hud/buttons');
+    this.load.image('button_play', 'play.png');
+    this.load.image('button_options', 'options.png');
+    this.load.image('button_credits', 'credits.png');
+    this.load.image('button_back', 'back.png');
   }
 
   // Loading done: load theme elements
