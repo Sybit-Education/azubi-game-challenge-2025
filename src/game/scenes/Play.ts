@@ -1,5 +1,5 @@
-import { Scene } from 'phaser';
-import { globalConsts } from "../main";
+import {Scene} from 'phaser';
+import {globalConsts} from "../main";
 
 export class Play extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -62,9 +62,9 @@ export class Play extends Scene {
     this.keyRight = this.input.keyboard?.addKey("D");
 
     //  Timer für jede Ebene
-    this.time.addEvent({ delay: 4000, callback: () => this.spawnHouse("back"), callbackScope: this, loop: true });
-    this.time.addEvent({ delay: 3000, callback: () => this.spawnHouse("mid"), callbackScope: this, loop: true });
-    this.time.addEvent({ delay: 2000, callback: () => this.spawnHouse("front"), callbackScope: this, loop: true });
+    this.time.addEvent({delay: 4000, callback: () => this.spawnHouse("back"), callbackScope: this, loop: true});
+    this.time.addEvent({delay: 3000, callback: () => this.spawnHouse("mid"), callbackScope: this, loop: true});
+    this.time.addEvent({delay: 2000, callback: () => this.spawnHouse("front"), callbackScope: this, loop: true});
   }
 
   update() {

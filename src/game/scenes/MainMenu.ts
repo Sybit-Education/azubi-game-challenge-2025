@@ -1,6 +1,6 @@
 import {Scene} from 'phaser';
-import { globalConsts } from '../main';
-import { Button } from '../custom_classes/Button';
+import {globalConsts} from '../main';
+import {Button} from '../custom_classes/Button';
 
 export class MainMenu extends Scene {
   // Types
@@ -19,14 +19,16 @@ export class MainMenu extends Scene {
 
   // Create methode
   create(): void {
+    // Player Icon
+    this.player_image = this.add.image(globalConsts.santaX, globalConsts.santaY, 'playerId');
+    this.player_image.setScale(4);
+
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
     // Adds buttons
-    this.buttonPlay = new Button(this.gameW * 0.5, this.gameH * 0.25, 'button_play', this, () => {this.scene.start('play')});
-    this.buttonOptions = new Button(this.gameW * 0.5, this.gameH * 0.5, 'button_options', this, () => {this.scene.start('options')});
-    this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.75, 'button_credits', this, () => {this.scene.start('credits')});
-    this.player_image = this.add.image(200, 680, 'playerId');
-    this.player_image.setScale(4);
+    this.buttonPlay = new Button(this.gameW * 0.5, this.gameH * 0.25, 'button_play', this, () => this.scene.start('play'));
+    this.buttonOptions = new Button(this.gameW * 0.5, this.gameH * 0.5, 'button_options', this, () => this.scene.start('options'));
+    this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.75, 'button_credits', this, () =>this.scene.start('credits'));
   }
 }
