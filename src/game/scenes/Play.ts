@@ -1,5 +1,5 @@
-import { Scene } from 'phaser';
-import { globalConsts } from "../main";
+import {Scene} from 'phaser';
+import {globalConsts} from "../main";
 
 export class Play extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -30,23 +30,7 @@ export class Play extends Scene {
     super('play');
   }
 
-  preload() {
-    // Standard-Assets
-    this.load.image("gameBackground", "assets/gameBackground.png");
-    this.load.image("ground", "assets/ground.png");
-    this.load.image("obstacle", "assets/obstacle.png");
-    this.load.image("playerIdle", "assets/playerIdle.png");
-    this.load.image("playerDucking", "assets/playerDucking.png");
-
-    // hausi laden
-    for (let i = 1; i <= 3; i++) {
-      this.load.image("House", "assets/house.png");
-
-
-    }
-  }
-
-  create() {
+  create(): void {
     const gameOver = () => {
       this.scene.start("gameOver");
     };
@@ -79,9 +63,9 @@ export class Play extends Scene {
     this.keyRight = this.input.keyboard?.addKey("D");
 
     //  Timer für jede Ebene
-    this.time.addEvent({ delay: 4000, callback: () => this.spawnHouse("back"), callbackScope: this, loop: true });
-    this.time.addEvent({ delay: 3000, callback: () => this.spawnHouse("mid"), callbackScope: this, loop: true });
-    this.time.addEvent({ delay: 2000, callback: () => this.spawnHouse("front"), callbackScope: this, loop: true });
+    this.time.addEvent({delay: 4000, callback: () => this.spawnHouse("back"), callbackScope: this, loop: true});
+    this.time.addEvent({delay: 3000, callback: () => this.spawnHouse("mid"), callbackScope: this, loop: true});
+    this.time.addEvent({delay: 2000, callback: () => this.spawnHouse("front"), callbackScope: this, loop: true});
   }
 
   update() {
