@@ -6,6 +6,9 @@ import {Express} from 'express';
 // Config
 const json: string = "server/data/leaderboard.json";
 
+// Variables
+let codes: string[] = [];
+
 // load file
 function loadLeaderboard(): any {
   const empty = {}; // fallback
@@ -23,6 +26,17 @@ function saveLeaderboard(data: any): void {
   fs.writeFileSync(json, data);
 }
 
+// Generates Code
+function generateCode(length: number = 12): string {
+  const chars: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?_-+=/";
+  let password: string = "";
+  for (let i: number = 0; i < length; i++) {
+    const ind: number = Math.floor(Math.random() * chars.length);
+    password += chars[ind];
+  }
+  return password;
+}
+
 // On start
 export function startLeaderboard(app: Express): void {
   // [GET] Leaderboard
@@ -32,12 +46,23 @@ export function startLeaderboard(app: Express): void {
     res.json(Object.fromEntries(sortedEntries));
   });
 
+  // [GET] new Code
+  app.get("/newCode", (_request, res) => {
+    const code: string = generateCode(10);
+    codes.push(code);
+    return res.status(201).json({code:code});
+  });
+
   // [POST] new score
   app.post("/leaderboard", (request, res) => {
-    const {name, score} = request.body;
-    if (typeof name !== "string" || typeof score !== "number") {
+    const {name, score, code} = request.body;
+    if (typeof name !== "string" || typeof score !== "number" || typeof code !== "string") {
       return res.status(400).json({error: "Invalid payload"});
     }
+    if (codes.indexOf(code) === -1) {
+      return res.status(401).json({error: "Unauthorized"});
+    }
+    codes = codes.filter(item => item != code);
     const leaderboard = loadLeaderboard();
     const contains: boolean = leaderboard.hasOwnProperty(name);
     // Old score was better
