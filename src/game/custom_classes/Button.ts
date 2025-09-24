@@ -2,11 +2,11 @@ import {GameObjects, Scene} from "phaser";
 
 //import via (import {Button} from "../custom_classes/Button")
 export class Button {
-  readonly x: number;
-  readonly y: number;
-  readonly image: string;
-  readonly targetScene: string;
-  readonly scene: Scene;
+  x: number;
+  y: number;
+  image: string;
+  targetScene: string;
+  scene: Scene;
   button: GameObjects.Image;
 
   // Constructor
@@ -35,7 +35,7 @@ export class Button {
       this.button.clearTint(); //stop highlighting the buttons if the mouse doesn't hover above it
     });
 
-    // Calls function that is provided
+    // Calls the function that is provided
     this.button.on('pointerdown', onButtonPressed);
   }
 
