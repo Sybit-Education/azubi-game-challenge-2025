@@ -29,7 +29,7 @@ export class Options extends Scene {
 
     // Placeholder
     this.placeholderText = this.add.text(this.gameW / 2, this.gameH / 2, 'This is the "options" screen \n nothing here yet though :)');
-    this.buttonBack = new Button(this.gameW * 0.5, this.gameH * 0.25, 'button_back', this, () => {
+    this.buttonBack = new Button(this.gameW * 0.5, this.gameH * 0.25, 4,'button_back', this, () => {
       this.scene.start('mainMenu')
     });
   }

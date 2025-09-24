@@ -10,7 +10,7 @@ export class Button {
   button: GameObjects.Image;
 
   // Constructor
-  constructor(x: number, y: number, image: string, curScene: Scene, onButtonPressed: Function) {
+  constructor(x: number, y: number, scale: number, image: string, curScene: Scene, onButtonPressed: Function) {
     //initialise variables
     this.x = x; //x position
     this.y = y; //y position
@@ -22,6 +22,9 @@ export class Button {
 
     // make buttons interactive
     this.button.setInteractive();
+
+    // scales the button
+    this.button.setScale(scale, scale);
 
     // Buttons actions
     this.button.on('pointerover', () => {
