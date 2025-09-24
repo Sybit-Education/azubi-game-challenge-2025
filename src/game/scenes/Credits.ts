@@ -1,3 +1,5 @@
+import {globalConsts} from "../main";
+
 // config
 const scrollSpeed: number = 150;
 const font: string = '24px Arial';
@@ -24,6 +26,10 @@ export class Credits extends Phaser.Scene {
 
   // Create
   create(): void {
+    // constants
+    const gameW: number = globalConsts.gameWidth;
+    const gameH: number = globalConsts.gameHeight;
+
     // Json
     const data = this.cache.json.get('creditsData');
 
@@ -34,9 +40,9 @@ export class Credits extends Phaser.Scene {
     this.creditTexts = [];
 
     // Config
-    const leftX: number = this.sys.game.config.width * 0.35;
-    const rightX: number = this.sys.game.config.width * 0.55;
-    let startY: number = parseInt(this.sys.game.config.height);
+    const leftX: number = gameW * 0.35;
+    const rightX: number = gameW * 0.55;
+    let startY: number = gameH;
 
     // TODO | Add "SyRun: The Team" & "Thank you for playing"
 
@@ -68,6 +74,11 @@ export class Credits extends Phaser.Scene {
       // Extra space after role
       startY += 30;
     }
+
+    // Onclick: MainMenu
+    this.input.once('pointerdown', () => {
+      this.scene.start('mainMenu');
+    });
   }
 
   // Scroll Effekt

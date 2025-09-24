@@ -1,6 +1,7 @@
 import {Scene} from 'phaser';
+import { globalConsts } from "../main";
 
-export class Game extends Scene {
+export class Play extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   player: Phaser.Physics.Arcade.Sprite;
@@ -8,15 +9,17 @@ export class Game extends Scene {
   obstacle: Phaser.Physics.Arcade.Sprite;
   colisionPlayerAndGround: Phaser.Physics.Arcade.Collider;
   colisionPlayerAndObstacle: Phaser.Physics.Arcade.Collider;
+  gameW: number = globalConsts.gameWidth;
+  gameH: number = globalConsts.gameHeight;
   isDucked: boolean = false;
   keyUp: Phaser.Input.Keyboard.Key | null | undefined;
   keyDown: Phaser.Input.Keyboard.Key | null | undefined;
-  keyLeft: Phaser.Input.Keyboard.Key | null | undefined; //Todo: Delete later
-  keyRight: Phaser.Input.Keyboard.Key | null | undefined; //Todo: Delete later
+  keyLeft: Phaser.Input.Keyboard.Key | null | undefined; //TODO: Delete later
+  keyRight: Phaser.Input.Keyboard.Key | null | undefined; //TODO: Delete later
 
   // Constructor
   constructor() {
-    super('game');
+    super('play');
   }
 
   // Create methode
@@ -29,14 +32,14 @@ export class Game extends Scene {
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0x00ff00);
     // was ist hier der Unterschied? ^^^ & vvv
-    this.background = this.add.image(512, 384, 'gameBackground');
+    this.background = this.add.image(this.gameW / 2, this.gameH / 2, 'gameBackground');
 
     // Ground
-    this.ground = this.physics.add.sprite(512, 736, "ground");
+    this.ground = this.physics.add.sprite(this.gameW / 2, this.gameH - 32, "ground");
     this.ground.setImmovable(true);
 
     // Test obstacle
-    this.obstacle = this.physics.add.sprite(512, 688, "obstacle");
+    this.obstacle = this.physics.add.sprite(this.gameW / 2, this.gameH - 80, "obstacle");
     this.obstacle.setImmovable(true);
 
     // Player
@@ -54,8 +57,8 @@ export class Game extends Scene {
     // Controls
     this.keyUp = this.input.keyboard?.addKey("W");
     this.keyDown = this.input.keyboard?.addKey("S");
-    this.keyLeft = this.input.keyboard?.addKey("A"); //Todo: delete later
-    this.keyRight = this.input.keyboard?.addKey("D"); //Todo: delete later
+    this.keyLeft = this.input.keyboard?.addKey("A"); //TODO: delete later
+    this.keyRight = this.input.keyboard?.addKey("D"); //TODO: delete later
   }
 
   // Update cycle
@@ -73,14 +76,14 @@ export class Game extends Scene {
       this.player.body?.setSize(32, 64, false);
       this.player.setTexture("playerIdle");
       this.isDucked = false;
-    } else if (this.keyRight.isDown) { // Right
+    } else if (this.keyRight.isDown) { //TODO: delete later
       this.player.setVelocityX(160);
-    } else if (this.keyLeft.isDown) { // Left
+    } else if (this.keyLeft.isDown) { //TODO: delete later
       this.player.setVelocityX(-160);
     } else {
       this.player.setVelocityX(0);
     }
-    if (this.keyUp.isDown && this.player.body?.touching.down) {
+    if (this.keyUp.isDown && this.player.body?.touching.down && !this.isDucked) {//jump only if player isn't ducking and touches the ground
       this.player.setVelocityY(-330);
     }
   }
