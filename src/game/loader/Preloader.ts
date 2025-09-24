@@ -10,6 +10,7 @@ export class Preloader extends Scene {
 
   // Load all theme related assets
   preload(): void {
+    // General assets
     this.load.setPath('assets');
     this.load.image('gameBackground', 'Background_Test_Sprite.png');
     this.load.image("playerIdle", "Player_Test_Sprite.png");
@@ -18,10 +19,13 @@ export class Preloader extends Scene {
     this.load.image('logo', 'logo.png');
     this.load.image("ground", "Ground_Test_Sprite.png");
     this.load.image('gameOverTitle', 'GameOver.png');
-    this.load.image('button_play', 'Button_Play.png');
-    this.load.image('button_options', 'Button_Options.png');
-    this.load.image('button_credits', 'Button_Credits.png');
-    this.load.image('button_back', 'Button_Back.png');
+
+    // Buttons
+    this.load.setPath('buttons');
+    this.load.image('button_play', 'play.png');
+    this.load.image('button_options', 'options.png');
+    this.load.image('button_credits', 'credits.png');
+    this.load.image('button_back', 'back.png');
   }
 
   // Loading done: start main menu scene

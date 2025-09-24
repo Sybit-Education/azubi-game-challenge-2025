@@ -1,0 +1,5 @@
+So ist die Struktur für den "public" folder:
+assets: sollte man am besten nicht neues hineinmachen, weil wir letztendlich diesen Ordner löschen wollen
+background: Assets die für den Hintergrund gedacht sind
+buttons: Buttons(Knöpfe)
+sprites: Für allgemeines auf dem Bildschirm

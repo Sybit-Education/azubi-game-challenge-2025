@@ -1,4 +1,4 @@
-import { globalConsts } from "../main";
+import {globalConsts} from "../main";
 
 // config
 const scrollSpeed: number = 150;
@@ -29,7 +29,7 @@ export class Credits extends Phaser.Scene {
     // constants
     const gameW: number = globalConsts.gameWidth;
     const gameH: number = globalConsts.gameHeight;
-    
+
     // Json
     const data = this.cache.json.get('creditsData');
 
@@ -74,6 +74,11 @@ export class Credits extends Phaser.Scene {
       // Extra space after role
       startY += 30;
     }
+
+    // Onclick: MainMenu
+    this.input.once('pointerdown', () => {
+      this.scene.start('mainMenu');
+    });
   }
 
   // Scroll Effekt
