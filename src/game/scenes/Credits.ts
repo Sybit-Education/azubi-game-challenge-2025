@@ -53,9 +53,9 @@ export class Credits extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0, 0);
     this.creditTexts.push(text);
-    startY += 125;
 
-    // TODO | Add "SyRun: The Team" & "Thank you for playing"
+    // Space
+    startY += 125;
 
     // Generate rows
     for (let role in data) {
@@ -88,6 +88,7 @@ export class Credits extends Phaser.Scene {
     // Extra space for footer
     startY += 350;
 
+    // "Thank you for playing" text
     const footer: Text = this.add.text(gameW * 0.45, startY, "Thank you for playing", {
       font: "48px " + font,
       color: roleColor,
