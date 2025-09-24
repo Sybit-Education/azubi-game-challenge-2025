@@ -9,6 +9,8 @@ export class Options extends Scene {
   gameW: number = globalConsts.gameWidth;
   gameH: number = globalConsts.gameHeight;
   buttonBack: Button;
+  buttonSound: Button;
+  buttonMusic: Button;
   player_image: Phaser.GameObjects.Image;
 
   // Constructor
@@ -27,10 +29,17 @@ export class Options extends Scene {
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
+    // TODO: This has to be finished
     // Placeholder
-    this.placeholderText = this.add.text(this.gameW / 2, this.gameH / 2, 'This is the "options" screen \n nothing here yet though :)');
     this.buttonBack = new Button(this.gameW * 0.5, this.gameH * 0.25, 4,'button_back', this, () => {
       this.scene.start('mainMenu')
     });
+    this.buttonSound = new Button(400,300,4,'button_active',this,() => {
+      this.buttonSound.image = "button_mute";
+      console.log("test")
+    })
+    this.buttonMusic = new Button(400,400,4,'button_active',this,() => {})
+
+
   }
 }
