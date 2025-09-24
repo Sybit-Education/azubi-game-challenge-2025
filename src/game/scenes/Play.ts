@@ -11,6 +11,8 @@ export class Play extends Scene {
   colisionPlayerAndObstacle: Phaser.Physics.Arcade.Collider;
   gameW: number = globalConsts.gameWidth;
   gameH: number = globalConsts.gameHeight;
+  santaX: number = globalConsts.gameWidth;
+  santaY: number = globalConsts.gameHeight;
   isDucked: boolean = false;
   keyUp: Phaser.Input.Keyboard.Key | null | undefined;
   keyDown: Phaser.Input.Keyboard.Key | null | undefined;
