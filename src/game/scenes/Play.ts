@@ -51,6 +51,7 @@ export class Play extends Scene {
     this.player.setOrigin(0.5, 1);
     this.player.setCollideWorldBounds(true);
     this.player.setGravityY(500);
+    this.player.setDepth(1);
 
     this.colisionPlayerAndGround = this.physics.add.collider(this.player, this.ground);
     this.colisionPlayerAndObstacle = this.physics.add.collider(this.player, this.obstacle, () => {
@@ -93,7 +94,7 @@ export class Play extends Scene {
     // Hausi bewegen
     this.moveHouses(this.backHouses, 0.5);
     this.moveHouses(this.midHouses, 1.2);
-    this.moveHouses(this.frontHouses, 2);
+    this.moveHouses(this.frontHouses, 6);
   }
 
   private spawnHouse(layer: "back" | "mid" | "front") {
@@ -112,7 +113,7 @@ export class Play extends Scene {
       y = this.gameH - 60;
       depth = -1;
     } else if (layer === "front") {
-      scale = 4.8 + Math.random() * 0.4;
+      scale = 6 + Math.random() * 0.4;
       y = this.gameH - 64;
       depth = 0;
     }
@@ -132,7 +133,7 @@ export class Play extends Scene {
       house.x -= speed;
     });
 
-    for (let i = houses.length - 1; i >= 0; i--) {
+    for (let i = houses.length - 3; i >= 0; i--) {
       if (houses[i].x < -houses[i].width) {
         houses[i].destroy();
         houses.splice(i, 1);
