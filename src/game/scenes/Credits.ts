@@ -5,11 +5,12 @@ const scrollSpeed: number = 150;
 const font: string = '24px Arial';
 const roleColor: string = '#ffffff';
 const nameColor: string = '#ffffff';
-const backgroundColor: string = '#000000';
+const backgroundColor: string = '#01386A';
 const jsonPath: string = "./src/game/scenes/creditsConfig.json";
 
 // Class
 export class Credits extends Phaser.Scene {
+  player_image: Phaser.GameObjects.Image;
 
   // Types
   creditTexts: Phaser.GameObjects.Text[];
@@ -27,6 +28,9 @@ export class Credits extends Phaser.Scene {
   // Create
   create(): void {
     // constants
+    this.player_image = this.add.image(200, 680, 'playerId');
+    this.player_image.setScale(4);
+
     const gameW: number = globalConsts.gameWidth;
     const gameH: number = globalConsts.gameHeight;
 
@@ -40,8 +44,8 @@ export class Credits extends Phaser.Scene {
     this.creditTexts = [];
 
     // Config
-    const leftX: number = gameW * 0.35;
-    const rightX: number = gameW * 0.55;
+    const leftX: number = gameW * 0.45;
+    const rightX: number = gameW * 0.65;
     let startY: number = gameH;
 
     // TODO | Add "SyRun: The Team" & "Thank you for playing"

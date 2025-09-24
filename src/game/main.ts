@@ -10,13 +10,18 @@ import {Credits} from './scenes/Credits.ts';
 // Config for Game
 // Docs: https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
 
-//declaring global variables for using the games width and height dynamically (import { globalConsts } from "../main") 
+//declaring global variables for using the games width and height dynamically (import { globalConsts } from "../main")
 const gameW: number = 1024;
 const gameH: number = 768;
+const santaX: number = 200;
+const santaY: number = 680;
+
 
 export const globalConsts = {
   gameWidth: gameW,
-  gameHeight: gameH
+  gameHeight: gameH,
+  SantaX: santaX,
+  SantaY: santaY,
 };
 
 const arcade: Phaser.Types.Core.PhysicsConfig = {default: 'arcade'};
@@ -27,6 +32,10 @@ const config: Phaser.Types.Core.GameConfig = {
   parent: 'game-container', // ID of the div in wich it should be displayed
   physics: arcade,
   input: {keyboard: true, mouse: true,}, // Wich inputs are enabled
+  render: {
+    pixelArt: true,   // macht die Sprites pixelig statt weich
+    antialias: false  // schaltet Kantenglättung aus
+  },
   scene: [ // All scenes
     // Loader
     Boot,
