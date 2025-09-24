@@ -30,23 +30,7 @@ export class Play extends Scene {
     super('play');
   }
 
-  preload() {
-    // Standard-Assets
-    this.load.image("gameBackground", "assets/gameBackground.png");
-    this.load.image("ground", "assets/ground.png");
-    this.load.image("obstacle", "assets/obstacle.png");
-    this.load.image("playerIdle", "assets/playerIdle.png");
-    this.load.image("playerDucking", "assets/playerDucking.png");
-
-    // hausi laden
-    for (let i = 1; i <= 3; i++) {
-      this.load.image("House", "assets/house.png");
-
-
-    }
-  }
-
-  create() {
+  create(): void {
     const gameOver = () => {
       this.scene.start("gameOver");
     };

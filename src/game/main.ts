@@ -7,23 +7,24 @@ import {Preloader} from './loader/Preloader.ts';
 import {Options} from './scenes/Options.ts';
 import {Credits} from './scenes/Credits.ts';
 
-// Config for Game
-// Docs: https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
-
-//declaring global variables for using the games width and height dynamically (import { globalConsts } from "../main")
+// Config
 const gameW: number = 1024;
 const gameH: number = 768;
-const santaX: number = 200;
-const santaY: number = 680;
+const santaXPosition: number = 200;
+const santaYPosition: number = 680;
+const background = 0x01386A;
 
-
+// Global variables
 export const globalConsts = {
   gameWidth: gameW,
   gameHeight: gameH,
-  SantaX: santaX,
-  SantaY: santaY,
+  santaX: santaXPosition,
+  santaY: santaYPosition,
+  backgroundColor: background,
 };
 
+// Config for Game
+// Docs: https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
 const arcade: Phaser.Types.Core.PhysicsConfig = {default: 'arcade'};
 const config: Phaser.Types.Core.GameConfig = {
   type: AUTO,

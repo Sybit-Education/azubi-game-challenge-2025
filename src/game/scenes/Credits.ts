@@ -1,18 +1,15 @@
 import {globalConsts} from "../main";
 
-// config
+// Config
 const scrollSpeed: number = 150;
 const font: string = '24px Arial';
 const roleColor: string = '#ffffff';
 const nameColor: string = '#ffffff';
-const backgroundColor: string = '#01386A';
 const jsonPath: string = "./src/game/scenes/creditsConfig.json";
 
-// Class
 export class Credits extends Phaser.Scene {
-  player_image: Phaser.GameObjects.Image;
-
   // Types
+  player_image: Phaser.GameObjects.Image;
   creditTexts: Phaser.GameObjects.Text[];
 
   // Constructor
@@ -27,18 +24,17 @@ export class Credits extends Phaser.Scene {
 
   // Create
   create(): void {
-    // constants
-    this.player_image = this.add.image(200, 680, 'playerId');
+    // Player Icon
+    this.player_image = this.add.image(globalConsts.santaX, globalConsts.santaY, 'playerId');
     this.player_image.setScale(4);
 
+    // Variables
     const gameW: number = globalConsts.gameWidth;
     const gameH: number = globalConsts.gameHeight;
-
-    // Json
-    const data = this.cache.json.get('creditsData');
+    const data = this.cache.json.get('creditsData'); // Json
 
     // Background
-    this.cameras.main.setBackgroundColor(backgroundColor);
+    this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
     // Variables
     this.creditTexts = [];
