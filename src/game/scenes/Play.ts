@@ -2,6 +2,7 @@ import {Scene} from 'phaser';
 import { globalConsts } from "../main";
 import { Player } from '../custom_classes/Player';
 import { Segment } from '../custom_classes/Section';
+import {globalConsts} from "../main";
 
 export class Play extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -14,26 +15,30 @@ export class Play extends Scene {
   colisionPlayerAndObstacle: Phaser.Physics.Arcade.Collider;
   gameW: number = globalConsts.gameWidth;
   gameH: number = globalConsts.gameHeight;
-  isDucked: boolean = false;
+  santaX: number = globalConsts.gameWidth;
+  santaY: number = globalConsts.gameHeight;
+  
+  // hausi ebenen
+  backHouses: Phaser.GameObjects.Image[] = [];
+  midHouses: Phaser.GameObjects.Image[] = [];
+  frontHouses: Phaser.GameObjects.Image[] = [];
 
-  // Constructor
+  houseKeys: string[] = ["house1", "house2", "house3"];
+
   constructor() {
     super('play');
   }
 
-  // Create methode
-  create() {//Todo: Add player movement
-    // Game over "function"
+  create(): void {
     const gameOver = () => {
       this.scene.start("gameOver");
-    }
+    };
 
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0x00ff00);
-    // was ist hier der Unterschied? ^^^ & vvv
+
     this.background = this.add.image(this.gameW / 2, this.gameH / 2, 'gameBackground');
 
-    // Ground
     this.ground = this.physics.add.sprite(this.gameW / 2, this.gameH - 32, "ground");
     this.ground.setImmovable(true);
 
@@ -50,12 +55,63 @@ export class Play extends Scene {
     this.colisionPlayerAndObstacle = this.physics.add.collider(this.player.sprite, this.obstacles, () => {
     }, gameOver);
 
-    // Controls
+    //  Timer für jede Ebene
+    this.time.addEvent({delay: 4000, callback: () => this.spawnHouse("back"), callbackScope: this, loop: true});
+    this.time.addEvent({delay: 3000, callback: () => this.spawnHouse("mid"), callbackScope: this, loop: true});
+    this.time.addEvent({delay: 2000, callback: () => this.spawnHouse("front"), callbackScope: this, loop: true});
   }
 
-  // Update cycle
   update() {
     // player movement
     this.player.movementUpdate();
+
+    // Hausi bewegen
+    this.moveHouses(this.backHouses, 0.5);
+    this.moveHouses(this.midHouses, 1.2);
+    this.moveHouses(this.frontHouses, 6);
+  }
+
+  private spawnHouse(layer: "back" | "mid" | "front") {
+    const key = Phaser.Utils.Array.GetRandom(this.houseKeys);
+
+    let y = this.gameH - 32;
+    let scale = 1;
+    let depth = 0;
+
+    if (layer === "back") {
+      scale = 0.4 + Math.random() * 0.2;
+      y = this.gameH - 80;
+      depth = -2;
+    } else if (layer === "mid") {
+      scale = 0.6 + Math.random() * 0.3;
+      y = this.gameH - 60;
+      depth = -1;
+    } else if (layer === "front") {
+      scale = 6 + Math.random() * 0.4;
+      y = this.gameH - 64;
+      depth = 0;
+    }
+
+    const house = this.add.image(this.gameW + 100, y, key);
+    house.setOrigin(0.5, 1);
+    house.setScale(scale);
+    house.setDepth(depth);
+
+    if (layer === "back") this.backHouses.push(house);
+    if (layer === "mid") this.midHouses.push(house);
+    if (layer === "front") this.frontHouses.push(house);
+  }
+
+  private moveHouses(houses: Phaser.GameObjects.Image[], speed: number) {
+    houses.forEach(house => {
+      house.x -= speed;
+    });
+
+    for (let i = houses.length - 3; i >= 0; i--) {
+      if (houses[i].x < -houses[i].width) {
+        houses[i].destroy();
+        houses.splice(i, 1);
+      }
+    }
   }
 }

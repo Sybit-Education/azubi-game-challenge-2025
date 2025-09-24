@@ -1,7 +1,8 @@
 import {Scene} from 'phaser';
+import {globalConsts} from '../main.ts';
 
 export class GameOver extends Scene {
-  // Variables
+  // Types
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   gameover_image: Phaser.GameObjects.Image;
@@ -18,6 +19,7 @@ export class GameOver extends Scene {
     this.gameover_image = this.add.image(512, 480, 'gameOverTitle');
     this.gameover_image.setScale(0.2);
 
+    // Info
     this.restart_text = this.add.text(170, 500, 'Deine Punktzahl:');
     this.restart_text = this.add.text(170, 530, 'Highscore:');
     this.restart_text = this.add.text(170, 560, 'Geschenke:');
@@ -25,8 +27,8 @@ export class GameOver extends Scene {
 
   // Create methode
   create(): void {
-    this.camera = this.cameras.main;
-    this.camera.setBackgroundColor(0x01386A);
+    // Background
+    this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
     // Onclick: MainMenu
     this.input.once('pointerdown', () => {

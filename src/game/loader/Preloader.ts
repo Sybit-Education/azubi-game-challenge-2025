@@ -25,7 +25,7 @@ export class Preloader extends Scene {
     this.load.image("gift2", "gift2.png");
     this.load.image("gift3", "gift3.png");
     // NOTE: I don't want to overwrite the player right now
-    // this.load.image("playerIdle", "player.png");
+    this.load.image("playerId", "player.png");
     //this.load.image("playerDucking", "playerSneaking.png");
     this.load.image("trash", "trash.png");
 

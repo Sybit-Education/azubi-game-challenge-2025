@@ -1,17 +1,16 @@
 import {globalConsts} from "../main";
+import Text = Phaser.GameObjects.Text;
 
-// config
+// Config
 const scrollSpeed: number = 150;
-const font: string = '24px Arial';
+const font: string = "Tiny5";
 const roleColor: string = '#ffffff';
 const nameColor: string = '#ffffff';
-const backgroundColor: string = '#000000';
 const jsonPath: string = "./src/game/scenes/creditsConfig.json";
 
-// Class
 export class Credits extends Phaser.Scene {
-
   // Types
+  player_image: Phaser.GameObjects.Image;
   creditTexts: Phaser.GameObjects.Text[];
 
   // Constructor
@@ -20,31 +19,43 @@ export class Credits extends Phaser.Scene {
   }
 
   // Preloader
-  preload() {
+  preload(): void {
     this.load.json('creditsData', jsonPath);
   }
 
   // Create
   create(): void {
-    // constants
+    // Player Icon
+    this.player_image = this.add.image(globalConsts.santaX, globalConsts.santaY, 'playerId');
+    this.player_image.setScale(4);
+
+    // Variables
     const gameW: number = globalConsts.gameWidth;
     const gameH: number = globalConsts.gameHeight;
-
-    // Json
-    const data = this.cache.json.get('creditsData');
+    const data = this.cache.json.get('creditsData'); // Json
 
     // Background
-    this.cameras.main.setBackgroundColor(backgroundColor);
+    this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
     // Variables
     this.creditTexts = [];
 
     // Config
-    const leftX: number = gameW * 0.35;
-    const rightX: number = gameW * 0.55;
+    const leftX: number = gameW * 0.45;
+    const rightX: number = gameW * 0.65;
     let startY: number = gameH;
 
-    // TODO | Add "SyRun: The Team" & "Thank you for playing"
+    // Title
+    const text: Text = this.add.text(gameW * 0.45, startY, "SyRun: Team", {
+      fontFamily: font,
+      fontSize: "75px",
+      color: roleColor,
+      align: 'center'
+    }).setOrigin(0, 0);
+    this.creditTexts.push(text);
+
+    // Space
+    startY += 125;
 
     // Generate rows
     for (let role in data) {
@@ -52,18 +63,17 @@ export class Credits extends Phaser.Scene {
       const names: string[] = data[role];
 
       // Roles | left
-      const roleText: Phaser.GameObjects.Text = this.add.text(leftX, startY, this.capitalize(role), {
-        font: font,
+      const roleText: Text = this.add.text(leftX, startY, this.capitalize(role), {
+        font: "30px " + font,
         color: roleColor,
         align: 'left'
       }).setOrigin(0, 0);
       this.creditTexts.push(roleText);
-      startY += 40;
 
       // Person | right
       for (let name of names) {
-        const nameText = this.add.text(rightX, startY, name, {
-          font: font,
+        const nameText: Text = this.add.text(rightX, startY, name, {
+          font: "30px " + font,
           color: nameColor,
           align: 'right'
         }).setOrigin(0, 0);
@@ -72,8 +82,19 @@ export class Credits extends Phaser.Scene {
       }
 
       // Extra space after role
-      startY += 30;
+      startY += 50;
     }
+
+    // Extra space for footer
+    startY += 350;
+
+    // "Thank you for playing" text
+    const footer: Text = this.add.text(gameW * 0.45, startY, "Thank you for playing", {
+      font: "48px " + font,
+      color: roleColor,
+      align: 'center'
+    }).setOrigin(0, 0);
+    this.creditTexts.push(footer);
 
     // Onclick: MainMenu
     this.input.once('pointerdown', () => {
@@ -88,9 +109,11 @@ export class Credits extends Phaser.Scene {
     }
 
     // All name done
-    const last: Phaser.GameObjects.Text = this.creditTexts[this.creditTexts.length - 1];
+    const last: Phaser.GameObjects.Text = this.creditTexts[this.creditTexts.length - 2];
+    if (last == undefined || last.y == undefined) return;
     if (last.y < -50) {
-      this.scene.start("mainMenu");
+      this.creditTexts.splice(this.creditTexts.length - 1, 1);
+      this.time.addEvent({delay: 500, callback: () => this.scene.start("mainMenu"), callbackScope: this, loop: false});
     }
   }
 
