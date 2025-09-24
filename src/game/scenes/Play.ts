@@ -149,7 +149,7 @@ export class Play extends Scene {
       house.x -= speed;
     });
 
-    for (let i = houses.length - 1; i >= 0; i--) {
+    for (let i = houses.length - 3; i >= 0; i--) {
       if (houses[i].x < -houses[i].width) {
         houses[i].destroy();
         houses.splice(i, 1);
