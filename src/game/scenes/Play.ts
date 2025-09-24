@@ -1,21 +1,20 @@
 import {Scene} from 'phaser';
 import { globalConsts } from "../main";
+import { Player } from '../custom_classes/Player';
+import { Segment } from '../custom_classes/Section';
 
 export class Play extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
-  player: Phaser.Physics.Arcade.Sprite;
+  player: Player;
+  segment: Segment;
+  obstacles: Phaser.Physics.Arcade.Group;
   ground: Phaser.Physics.Arcade.Sprite;
-  obstacle: Phaser.Physics.Arcade.Sprite;
   colisionPlayerAndGround: Phaser.Physics.Arcade.Collider;
   colisionPlayerAndObstacle: Phaser.Physics.Arcade.Collider;
   gameW: number = globalConsts.gameWidth;
   gameH: number = globalConsts.gameHeight;
   isDucked: boolean = false;
-  keyUp: Phaser.Input.Keyboard.Key | null | undefined;
-  keyDown: Phaser.Input.Keyboard.Key | null | undefined;
-  keyLeft: Phaser.Input.Keyboard.Key | null | undefined; //TODO: Delete later
-  keyRight: Phaser.Input.Keyboard.Key | null | undefined; //TODO: Delete later
 
   // Constructor
   constructor() {
@@ -38,53 +37,25 @@ export class Play extends Scene {
     this.ground = this.physics.add.sprite(this.gameW / 2, this.gameH - 32, "ground");
     this.ground.setImmovable(true);
 
-    // Test obstacle
-    this.obstacle = this.physics.add.sprite(this.gameW / 2, this.gameH - 80, "obstacle");
-    this.obstacle.setImmovable(true);
-
+    // Segment
+    this.segment = new Segment('gameBackground', 1, [], this);
+    this.segment = this.segment.generateTestSegment(0);
+    this.obstacles = this.physics.add.group(this.segment.obstacles[0].sprite);
+    
     // Player
-    this.player = this.physics.add.sprite(64, 64, "playerIdle");
-    this.player.body?.setSize(32, 64, false);
-    this.player.setOrigin(0.5, 1);
-    this.player.setCollideWorldBounds(true);
-    this.player.setGravityY(500);
+    this.player = new Player(64, this.gameH-64, 'playerIdle', 'playerDucking', "W", "S", "A", "D", this);
 
     // Collision detection
-    this.colisionPlayerAndGround = this.physics.add.collider(this.player, this.ground);
-    this.colisionPlayerAndObstacle = this.physics.add.collider(this.player, this.obstacle, () => {
+    this.colisionPlayerAndGround = this.physics.add.collider(this.player.sprite, this.ground);
+    this.colisionPlayerAndObstacle = this.physics.add.collider(this.player.sprite, this.obstacles, () => {
     }, gameOver);
 
     // Controls
-    this.keyUp = this.input.keyboard?.addKey("W");
-    this.keyDown = this.input.keyboard?.addKey("S");
-    this.keyLeft = this.input.keyboard?.addKey("A"); //TODO: delete later
-    this.keyRight = this.input.keyboard?.addKey("D"); //TODO: delete later
   }
 
   // Update cycle
   update() {
-    // NOTE | es ist seltsam, das man beim sneaken springen kann aber im Springen nicht sneaken. Ist ja auch nur ein Proto type
-
-    // Movement
-    if (!this.keyUp || !this.keyDown || !this.keyLeft || !this.keyRight) return;
-    if (this.keyDown.isDown && this.player.body?.touching.down) {  // Sneaking
-      this.player.body?.setSize(32, 32, false);
-      this.player.setTexture("playerDucking");
-      this.player.setVelocityX(0);
-      this.isDucked = true;
-    } else if (this.keyDown.isUp && this.isDucked) {
-      this.player.body?.setSize(32, 64, false);
-      this.player.setTexture("playerIdle");
-      this.isDucked = false;
-    } else if (this.keyRight.isDown) { //TODO: delete later
-      this.player.setVelocityX(160);
-    } else if (this.keyLeft.isDown) { //TODO: delete later
-      this.player.setVelocityX(-160);
-    } else {
-      this.player.setVelocityX(0);
-    }
-    if (this.keyUp.isDown && this.player.body?.touching.down && !this.isDucked) {//jump only if player isn't ducking and touches the ground
-      this.player.setVelocityY(-330);
-    }
+    // player movement
+    this.player.movementUpdate();
   }
 }
