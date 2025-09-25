@@ -10,7 +10,6 @@ export class Boot extends Scene {
   // Load global assets
   preload(): void {
     // General
-    this.load.image("startBackground", "assets/bg.png");
     this.load.image("logo", "assets/logo.png");
 
     // Hud
