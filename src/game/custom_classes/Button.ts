@@ -39,4 +39,9 @@ export class Button {
     this.button.on('pointerdown', onButtonPressed);
   }
 
+  setImage(newImage: string) {
+    this.image = newImage;
+    this.button.setTexture(newImage)
+  }
+
 }
