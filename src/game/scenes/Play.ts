@@ -5,7 +5,7 @@ import {globalConsts} from "../main";
 import Image = Phaser.GameObjects.Image;
 
 export class Play extends Scene {
-  background: Phaser.GameObjects.Image;
+  background: Phaser.GameObjects.TileSprite;
   player: Player;
   segment: Segment;
   obstacles: Phaser.Physics.Arcade.Group;
@@ -31,21 +31,16 @@ export class Play extends Scene {
       this.scene.start("gameOver");
     };
 
-    // Background color
-    this.cameras.main.setBackgroundColor(0x000000);
-    // Scrolling background
-    this.background = this.add.image(
-      0, // x
-      0, // y
-      'gameBackground' // texture key
+    this.background = this.add.tileSprite(
+      0,
+      0,
+      this.gameW,
+      this.gameH,
+      'gameBackground2' // Stelle sicher, dass dieses Bild geladen wurde!
     ).setOrigin(0, 0);
-
-
-    // Background image
-    this.background = this.add.image(this.gameW / 2, this.gameH / 2, 'gameBackground2');
+    this.background.setScale(4.5);
+    this.background.setAlpha(1);
     this.background.setDepth(-4);
-    this.background.setScale(4.40, 4.40);
-    this.background.setAlpha(0.75)
 
     // Ground
     this.ground = this.physics.add.sprite(this.gameW / 2, this.gameH - 32, "ground");
@@ -90,6 +85,9 @@ export class Play extends Scene {
     // player movement
     this.player.movementUpdate();
 
+    //scrolling background
+    this.background.tilePositionX += 0.1;
+
     // Move housis
     this.moveHouses(getLayerDetails(Layer.FRONT).houses, getLayerDetails(Layer.FRONT).speed);
     this.moveHouses(getLayerDetails(Layer.MIDDLE).houses, getLayerDetails(Layer.MIDDLE).speed);
@@ -98,6 +96,7 @@ export class Play extends Scene {
 
   // Spawn house
   private spawnHouse(layer: Layer): void {
+    console.log("new")
     // Variables
     const layerDetails: LayerProperties = getLayerDetails(layer);
     let houseID: string;
@@ -115,12 +114,13 @@ export class Play extends Scene {
     house.setScale(layerDetails.scale());
     house.setAlpha(layerDetails.opacity);
 
+    console.log(layerDetails);
     layerDetails.houses.push(house);
     layerDetails.lastHouse = houseID;
   }
 
   // Moves every house on specified layer
-  private moveHouses(houses: Phaser.GameObjects.Image[], speed: number) {
+  private moveHouses(houses: Phaser.GameObjects.Image[], speed: number): void {
     houses.forEach(house => {
       house.x -= speed;
     });
@@ -158,11 +158,11 @@ interface LayerProperties {
 // Config
 const layerPropertiesMap: Record<Layer, LayerProperties> = {
   [Layer.FRONT]: {
-    delay: 1000,
+    delay: 2100,
     scale: () => 6 + Math.random() * 0.4,
     depth: -1,
     y: () => globalConsts.gameHeight - 64,
-    speed: 3,
+    speed: 2,
     opacity: 1,
     // Data
     lastHouse: "",
