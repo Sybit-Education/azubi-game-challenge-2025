@@ -96,7 +96,6 @@ export class Play extends Scene {
 
   // Spawn house
   private spawnHouse(layer: Layer): void {
-    console.log("new")
     // Variables
     const layerDetails: LayerProperties = getLayerDetails(layer);
     let houseID: string;
@@ -113,8 +112,7 @@ export class Play extends Scene {
     house.setDepth(layerDetails.depth);
     house.setScale(layerDetails.scale());
     house.setAlpha(layerDetails.opacity);
-
-    console.log(layerDetails);
+    
     layerDetails.houses.push(house);
     layerDetails.lastHouse = houseID;
   }
