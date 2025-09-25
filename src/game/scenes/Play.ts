@@ -1,7 +1,6 @@
 import {Scene} from 'phaser';
-import { globalConsts } from "../main";
-import { Player } from '../custom_classes/Player';
-import { Segment } from '../custom_classes/Section';
+import {Player} from '../custom_classes/Player';
+import {Segment} from '../custom_classes/Section';
 import {globalConsts} from "../main";
 
 export class Play extends Scene {
@@ -17,7 +16,7 @@ export class Play extends Scene {
   gameH: number = globalConsts.gameHeight;
   santaX: number = globalConsts.gameWidth;
   santaY: number = globalConsts.gameHeight;
-  
+
   // hausi ebenen
   backHouses: Phaser.GameObjects.Image[] = [];
   midHouses: Phaser.GameObjects.Image[] = [];
@@ -46,9 +45,9 @@ export class Play extends Scene {
     this.segment = new Segment('gameBackground', 1, [], this);
     this.segment = this.segment.generateTestSegment(0);
     this.obstacles = this.physics.add.group(this.segment.obstacles[0].sprite);
-    
+
     // Player
-    this.player = new Player(64, this.gameH-64, 'playerIdle', 'playerDucking', "W", "S", "A", "D", this);
+    this.player = new Player(64, this.gameH - 64, 'playerIdle', 'playerDucking', "W", "S", "A", "D", this);
 
     // Collision detection
     this.colisionPlayerAndGround = this.physics.add.collider(this.player.sprite, this.ground);
