@@ -6,13 +6,19 @@ import {AUTO, Game} from 'phaser';
 import {Preloader} from './loader/Preloader.ts';
 import {Options} from './scenes/Options.ts';
 import {Credits} from './scenes/Credits.ts';
+import { TestScene } from './scenes/TestScene.ts';
 
 // Config
 const gameW: number = 1024;
 const gameH: number = 768;
 const santaXPosition: number = 200;
 const santaYPosition: number = 680;
-const background = 0x01386A;
+const background: number = 0x01386A;
+const getRandomInt: Function = (min: number, max: number): number => {//return a random number between min(inclusive) and max(inclusive)
+  const minCeiled = Math.ceil(min);
+  const maxFloored = Math.floor(max);
+  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
+}
 
 // Global variables
 export const globalConsts = {
@@ -21,6 +27,7 @@ export const globalConsts = {
   santaX: santaXPosition,
   santaY: santaYPosition,
   backgroundColor: background,
+  getRandomInt: getRandomInt
 };
 
 // Config for Game
@@ -46,7 +53,8 @@ const config: Phaser.Types.Core.GameConfig = {
     ThatGame,
     GameOver,
     Credits,
-    Options
+    Options,
+    TestScene
   ]
 };
 
