@@ -26,7 +26,6 @@ export class MainMenu extends Scene {
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
-    // Adds buttons
     this.buttonPlay = new Button(this.gameW * 0.5, this.gameH * 0.25, 7,'button_play', this, () => this.scene.start('play'));
     this.buttonOptions = new Button(this.gameW * 0.5, this.gameH * 0.5, 7,'button_options', this, () => this.scene.start('options'));
     this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.75, 7,'button_credits', this, () =>this.scene.start('credits'));
