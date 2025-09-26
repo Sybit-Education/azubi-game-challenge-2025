@@ -61,13 +61,6 @@ export class Play extends Scene {
     this.ground.setImmovable(true);
 
     // Segment
-    this.segment = new Segment('gameBackground', 1, [], this);
-    this.segment = this.segment.generateTestSegment(0);
-    this.obstacles = this.physics.add.group(this.segment.obstacles[0].sprite);
-    this.camera = this.cameras.main;
-    this.camera.setBackgroundColor(0x00ff00);
-
-    this.background = this.add.image(this.gameW / 2, this.gameH / 2, 'gameBackground');
 
     // Sections
     this.section = new Section(this);

@@ -12,10 +12,11 @@ export class Preloader extends Scene {
   preload(): void {
     // General, which we are trying to replace in the future
     this.load.setPath('assets');
-    this.load.image("oldPlayerIdle", "Player_Test_Sprite.png");
-    this.load.image("oldPlayerDucking", "Player_Test_Sprite_Ducking.png");
-    this.load.image("oldObstacle", "Obstacle_Test_Sprite.png");
-    this.load.image("oldGround", "Ground_Test_Sprite.png");
+    this.load.image("playerIdle", "Player_Test_Sprite.png");
+    this.load.image("playerDucking", "Player_Test_Sprite_Ducking.png");
+    this.load.image("obstacle", "Obstacle_Test_Sprite.png");
+    this.load.image("ground", "Ground_Test_Sprite.png");
+    this.load.image("testBackground","Background_Test_Sprite.png");
 
     // Sprites
     this.load.setPath('sprites');
