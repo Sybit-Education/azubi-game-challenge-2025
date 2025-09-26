@@ -1,7 +1,6 @@
 import {Scene} from "phaser";
 import {Segment} from "./Segment";
 import {globalConsts} from '../main.ts';
-
 // Config
 const speed: number = -100;
 
@@ -13,7 +12,7 @@ export class Section {
   gameWidth: number = globalConsts.gameWidth;
   width: number;
   height: number;
-
+  
   // Construct
   constructor(scene: Scene, imageID: string) {
     this.curScene = scene;

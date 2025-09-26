@@ -4,6 +4,8 @@ import {Section} from "../custom_classes/Section";
 import {globalConsts} from "../main";
 
 export class TestScene extends Scene {
+  
+  camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   player: Player;
   section: Section;

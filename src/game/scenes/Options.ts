@@ -1,11 +1,9 @@
 import {GameObjects, Scene} from "phaser";
-import {globalConsts} from "../main";
+import {displayPlayer, globalConsts} from "../main";
 import {Button} from "../custom_classes/Button";
-import * as string_decoder from 'node:string_decoder';
 
 export class Options extends Scene {
   // Types
-  placeholderText: GameObjects.Text;
   background: GameObjects.Image;
   gameW: number = globalConsts.gameWidth;
   gameH: number = globalConsts.gameHeight;
@@ -13,7 +11,6 @@ export class Options extends Scene {
   buttonSound: Button;
   buttonMusic: Button;
   player_image: Phaser.GameObjects.Image;
-  sound_image: Phaser.GameObjects.Image;
 
   // Constructor
   constructor() {
@@ -23,11 +20,8 @@ export class Options extends Scene {
   // TODO: Add actual options
   // Create method
   create(): void {
-
-    // Player Icon
-    this.player_image = this.add.image(globalConsts.santaX, globalConsts.santaY, 'playerId');
-    this.player_image.setScale(4);
-
+    // Player
+    displayPlayer(this);
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
@@ -37,7 +31,6 @@ export class Options extends Scene {
     this.buttonBack = new Button(this.gameW * 0.5, this.gameH * 0.25, 4, 'button_back', this, () => {
       this.scene.start('mainMenu')
     });
-
 
     // Sound: Toggle
     this.buttonSound = new Button(380, 300, 4, localStorage.getItem("isActive.sound") == "true" ?
