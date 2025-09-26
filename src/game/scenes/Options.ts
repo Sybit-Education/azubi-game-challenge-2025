@@ -40,7 +40,7 @@ export class Options extends Scene {
 
 
     // Sound: Toggle
-    this.buttonSound = new Button(400, 300, 4, localStorage.getItem("isActive.sound") == "true" ?
+    this.buttonSound = new Button(380, 300, 4, localStorage.getItem("isActive.sound") == "true" ?
       'button_soundActive' : 'button_soundMute', this, () => {
 
       if (localStorage.getItem("isActive.sound") == "true") {
@@ -57,7 +57,7 @@ export class Options extends Scene {
 
 
     // Musik: Toggle
-    this.buttonMusic = new Button(400, 400, 4, localStorage.getItem("isActive.music") == "true" ?
+    this.buttonMusic = new Button(380, 400, 4, localStorage.getItem("isActive.music") == "true" ?
       'button_soundActive' : 'button_soundMute', this, () => {
 
       if (localStorage.getItem("isActive.music") == "true") {
