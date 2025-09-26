@@ -51,9 +51,5 @@ export class Section {
       this.segments.push(generateSegment(i,true,5,curScene));
     }
   }
-  isCloseToEnd(curSegment: Segment):boolean {
-    if(curSegment.index >= 8)return true;
-    else return false;
-  }
 
 }

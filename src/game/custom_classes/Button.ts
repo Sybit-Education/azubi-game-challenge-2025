@@ -35,13 +35,8 @@ export class Button {
       this.button.clearTint(); //stop highlighting the buttons if the mouse doesn't hover above it
     });
 
-    // Calls the function that is provided
+    // Calls function that is provided
     this.button.on('pointerdown', onButtonPressed);
-  }
-
-  setImage(newImage: string) {
-    this.image = newImage;
-    this.button.setTexture(newImage)
   }
 
 }

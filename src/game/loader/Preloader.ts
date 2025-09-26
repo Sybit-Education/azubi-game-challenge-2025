@@ -16,6 +16,7 @@ export class Preloader extends Scene {
     this.load.image("playerDucking", "Player_Test_Sprite_Ducking.png");
     this.load.image("obstacle", "Obstacle_Test_Sprite.png");
     this.load.image("ground", "Ground_Test_Sprite.png");
+    this.load.image("testBackground","Background_Test_Sprite.png");
 
     // Sprites
     this.load.setPath('sprites');
