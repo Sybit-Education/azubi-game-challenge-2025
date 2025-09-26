@@ -4,6 +4,17 @@ import {Section} from '../custom_classes/Section';
 import {globalConsts} from "../main";
 import Image = Phaser.GameObjects.Image;
 
+/*
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Diese Datei kann und sollte nicht benutzt werden!
+> Julian wird diese bald mit neuen code überschreiben
+> Und es funktioniert wahrscheinlich zu 95% eh nicht, lol
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ */
+
+
 export class Play extends Scene {
   background: Phaser.GameObjects.TileSprite;
   player: Player;
@@ -123,7 +134,7 @@ export class Play extends Scene {
     house.setDepth(layerDetails.depth);
     house.setScale(layerDetails.scale());
     house.setAlpha(layerDetails.opacity);
-    
+
     layerDetails.houses.push(house);
     layerDetails.lastHouse = houseID;
   }

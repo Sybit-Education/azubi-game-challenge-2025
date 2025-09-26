@@ -1,5 +1,5 @@
 import {Scene} from 'phaser';
-import {globalConsts} from '../main';
+import {displayPlayer, globalConsts} from '../main';
 import {Button} from '../custom_classes/Button';
 
 export class MainMenu extends Scene {
@@ -11,7 +11,6 @@ export class MainMenu extends Scene {
   buttonOptions: Button;
   buttonCredits: Button;
   buttonSteuerung: Button;
-  player_image: Phaser.GameObjects.Image;
   buttonClose: Button;
 
   // Constructor
@@ -22,17 +21,16 @@ export class MainMenu extends Scene {
   // Create methode
   create(): void {
     // Player Icon
-    this.player_image = this.add.image(globalConsts.santaX, globalConsts.santaY, 'playerId');
-    this.player_image.setScale(4);
+    displayPlayer(this);
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
     // Adds buttons
-    this.buttonPlay = new Button(this.gameW * 0.5, this.gameH * 0.37, 7, 'button_play', this, () => this.scene.start('play'));
-    this.buttonOptions = new Button(this.gameW * 0.5, this.gameH * 0.5, 7, 'button_options', this, () => this.scene.start('options'));
-    this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.75, 7, 'button_credits', this, () => this.scene.start('credits'));
-    this.buttonSteuerung = new Button(this.gameW * 0.59, this.gameH * 0.67, 0.2, 'button_steuerung', this, () => this.scene.start('steuerung'))
-    if (window.opener != null) this.buttonClose = new Button(this.gameW * 0.5, this.gameH * 0.85, 6, 'button_credits', this, () => window.close()); // This is a website close button
+    this.buttonPlay = new Button(this.gameW * 0.53, this.gameH * 0.37, 7, 'button_play', this, () => this.scene.start('play'));
+    this.buttonOptions = new Button(this.gameW * 0.53, this.gameH * 0.5, 7, 'button_options', this, () => this.scene.start('options'));
+    this.buttonCredits = new Button(this.gameW * 0.53, this.gameH * 0.75, 7, 'button_credits', this, () => this.scene.start('credits'));
+    this.buttonSteuerung = new Button(this.gameW * 0.53, this.gameH * 0.63, 7, 'button_steuerung', this, () => this.scene.start('steuerung'))
+    if (window.opener != null) this.buttonClose = new Button(this.gameW * 0.53, this.gameH * 0.85, 5.5, 'button_close', this, () => window.close()); // This is a website close button
   }
 }

@@ -12,10 +12,10 @@ export class Preloader extends Scene {
   preload(): void {
     // General, which we are trying to replace in the future
     this.load.setPath('assets');
-    this.load.image("playerIdle", "Player_Test_Sprite.png");
-    this.load.image("playerDucking", "Player_Test_Sprite_Ducking.png");
-    this.load.image("obstacle", "Obstacle_Test_Sprite.png");
-    this.load.image("ground", "Ground_Test_Sprite.png");
+    this.load.image("oldPlayerIdle", "Player_Test_Sprite.png");
+    this.load.image("oldPlayerDucking", "Player_Test_Sprite_Ducking.png");
+    this.load.image("oldObstacle", "Obstacle_Test_Sprite.png");
+    this.load.image("oldGround", "Ground_Test_Sprite.png");
 
     // Sprites
     this.load.setPath('sprites');
@@ -23,21 +23,23 @@ export class Preloader extends Scene {
     this.load.image('gift1', 'gift1.png');
     this.load.image("gift2", "gift2.png");
     this.load.image("gift3", "gift3.png");
-    // NOTE: I don't want to overwrite the player right now
-    this.load.image("playerId", "player2.png");
-    //this.load.image("playerDucking", "playerSneaking2.png");
+    this.load.image("gift4", "gift4.png");
+    this.load.image("player", "player.png");
+    this.load.image("player2", "player2.png");
+    this.load.image("playerSneaking", "playerSneaking.png");
+    this.load.image("playerSneaking2", "playerSneaking2.png");
     this.load.image("trash", "trash.png");
 
     // Background
     this.load.setPath('background');
-    this.load.image('gameBackground', 'image.png');
-    this.load.image('gameBackground2', 'image2.png');
     this.load.image('church', 'church.png');
     this.load.image('cloud1', 'cloud1.png');
     this.load.image("house1", "house1.png");
     this.load.image("house2", "house2.png");
     this.load.image("house3", "house3.png");
     this.load.image("house4", "house4.png");
+    this.load.image('gameBackground', 'image1.png');
+    this.load.image('gameBackground2', 'image2.png');
   }
 
   // Loading done: start main menu scene

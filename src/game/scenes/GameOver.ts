@@ -3,7 +3,6 @@ import {globalConsts} from '../main.ts';
 
 export class GameOver extends Scene {
   // Types
-  camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   gameover_image: Phaser.GameObjects.Image;
   restart_text: Phaser.GameObjects.Text;
