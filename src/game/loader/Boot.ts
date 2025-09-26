@@ -10,7 +10,7 @@ export class Boot extends Scene {
   // Load global assets
   preload(): void {
     // General
-    this.load.image("logo", "assets/logo.png");
+
 
     // Hud
     this.load.setPath('hud');
@@ -31,6 +31,7 @@ export class Boot extends Scene {
     this.load.image('button_highscore', 'highscore.png');
     this.load.image('button_deinScore', 'deinScore.png');
     this.load.image('button_gifts', 'fifts.png');
+    this.load.image('logo', 'logo.png');
   }
 
   // Loading done: load theme elements

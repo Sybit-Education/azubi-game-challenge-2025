@@ -13,6 +13,7 @@ export class MainMenu extends Scene {
   buttonSteuerung: Button;
   player_image: Phaser.GameObjects.Image;
   buttonClose: Button;
+  logo_image: Phaser.GameObjects.Image;
 
   // Constructor
   constructor() {
@@ -24,6 +25,8 @@ export class MainMenu extends Scene {
     // Player Icon
     this.player_image = this.add.image(globalConsts.santaX, globalConsts.santaY, 'playerId');
     this.player_image.setScale(4);
+
+    this.logo_image = this.add.image(  300,90,'logo' );
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
