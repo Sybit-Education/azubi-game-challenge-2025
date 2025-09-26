@@ -6,6 +6,7 @@ import {AUTO, Game} from 'phaser';
 import {Preloader} from './loader/Preloader.ts';
 import {Options} from './scenes/Options.ts';
 import {Credits} from './scenes/Credits.ts';
+import {Steuerung} from './scenes/Steuerung.ts';
 
 // Config
 const gameW: number = 1024;
@@ -47,7 +48,8 @@ const config: Phaser.Types.Core.GameConfig = {
     ThatGame,
     GameOver,
     Credits,
-    Options
+    Options,
+    Steuerung,
   ]
 };
 
