@@ -1,143 +1,207 @@
 import {Scene} from 'phaser';
+import {Player} from '../custom_classes/Player';
+import {Section} from '../custom_classes/Section';
 import {globalConsts} from "../main";
+import Image = Phaser.GameObjects.Image;
 
 export class Play extends Scene {
-  camera: Phaser.Cameras.Scene2D.Camera;
-  background: Phaser.GameObjects.Image;
-  player: Phaser.Physics.Arcade.Sprite;
+  background: Phaser.GameObjects.TileSprite;
+  player: Player;
+  section: Section;
+  obstacles: Phaser.Physics.Arcade.Group;
   ground: Phaser.Physics.Arcade.Sprite;
-  obstacle: Phaser.Physics.Arcade.Sprite;
+  collisionPlayerAndGround: Phaser.Physics.Arcade.Collider;
+  collisionPlayerAndObstacle: Phaser.Physics.Arcade.Collider;
+  groundObjects: Phaser.Physics.Arcade.Group;
   colisionPlayerAndGround: Phaser.Physics.Arcade.Collider;
   colisionPlayerAndObstacle: Phaser.Physics.Arcade.Collider;
   gameW: number = globalConsts.gameWidth;
   gameH: number = globalConsts.gameHeight;
-  santaX: number = globalConsts.gameWidth;
-  santaY: number = globalConsts.gameHeight;
-  isDucked: boolean = false;
-  keyUp: Phaser.Input.Keyboard.Key | null | undefined;
-  keyDown: Phaser.Input.Keyboard.Key | null | undefined;
-  keyLeft: Phaser.Input.Keyboard.Key | null | undefined;
-  keyRight: Phaser.Input.Keyboard.Key | null | undefined;
+  santaX: number = globalConsts.santaX;
+  santaY: number = globalConsts.santaY;
 
-  // hausi ebenen
-  backHouses: Phaser.GameObjects.Image[] = [];
-  midHouses: Phaser.GameObjects.Image[] = [];
-  frontHouses: Phaser.GameObjects.Image[] = [];
+  // Config
+  houseKeys: string[] = ["house1", "house2", "house3", "house4", "church"];
 
-  houseKeys: string[] = ["house1", "house2", "house3"];
-
+  // Constructor
   constructor() {
     super('play');
   }
 
   create(): void {
+    // Game over function
     const gameOver = () => {
       this.scene.start("gameOver");
     };
 
+    this.background = this.add.tileSprite(
+      0,
+      0,
+      this.gameW,
+      this.gameH,
+      'gameBackground2' // Stelle sicher, dass dieses Bild geladen wurde!
+    ).setOrigin(0, 0);
+    this.background.setScale(4.5);
+    this.background.setAlpha(1);
+    this.background.setDepth(-4);
+
+    // Ground
+    this.ground = this.physics.add.sprite(this.gameW / 2, this.gameH - 32, "ground");
+    this.ground.setImmovable(true);
+
+    // Segment
+    this.segment = new Segment('gameBackground', 1, [], this);
+    this.segment = this.segment.generateTestSegment(0);
+    this.obstacles = this.physics.add.group(this.segment.obstacles[0].sprite);
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0x00ff00);
 
     this.background = this.add.image(this.gameW / 2, this.gameH / 2, 'gameBackground');
 
-    this.ground = this.physics.add.sprite(this.gameW / 2, this.gameH - 32, "ground");
-    this.ground.setImmovable(true);
+    // Sections
+    this.section = new Section(this);
 
-    this.obstacle = this.physics.add.sprite(this.gameW / 2, this.gameH - 80, "obstacle");
-    this.obstacle.setImmovable(true);
+    // Player
+    this.player = new Player(64, this.gameH - 64, 'playerIdle', 'playerDucking', "W", "S", "A", "D", this);
 
-    this.player = this.physics.add.sprite(64, 64, "playerIdle");
-    this.player.body?.setSize(32, 64, false);
-    this.player.setOrigin(0.5, 1);
-    this.player.setCollideWorldBounds(true);
-    this.player.setGravityY(500);
-    this.player.setDepth(1);
-
-    this.colisionPlayerAndGround = this.physics.add.collider(this.player, this.ground);
-    this.colisionPlayerAndObstacle = this.physics.add.collider(this.player, this.obstacle, () => {
+    // Collision detection
+    this.groundObjects = this.physics.add.group()
+    this.colisionPlayerAndGround = this.physics.add.collider(this.player.sprite, this.groundObjects);
+    this.colisionPlayerAndObstacle = this.physics.add.collider(this.player.sprite, this.obstacles, () => {
     }, gameOver);
 
-    this.keyUp = this.input.keyboard?.addKey("W");
-    this.keyDown = this.input.keyboard?.addKey("S");
-    this.keyLeft = this.input.keyboard?.addKey("A");
-    this.keyRight = this.input.keyboard?.addKey("D");
-
-    //  Timer für jede Ebene
-    this.time.addEvent({delay: 4000, callback: () => this.spawnHouse("back"), callbackScope: this, loop: true});
-    this.time.addEvent({delay: 3000, callback: () => this.spawnHouse("mid"), callbackScope: this, loop: true});
-    this.time.addEvent({delay: 2000, callback: () => this.spawnHouse("front"), callbackScope: this, loop: true});
+    // Timer for each layer
+    this.time.addEvent({
+      delay: getLayerDetails(Layer.FRONT).delay,
+      callback: () => this.spawnHouse(Layer.FRONT),
+      callbackScope: this,
+      loop: true
+    });
+    this.time.addEvent({
+      delay: getLayerDetails(Layer.MIDDLE).delay,
+      callback: () => this.spawnHouse(Layer.MIDDLE),
+      callbackScope: this,
+      loop: true
+    });
+    this.time.addEvent({
+      delay: getLayerDetails(Layer.BACK).delay,
+      callback: () => this.spawnHouse(Layer.BACK),
+      callbackScope: this,
+      loop: true
+    });
   }
 
-  update() {
-    if (!this.keyUp || !this.keyDown || !this.keyLeft || !this.keyRight) return;
+  // Updates every frame
+  update(): void {
+    // player movement
+    this.player.movementUpdate();
 
-    if (this.keyDown.isDown && this.player.body?.touching.down) {
-      this.player.body?.setSize(32, 32, false);
-      this.player.setTexture("playerDucking");
-      this.player.setVelocityX(0);
-      this.isDucked = true;
-    } else if (this.keyDown.isUp && this.isDucked) {
-      this.player.body?.setSize(32, 64, false);
-      this.player.setTexture("playerIdle");
-      this.isDucked = false;
-    } else if (this.keyRight.isDown) {
-      this.player.setVelocityX(160);
-    } else if (this.keyLeft.isDown) {
-      this.player.setVelocityX(-160);
-    } else {
-      this.player.setVelocityX(0);
-    }
-    if (this.keyUp.isDown && this.player.body?.touching.down && !this.isDucked) {
-      this.player.setVelocityY(-330);
-    }
+    //scrolling background
+    this.background.tilePositionX += 0.1;
 
-    // Hausi bewegen
-    this.moveHouses(this.backHouses, 0.5);
-    this.moveHouses(this.midHouses, 1.2);
-    this.moveHouses(this.frontHouses, 6);
+    // Move housis
+    this.moveHouses(getLayerDetails(Layer.FRONT).houses, getLayerDetails(Layer.FRONT).speed);
+    this.moveHouses(getLayerDetails(Layer.MIDDLE).houses, getLayerDetails(Layer.MIDDLE).speed);
+    this.moveHouses(getLayerDetails(Layer.BACK).houses, getLayerDetails(Layer.BACK).speed);
   }
 
-  private spawnHouse(layer: "back" | "mid" | "front") {
-    const key = Phaser.Utils.Array.GetRandom(this.houseKeys);
+  // Spawn house
+  private spawnHouse(layer: Layer): void {
+    // Variables
+    const layerDetails: LayerProperties = getLayerDetails(layer);
+    let houseID: string;
 
-    let y = this.gameH - 32;
-    let scale = 1;
-    let depth = 0;
-
-    if (layer === "back") {
-      scale = 0.4 + Math.random() * 0.2;
-      y = this.gameH - 80;
-      depth = -2;
-    } else if (layer === "mid") {
-      scale = 0.6 + Math.random() * 0.3;
-      y = this.gameH - 60;
-      depth = -1;
-    } else if (layer === "front") {
-      scale = 6 + Math.random() * 0.4;
-      y = this.gameH - 64;
-      depth = 0;
+    // Get random house
+    while (true) {
+      houseID = Phaser.Utils.Array.GetRandom(this.houseKeys)
+      if (houseID != layerDetails.lastHouse) break;
     }
 
-    const house = this.add.image(this.gameW + 100, y, key);
+    // Setter
+    const house: Image = this.add.image(this.gameW + 100, layerDetails.y(), houseID);
     house.setOrigin(0.5, 1);
-    house.setScale(scale);
-    house.setDepth(depth);
-
-    if (layer === "back") this.backHouses.push(house);
-    if (layer === "mid") this.midHouses.push(house);
-    if (layer === "front") this.frontHouses.push(house);
+    house.setDepth(layerDetails.depth);
+    house.setScale(layerDetails.scale());
+    house.setAlpha(layerDetails.opacity);
+    
+    layerDetails.houses.push(house);
+    layerDetails.lastHouse = houseID;
   }
 
-  private moveHouses(houses: Phaser.GameObjects.Image[], speed: number) {
+  // Moves every house on specified layer
+  private moveHouses(houses: Phaser.GameObjects.Image[], speed: number): void {
     houses.forEach(house => {
       house.x -= speed;
     });
 
     for (let i = houses.length - 3; i >= 0; i--) {
-      if (houses[i].x < -houses[i].width) {
+      if (houses[i].x < -houses[i].width - (houses[i].width * 3)) {
         houses[i].destroy();
         houses.splice(i, 1);
       }
     }
   }
+}
+
+// Layers enum
+enum Layer {
+  FRONT = "FRONT",
+  MIDDLE = "MIDDLE",
+  BACK = "BACK"
+}
+
+// Layer Properties
+interface LayerProperties {
+  // config
+  delay: number;
+  scale: () => number;
+  depth: number;
+  y: () => number;
+  speed: number;
+  opacity: number,
+  // data
+  lastHouse: string;
+  houses: Phaser.GameObjects.Image[];
+}
+
+// Config
+const layerPropertiesMap: Record<Layer, LayerProperties> = {
+  [Layer.FRONT]: {
+    delay: 2100,
+    scale: () => 6 + Math.random() * 0.4,
+    depth: -1,
+    y: () => globalConsts.gameHeight - 64,
+    speed: 2,
+    opacity: 1,
+    // Data
+    lastHouse: "",
+    houses: []
+  },
+  [Layer.MIDDLE]: {
+    delay: 2500,
+    scale: () => 3 + Math.random() * 0.3,
+    depth: -2,
+    y: () => globalConsts.gameHeight - 60,
+    speed: 1.2,
+    opacity: 1,
+    // Data
+    lastHouse: "",
+    houses: []
+  },
+  [Layer.BACK]: {
+    delay: 4000,
+    scale: () => 2 + Math.random() * 0.2,
+    depth: -3,
+    y: () => globalConsts.gameHeight - 10,
+    speed: 0.5,
+    opacity: 1,
+    // Data
+    lastHouse: "",
+    houses: []
+  }
+};
+
+// Helper methode
+function getLayerDetails(layer: Layer): LayerProperties {
+  return layerPropertiesMap[layer];
 }

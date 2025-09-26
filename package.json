@@ -9,7 +9,7 @@
   "author": "Sybit GmbH",
   "homepage": "https://github.com/Sybit-Education/azubi-game-challenge-2025#readme",
   "scripts": {
-    "dev": "node log.js dev & vite --config vite/config.dev.mjs",
+    "dev": "node log.js dev & vite --config vite/config.dev.mjs --host",
     "build": "node log.js build & vite build --config vite/config.prod.mjs",
     "dev-nolog": "vite --config vite/config.dev.mjs",
     "build-nolog": "vite build --config vite/config.prod.mjs",

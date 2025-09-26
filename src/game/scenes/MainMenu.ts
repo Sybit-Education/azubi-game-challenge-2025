@@ -12,6 +12,7 @@ export class MainMenu extends Scene {
   buttonCredits: Button;
   buttonSteuerung: Button;
   player_image: Phaser.GameObjects.Image;
+  buttonClose: Button;
 
   // Constructor
   constructor() {
@@ -28,10 +29,10 @@ export class MainMenu extends Scene {
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
     // Adds buttons
-    this.buttonPlay = new Button(this.gameW * 0.5, this.gameH * 0.37, 7,'button_play', this, () => this.scene.start('play'));
-    this.buttonOptions = new Button(this.gameW * 0.5, this.gameH * 0.5, 7,'button_options', this, () => this.scene.start('options'));
-    this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.75, 7,'button_credits', this, () =>this.scene.start('credits'));
-    this.buttonSteuerung = new Button(this.gameW * 0.59, this.gameH * 0.67, 0.2,'button_steuerung', this, () =>this.scene.start('Steuerung'))
-    if (window.opener != null) this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.85, 6,'button_credits', this, () => window.close()); // This is a website close button
+    this.buttonPlay = new Button(this.gameW * 0.5, this.gameH * 0.37, 7, 'button_play', this, () => this.scene.start('play'));
+    this.buttonOptions = new Button(this.gameW * 0.5, this.gameH * 0.5, 7, 'button_options', this, () => this.scene.start('options'));
+    this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.75, 7, 'button_credits', this, () => this.scene.start('credits'));
+    this.buttonSteuerung = new Button(this.gameW * 0.59, this.gameH * 0.67, 0.2, 'button_steuerung', this, () => this.scene.start('Steuerung'))
+    if (window.opener != null) this.buttonClose = new Button(this.gameW * 0.5, this.gameH * 0.85, 6, 'button_credits', this, () => window.close()); // This is a website close button
   }
 }

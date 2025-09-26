@@ -12,7 +12,6 @@ export class Preloader extends Scene {
   preload(): void {
     // General, which we are trying to replace in the future
     this.load.setPath('assets');
-    this.load.image('gameBackground', 'Background_Test_Sprite.png');
     this.load.image("playerIdle", "Player_Test_Sprite.png");
     this.load.image("playerDucking", "Player_Test_Sprite_Ducking.png");
     this.load.image("obstacle", "Obstacle_Test_Sprite.png");
@@ -31,6 +30,8 @@ export class Preloader extends Scene {
 
     // Background
     this.load.setPath('background');
+    this.load.image('gameBackground', 'image.png');
+    this.load.image('gameBackground2', 'image2.png');
     this.load.image('church', 'church.png');
     this.load.image('cloud1', 'cloud1.png');
     this.load.image("house1", "house1.png");
