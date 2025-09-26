@@ -28,6 +28,7 @@ export const globalConsts = {
   santaY: santaYPosition,
   backgroundColor: background,
   getRandomInt: getRandomInt
+
 };
 
 // Config for Game

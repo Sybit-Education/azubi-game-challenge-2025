@@ -21,10 +21,11 @@ export class Boot extends Scene {
     this.load.image('button_play', 'play.png');
     this.load.image('button_options', 'options.png');
     this.load.image('button_credits', 'credits.png');
+    this.load.image('button_music', 'music.png');
     this.load.image('button_back', 'back.png');
-    this.load.image('sound', 'sound.png');
-    this.load.image('sound_active', 'soundActive.png');
-    this.load.image('sound_mute', 'soundMute.png');
+    this.load.image('button_sound', 'sound.png');
+    this.load.image('button_soundActive', 'soundActive.png');
+    this.load.image('button_soundMute', 'soundMute.png');
   }
 
   // Loading done: load theme elements
