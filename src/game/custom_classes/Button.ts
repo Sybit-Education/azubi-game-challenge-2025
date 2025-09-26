@@ -2,11 +2,10 @@ import {GameObjects, Scene} from "phaser";
 
 //import via (import {Button} from "../custom_classes/Button")
 export class Button {
-  x: number;
-  y: number;
-  image: string;
-  targetScene: string;
-  scene: Scene;
+  readonly x: number;
+  readonly y: number;
+  readonly image: string;
+  readonly scene: Scene;
   button: GameObjects.Image;
 
   // Constructor

@@ -1,7 +1,7 @@
-import { Scene } from "phaser";
-import { Player } from "../custom_classes/Player";
-import { Section } from "../custom_classes/Section";
-import { globalConsts } from "../main";
+import {Scene} from "phaser";
+import {Player} from "../custom_classes/Player";
+import {Section} from "../custom_classes/Section";
+import {globalConsts} from "../main";
 
 export class TestScene extends Scene {
   background: Phaser.GameObjects.Image;

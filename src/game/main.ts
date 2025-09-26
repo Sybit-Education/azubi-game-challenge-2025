@@ -6,7 +6,7 @@ import {AUTO, Game} from 'phaser';
 import {Preloader} from './loader/Preloader.ts';
 import {Options} from './scenes/Options.ts';
 import {Credits} from './scenes/Credits.ts';
-import { TestScene } from './scenes/TestScene.ts';
+import {TestScene} from './scenes/TestScene.ts';
 
 // Config
 const gameW: number = 1024;
