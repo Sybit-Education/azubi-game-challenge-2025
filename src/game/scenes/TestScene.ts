@@ -29,7 +29,7 @@ export class TestScene extends Scene {
     this.cameras.main.setBackgroundColor(0x00ff00);
 
     // Sections
-    this.section = new Section(this);
+    this.section = new Section(this, "testBackground");
 
     // Player
     this.player = new Player(64, this.gameH - 64, 'playerIdle', 'playerDucking', "W", "S", "A", "D", this);

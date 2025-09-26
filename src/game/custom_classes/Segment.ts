@@ -31,10 +31,9 @@ export class Segment {
     // Modifier
     this.segment.setScale(scale); // set segment scale
     this.segment.setDepth(-4); // Sets Depth to -4
+
     // Get sprite height & width
     this.width = this.segment.width;
     this.height = this.segment.height;
-
-
   }
 }
