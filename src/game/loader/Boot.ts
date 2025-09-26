@@ -30,7 +30,7 @@ export class Boot extends Scene {
     this.load.image('button_knopfe', 'knopfe.png');
     this.load.image('button_highscore', 'highscore.png');
     this.load.image('button_deinScore', 'deinScore.png');
-    this.load.image('button_gifts', 'fifts.png');
+    this.load.image('button_gifts', 'gifts.png');
   }
 
   // Loading done: load theme elements
