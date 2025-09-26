@@ -14,6 +14,6 @@ export class Obstacle {
     this.curScene = curScene;
 
     this.sprite = this.curScene.physics.add.sprite(this.x, this.y, this.image);
-    this.sprite.setSize(32, 32);
+    this.sprite.setBodySize(32, 32, true);
   }
 }
