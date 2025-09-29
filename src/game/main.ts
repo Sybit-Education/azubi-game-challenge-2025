@@ -14,9 +14,9 @@ const gameW: number = 1024;
 const gameH: number = 768;
 const santaXPosition: number = 200;
 const santaYPosition: number = 680;
-const background: number = 0x01386A;
+const background: number = 0xd3d1fa;
 const getRandomInt: Function = (min: number, max: number): number => {//return a random number between min(inclusive) and max(inclusive)
-  const minCeiled = Math.ceil(min);
+   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
 }
