@@ -8,16 +8,15 @@ import {Options} from './scenes/Options.ts';
 import {Credits} from './scenes/Credits.ts';
 import {Steuerung} from './scenes/Steuerung.ts';
 import {TestScene} from './scenes/TestScene.ts';
-import Image = Phaser.GameObjects.Image;
 
 // Config
 const gameW: number = 1024;
 const gameH: number = 768;
 const santaXPosition: number = 200;
 const santaYPosition: number = 680;
-const background: number = 0x01386A;
+const background: number = 0xd3d1fa;
 const getRandomInt: Function = (min: number, max: number): number => {//return a random number between min(inclusive) and max(inclusive)
-  const minCeiled = Math.ceil(min);
+   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
 }
@@ -59,16 +58,11 @@ const config: Phaser.Types.Core.GameConfig = {
     Options,
     Steuerung,
     TestScene
+
   ]
 };
 
 // Creates new Game instance
 export default function startGame() {
   return new Game({...config});
-}
-
-// Displays player
-export function displayPlayer(that: any): void {
-  const player: Image = that.add.image(globalConsts.santaX, globalConsts.santaY, 'player2');
-  player.setScale(4);
 }

@@ -1,4 +1,4 @@
-import {displayPlayer, globalConsts} from "../main";
+import {globalConsts} from "../main";
 import Text = Phaser.GameObjects.Text;
 
 // Config
@@ -10,6 +10,7 @@ const jsonPath: string = "./src/game/scenes/creditsConfig.json";
 
 export class Credits extends Phaser.Scene {
   // Types
+  player_image: Phaser.GameObjects.Image;
   creditTexts: Phaser.GameObjects.Text[];
 
   // Constructor
@@ -25,7 +26,8 @@ export class Credits extends Phaser.Scene {
   // Create
   create(): void {
     // Player Icon
-    displayPlayer(this);
+    this.player_image = this.add.image(globalConsts.santaX, globalConsts.santaY, 'playerId');
+    this.player_image.setScale(4);
 
     // Variables
     const gameW: number = globalConsts.gameWidth;

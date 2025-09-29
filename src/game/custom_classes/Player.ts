@@ -56,7 +56,7 @@ export class Player {
       this.sprite.setBodySize(32, 64, false);
       this.sprite.setTexture(this.idleSprite);
       this.isDucked = false;
-    } else if (this.keyRight.isDown) {//TODO: Delete later
+    } else if (this.keyRight.isDown){//TODO: Delete later
       this.sprite.setVelocityX(160);
     } else if (this.keyLeft.isDown) {//TODO: Delete later
       this.sprite.setVelocityX(-160);

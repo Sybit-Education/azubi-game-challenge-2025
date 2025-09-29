@@ -4,17 +4,6 @@ import {Section} from '../custom_classes/Section';
 import {globalConsts} from "../main";
 import Image = Phaser.GameObjects.Image;
 
-/*
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-Diese Datei kann und sollte nicht benutzt werden!
-> Julian wird diese bald mit neuen code überschreiben
-> Und es funktioniert wahrscheinlich zu 95% eh nicht, lol
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- */
-
-
 export class Play extends Scene {
   background: Phaser.GameObjects.TileSprite;
   player: Player;
@@ -61,6 +50,13 @@ export class Play extends Scene {
     this.ground.setImmovable(true);
 
     // Segment
+    this.segment = new Segment('gameBackground', 1, [], this);
+    this.segment = this.segment.generateTestSegment(0);
+    this.obstacles = this.physics.add.group(this.segment.obstacles[0].sprite);
+    this.camera = this.cameras.main;
+    this.camera.setBackgroundColor(0x00ff00);
+
+    this.background = this.add.image(this.gameW / 2, this.gameH / 2, 'gameBackground');
 
     // Sections
     this.section = new Section(this);
@@ -127,7 +123,7 @@ export class Play extends Scene {
     house.setDepth(layerDetails.depth);
     house.setScale(layerDetails.scale());
     house.setAlpha(layerDetails.opacity);
-
+    
     layerDetails.houses.push(house);
     layerDetails.lastHouse = houseID;
   }
