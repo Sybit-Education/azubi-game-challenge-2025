@@ -8,6 +8,7 @@ import {Options} from './scenes/Options.ts';
 import {Credits} from './scenes/Credits.ts';
 import {Steuerung} from './scenes/Steuerung.ts';
 import {TestScene} from './scenes/TestScene.ts';
+import Image = Phaser.GameObjects.Image;
 
 // Config
 const gameW: number = 1024;
@@ -65,4 +66,10 @@ const config: Phaser.Types.Core.GameConfig = {
 // Creates new Game instance
 export default function startGame() {
   return new Game({...config});
+}
+
+// Displays player
+export function displayPlayer(that: any): void {
+  const player: Image = that.add.image(globalConsts.santaX, globalConsts.santaY, 'player2');
+  player.setScale(4);
 }
