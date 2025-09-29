@@ -4,7 +4,7 @@ import {GameObjects, Scene} from "phaser";
 export class Button {
   readonly x: number;
   readonly y: number;
-  readonly image: string;
+  image: string;
   readonly scene: Scene;
   button: GameObjects.Image;
 
@@ -34,8 +34,14 @@ export class Button {
       this.button.clearTint(); //stop highlighting the buttons if the mouse doesn't hover above it
     });
 
+
+
     // Calls function that is provided
     this.button.on('pointerdown', onButtonPressed);
   }
 
-}
+  setImage(newImage: string) {
+    this.image = newImage;
+    this.button.setTexture(newImage)
+
+}}

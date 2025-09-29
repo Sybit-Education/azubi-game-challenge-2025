@@ -3,9 +3,14 @@ import {globalConsts} from '../main.ts';
 
 export class GameOver extends Scene {
   // Types
+  gameW: number = globalConsts.gameWidth;
+  gameH: number = globalConsts.gameHeight;
   background: Phaser.GameObjects.Image;
   gameover_image: Phaser.GameObjects.Image;
   restart_text: Phaser.GameObjects.Text;
+  highscore_image: Phaser.GameObjects.Image;
+  deinScore_image: Phaser.GameObjects.Image;
+  gifts_image: Phaser.GameObjects.Image;
 
   // Constructor
   constructor() {
@@ -19,9 +24,12 @@ export class GameOver extends Scene {
     this.gameover_image.setScale(0.2);
 
     // Info
-    this.restart_text = this.add.text(170, 500, 'Deine Punktzahl:');
-    this.restart_text = this.add.text(170, 530, 'Highscore:');
-    this.restart_text = this.add.text(170, 560, 'Geschenke:');
+    this.highscore_image = this.add.image(250, 500, 'button_highscore');
+    this.highscore_image.setScale(4.5);
+    this.deinScore_image = this.add.image(250, 550, 'button_deinScore');
+    this.deinScore_image.setScale(4.5);
+    this.gifts_image = this.add.image(215, 600, 'button_gifts');
+    this.gifts_image.setScale(4.4);
   }
 
   // Create methode
