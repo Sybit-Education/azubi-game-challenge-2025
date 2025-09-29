@@ -26,7 +26,8 @@ export class MainMenu extends Scene {
     this.player_image = this.add.image(globalConsts.santaX, globalConsts.santaY, 'playerId');
     this.player_image.setScale(4);
 
-    this.logo_image = this.add.image(  300,90,'logo' );
+    this.logo_image = this.add.image(  550,130,'logo' );
+    this.logo_image.setScale(9);
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);

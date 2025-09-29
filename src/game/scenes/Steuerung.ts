@@ -8,7 +8,7 @@ export class Steuerung extends Scene {
 
   // Constructor
   constructor() {
-    super("credits");
+    super("steuerung ");
   }
 
 }
