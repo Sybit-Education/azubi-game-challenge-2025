@@ -19,6 +19,9 @@ export class Play extends Scene {
   gameH: number = globalConsts.gameHeight;
   santaX: number = globalConsts.santaX;
   santaY: number = globalConsts.santaY;
+  name: string;
+  score: number;
+
 
   // Config
   houseKeys: string[] = ["house1", "house2", "house3", "house4", "church"];
@@ -31,7 +34,7 @@ export class Play extends Scene {
   create(): void {
     // Game over function
     const gameOver = () => {
-      this.scene.start("gameOver");
+      this.scene.start("gameOver", {score: name,});
     };
 
     this.background = this.add.tileSprite(
@@ -89,7 +92,10 @@ export class Play extends Scene {
       callbackScope: this,
       loop: true
     });
+
   }
+
+
 
   // Updates every frame
   update(): void {
@@ -123,7 +129,7 @@ export class Play extends Scene {
     house.setDepth(layerDetails.depth);
     house.setScale(layerDetails.scale());
     house.setAlpha(layerDetails.opacity);
-    
+
     layerDetails.houses.push(house);
     layerDetails.lastHouse = houseID;
   }

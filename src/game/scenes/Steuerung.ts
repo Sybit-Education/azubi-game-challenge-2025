@@ -25,7 +25,7 @@ export class Steuerung extends Phaser.Scene{
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
-    this.knoepfe_image = this.add.image(512, 400, 'button_knöpfe');
+    this.knoepfe_image = this.add.image(512, 400, 'button_knopfe');
     this.knoepfe_image.setScale(6);
 
     // Placeholder

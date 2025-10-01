@@ -1,5 +1,5 @@
 import {GameObjects, Scene} from "phaser";
-import {globalConsts} from "../main";
+import {displayPlayer, globalConsts} from "../main";
 import {Button} from "../custom_classes/Button";
 import * as string_decoder from 'node:string_decoder';
 
@@ -25,14 +25,11 @@ export class Options extends Scene {
   create(): void {
 
     // Player Icon
-    this.player_image = this.add.image(globalConsts.santaX, globalConsts.santaY, 'playerId');
-    this.player_image.setScale(4);
-
+    displayPlayer(this);
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
-    // TODO: This has to be finished
     // Placeholder
     this.buttonBack = new Button(this.gameW * 0.5, this.gameH * 0.25, 4, 'button_back', this, () => {
       this.scene.start('mainMenu')
