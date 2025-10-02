@@ -1,16 +1,14 @@
-import {globalConsts} from "../main";
+import {displayPlayer, globalConsts} from "../main";
 import Text = Phaser.GameObjects.Text;
 
 // Config
 const scrollSpeed: number = 150;
-const font: string = "Tiny5";
-const roleColor: string = '#ffffff';
-const nameColor: string = '#ffffff';
+const roleColor: string = '#000000';
+const nameColor: string = '#000000';
 const jsonPath: string = "./src/game/scenes/creditsConfig.json";
 
 export class Credits extends Phaser.Scene {
   // Types
-  player_image: Phaser.GameObjects.Image;
   creditTexts: Phaser.GameObjects.Text[];
 
   // Constructor
@@ -26,12 +24,12 @@ export class Credits extends Phaser.Scene {
   // Create
   create(): void {
     // Player Icon
-    this.player_image = this.add.image(globalConsts.santaX, globalConsts.santaY, 'playerId');
-    this.player_image.setScale(4);
+    displayPlayer(this);
 
     // Variables
     const gameW: number = globalConsts.gameWidth;
     const gameH: number = globalConsts.gameHeight;
+    const font: string = globalConsts.pixelFont;
     const data = this.cache.json.get('creditsData'); // Json
 
     // Background
@@ -41,14 +39,13 @@ export class Credits extends Phaser.Scene {
     this.creditTexts = [];
 
     // Config
-    const leftX: number = gameW * 0.45;
-    const rightX: number = gameW * 0.65;
+    const leftX: number = gameW * 0.44;
+    const rightX: number = gameW * 0.72;
     let startY: number = gameH;
 
-    // Title
-    const text: Text = this.add.text(gameW * 0.45, startY, "SyRun: Team", {
-      fontFamily: font,
-      fontSize: "75px",
+    // Title | NOTE: I hate you
+    const text: Text = this.add.text(gameW * 0.42, startY, "SyRun: Team", {
+      font: "40px " + font,
       color: roleColor,
       align: 'center'
     }).setOrigin(0, 0);
@@ -64,7 +61,7 @@ export class Credits extends Phaser.Scene {
 
       // Roles | left
       const roleText: Text = this.add.text(leftX, startY, this.capitalize(role), {
-        font: "30px " + font,
+        font: "20px " + font,
         color: roleColor,
         align: 'left'
       }).setOrigin(0, 0);
@@ -73,7 +70,7 @@ export class Credits extends Phaser.Scene {
       // Person | right
       for (let name of names) {
         const nameText: Text = this.add.text(rightX, startY, name, {
-          font: "30px " + font,
+          font: "20px " + font,
           color: nameColor,
           align: 'right'
         }).setOrigin(0, 0);
@@ -89,8 +86,8 @@ export class Credits extends Phaser.Scene {
     startY += 350;
 
     // "Thank you for playing" text
-    const footer: Text = this.add.text(gameW * 0.45, startY, "Thank you for playing", {
-      font: "48px " + font,
+    const footer: Text = this.add.text(gameW * 0.38, startY, "Thank you for playing", {
+      font: "30px " + font,
       color: roleColor,
       align: 'center'
     }).setOrigin(0, 0);
@@ -102,7 +99,7 @@ export class Credits extends Phaser.Scene {
     });
   }
 
-  // Scroll Effekt
+  // Scroll Effect
   update(_time: number, delta: any): void {
     for (let text of this.creditTexts) {
       text.y -= scrollSpeed * (delta / 1000);
@@ -111,7 +108,7 @@ export class Credits extends Phaser.Scene {
     // All name done
     const last: Phaser.GameObjects.Text = this.creditTexts[this.creditTexts.length - 2];
     if (last == undefined || last.y == undefined) return;
-    if (last.y < -50) {
+    if (last.y < -20) {
       this.creditTexts.splice(this.creditTexts.length - 1, 1);
       this.time.addEvent({delay: 500, callback: () => this.scene.start("mainMenu"), callbackScope: this, loop: false});
     }
@@ -121,4 +118,5 @@ export class Credits extends Phaser.Scene {
   capitalize(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
+
 }

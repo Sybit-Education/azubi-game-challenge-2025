@@ -37,6 +37,7 @@ function generateCode(length: number = 12): string {
   return password;
 }
 
+// On start
 export function startLeaderboard(app: Express): void {
   // [GET] Leaderboard
   app.get("/leaderboard", (_request, res) => {
@@ -58,21 +59,20 @@ export function startLeaderboard(app: Express): void {
     if (typeof name !== "string" || typeof score !== "number" || typeof code !== "string") {
       return res.status(400).json({error: "Invalid payload"});
     }
-    /*if (codes.indexOf(code) === -1) {
+    if (codes.indexOf(code) === -1) {
       return res.status(401).json({error: "Unauthorized"});
-    }*/
-    codes = codes.filter(item => item != code);
-    const leaderboard = loadLeaderboard();
+    }
+    codes = codes.filter(item => item != code); // removes code
+    const leaderboard: any = loadLeaderboard(); // Json
     const contains: boolean = leaderboard.hasOwnProperty(name);
     // Old score was better
     if (contains && leaderboard[name] >= score) {
       res.status(208).json({success: false}); // 208 = ALREADY REPORTED
       return;
     }
-    leaderboard[name] = score;
+    leaderboard[name.toLowerCase()] = score;
     saveLeaderboard(JSON.stringify(leaderboard, null, 2));
     res.status(contains ? 200 : 201).json({success: true}); // 200 = OK | 201 = CREATED
   });
-
 
 }

@@ -1,11 +1,9 @@
 import {GameObjects, Scene} from "phaser";
 import {displayPlayer, globalConsts} from "../main";
 import {Button} from "../custom_classes/Button";
-import * as string_decoder from 'node:string_decoder';
 
 export class Options extends Scene {
   // Types
-  placeholderText: GameObjects.Text;
   background: GameObjects.Image;
   gameW: number = globalConsts.gameWidth;
   gameH: number = globalConsts.gameHeight;
@@ -13,40 +11,27 @@ export class Options extends Scene {
   buttonSound: Button;
   buttonMusic: Button;
   player_image: Phaser.GameObjects.Image;
-  sound_image: Phaser.GameObjects.Image;
 
   // Constructor
   constructor() {
     super("options");
   }
 
-  // TODO: Add actual options
   // Create method
   create(): void {
-
-    // Player Icon
+    // Player
     displayPlayer(this);
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
-    // Placeholder
+    // Back button
     this.buttonBack = new Button(this.gameW * 0.5, this.gameH * 0.25, 4, 'button_back', this, () => {
       this.scene.start('mainMenu')
     });
 
-
     // Sound: Toggle
-    this.buttonSound = new Button(380, 300, 4, localStorage.getItem("isActive.sound") == "true" ?
-      'button_soundActive' : 'button_soundMute', this, () => {
-
-      if (localStorage.getItem("isActive.sound") == "true") {
-        this.buttonSound.setImage('button_soundMute');
-      } else {
-        this.buttonSound.setImage('button_soundActive');
-      }
-      localStorage.setItem("isActive.sound", (localStorage.getItem("isActive.sound") != "true").toString());
-    });
+    this.buttonSound = new Button(380, 300, 4, localStorage.getItem("isActive.sound") == "true" ? 'button_soundActive' : 'button_soundMute', this, () => this.toggle("isActive.sound", this.buttonSound));
 
     // Sound: Label
     this.player_image = this.add.image(700, 300, 'button_sound');
@@ -54,21 +39,15 @@ export class Options extends Scene {
 
 
     // Musik: Toggle
-    this.buttonMusic = new Button(380, 400, 4, localStorage.getItem("isActive.music") == "true" ?
-      'button_soundActive' : 'button_soundMute', this, () => {
-
-      if (localStorage.getItem("isActive.music") == "true") {
-        this.buttonMusic.setImage('button_soundMute');
-      } else {
-        this.buttonMusic.setImage('button_soundActive');
-      }
-      localStorage.setItem("isActive.music", (localStorage.getItem("isActive.music") != "true").toString());
-    });
+    this.buttonMusic = new Button(380, 400, 4, localStorage.getItem("isActive.music") == "true" ? 'button_soundActive' : 'button_soundMute', this, () => this.toggle("isActive.music", this.buttonMusic));
 
     // Music: Label
     this.player_image = this.add.image(700, 400, 'button_music');
     this.player_image.setScale(8);
+  }
 
-
+  toggle(localStorageKey: string, button: Button): void {
+    button.setImage(localStorage.getItem(localStorageKey) == "true" ? "button_soundMute" : "button_soundActive");
+    localStorage.setItem(localStorageKey, (localStorage.getItem(localStorageKey) != "true").toString());
   }
 }

@@ -16,7 +16,7 @@ export class Button {
     this.image = image; //image as string
     this.scene = curScene; //the scene the buttons is in (this)
 
-    //add buttons to the current scene (just "this" in the scene you implement the buttons)
+    // add buttons to the current scene (just "this" in the scene you implement the buttons)
     this.button = this.scene.add.image(this.x, this.y, this.image);
 
     // make buttons interactive
@@ -27,21 +27,18 @@ export class Button {
 
     // Buttons actions
     this.button.on('pointerover', () => {
-      this.button.setTint(0xcccccc); //highlight the buttons gray while the mouse hovers over it
+      this.button.setAlpha(0.7);
     });
 
     this.button.on('pointerout', () => {
-      this.button.clearTint(); //stop highlighting the buttons if the mouse doesn't hover above it
+      this.button.setAlpha(1);
     });
-
-
-
     // Calls function that is provided
     this.button.on('pointerdown', onButtonPressed);
   }
 
-  setImage(newImage: string) {
+  setImage(newImage: string): void {
     this.image = newImage;
     this.button.setTexture(newImage)
-
-}}
+  }
+}
