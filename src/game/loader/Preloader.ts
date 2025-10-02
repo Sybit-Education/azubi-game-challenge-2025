@@ -31,6 +31,7 @@ export class Preloader extends Scene {
     this.load.setPath('background');
     this.load.image('church', 'church.png');
     this.load.image('cloud1', 'cloud1.png');
+    this.load.image('ground', 'ground.png');
     this.load.image("house1", "house1.png");
     this.load.image("house2", "house2.png");
     this.load.image("house3", "house3.png");
