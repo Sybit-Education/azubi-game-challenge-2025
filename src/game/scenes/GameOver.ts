@@ -4,14 +4,9 @@ import {startLeaderboard} from '../../../server/leaderboard.ts';
 
 export class GameOver extends Scene {
   // Types
-  gameW: number = globalConsts.gameWidth;
-  gameH: number = globalConsts.gameHeight;
   background: Phaser.GameObjects.Image;
   gameover_image: Phaser.GameObjects.Image;
   restart_text: Phaser.GameObjects.Text;
-  highscore_image: Phaser.GameObjects.Image;
-  deinScore_image: Phaser.GameObjects.Image;
-  gifts_image: Phaser.GameObjects.Image;
   playerScore: Phaser.GameObjects.Image;
   uploadCode: Phaser.GameObjects.Image;
   playerName: string;
@@ -46,8 +41,8 @@ export class GameOver extends Scene {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: /* asdasdasd */, // könnt ihr auch abfragen lassen
-        score: /* asdasd */,
+        name:  localStorage.getItem('Kuerzel') , // könnt ihr auch abfragen lassen
+        score: 55,
         code: codeX,
       })
     });

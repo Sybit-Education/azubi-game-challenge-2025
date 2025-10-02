@@ -9,6 +9,7 @@ import {Credits} from './scenes/Credits.ts';
 import {Steuerung} from './scenes/Steuerung.ts';
 import {TestScene} from './scenes/TestScene.ts';
 import Image = Phaser.GameObjects.Image;
+import {TextFeld} from './scenes/TextFeld.ts';
 
 // Config
 const gameW: number = 1024;
@@ -58,7 +59,8 @@ const config: Phaser.Types.Core.GameConfig = {
     Credits,
     Options,
     Steuerung,
-    TestScene
+    TestScene,
+    TextFeld
 
   ]
 };

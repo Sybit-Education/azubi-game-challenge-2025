@@ -32,6 +32,21 @@ export class Play extends Scene {
   }
 
   create(): void {
+
+    //Text Input
+    const usernameInput = document.getElementById('Kuerzel') as HTMLInputElement;
+    const result = document.getElementById('result') as HTMLParagraphElement;
+    document.getElementById('submitBtn')?.addEventListener('click', () => {
+      const username = usernameInput.value;
+      if (username) {
+        result.textContent = `Entered Kürzel: ${username}`;
+      } else {
+        result.textContent = 'Input field cannot be empty';
+      }
+      localStorage.setItem('Kuerzel', usernameInput.value);
+    })
+
+
     // Game over function
     const gameOver = () => {
       this.scene.start("gameOver", {score: name,});
@@ -51,47 +66,6 @@ export class Play extends Scene {
     // Ground
     this.ground = this.physics.add.sprite(this.gameW / 2, this.gameH - 32, "ground");
     this.ground.setImmovable(true);
-
-    // Segment
-    this.segment = new Segment('gameBackground', 1, [], this);
-    this.segment = this.segment.generateTestSegment(0);
-    this.obstacles = this.physics.add.group(this.segment.obstacles[0].sprite);
-    this.camera = this.cameras.main;
-    this.camera.setBackgroundColor(0x00ff00);
-
-    this.background = this.add.image(this.gameW / 2, this.gameH / 2, 'gameBackground');
-
-    // Sections
-    this.section = new Section(this);
-
-    // Player
-    this.player = new Player(64, this.gameH - 64, 'playerIdle', 'playerDucking', "W", "S", "A", "D", this);
-
-    // Collision detection
-    this.groundObjects = this.physics.add.group()
-    this.colisionPlayerAndGround = this.physics.add.collider(this.player.sprite, this.groundObjects);
-    this.colisionPlayerAndObstacle = this.physics.add.collider(this.player.sprite, this.obstacles, () => {
-    }, gameOver);
-
-    // Timer for each layer
-    this.time.addEvent({
-      delay: getLayerDetails(Layer.FRONT).delay,
-      callback: () => this.spawnHouse(Layer.FRONT),
-      callbackScope: this,
-      loop: true
-    });
-    this.time.addEvent({
-      delay: getLayerDetails(Layer.MIDDLE).delay,
-      callback: () => this.spawnHouse(Layer.MIDDLE),
-      callbackScope: this,
-      loop: true
-    });
-    this.time.addEvent({
-      delay: getLayerDetails(Layer.BACK).delay,
-      callback: () => this.spawnHouse(Layer.BACK),
-      callbackScope: this,
-      loop: true
-    });
 
   }
 
