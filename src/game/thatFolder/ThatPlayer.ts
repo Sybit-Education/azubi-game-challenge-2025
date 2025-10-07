@@ -1,13 +1,12 @@
 import {Scene} from 'phaser';
 import {globalConsts} from '../main.ts';
 import Sprite = Phaser.Physics.Arcade.Sprite;
-import ESC = Phaser.Input.Keyboard.KeyCodes.ESC;
 import Text = Phaser.GameObjects.Text;
 
 export class ThatPlayer {
   // Config
-  spriteID: string = "player"
-  idleID: string = "playerSneaking";
+  spriteID: string = "player2"
+  idleID: string = "playerSneaking2";
   keyIdUp: string = "W";
   keyIdDown: string = "S";
   keyIdLeft: string = "A";
@@ -25,7 +24,6 @@ export class ThatPlayer {
   keyDown: Phaser.Input.Keyboard.Key | null | undefined;
   keyLeft: Phaser.Input.Keyboard.Key | null | undefined;
   keyRight: Phaser.Input.Keyboard.Key | null | undefined;
-  esc: Phaser.Input.Keyboard.Key | null | undefined;
 
   // Constructor
   constructor(currentScene: Scene, startX: number = 100, startY: number = globalConsts.gameHeight - 100) {
@@ -50,7 +48,6 @@ export class ThatPlayer {
     this.keyDown = currentScene.input.keyboard?.addKey(this.keyIdDown);
     this.keyLeft = currentScene.input.keyboard?.addKey(this.keyIdLeft);
     this.keyRight = currentScene.input.keyboard?.addKey(this.keyIdRight);
-    this.esc = currentScene.input.keyboard?.addKey(ESC);
   }
 
   // Score
@@ -72,14 +69,7 @@ export class ThatPlayer {
 
   // Updates movement
   updateMovement(): void {
-    if (!this.keyUp || !this.keyDown || !this.keyLeft || !this.keyRight || !this.esc) return;
-
-    // Kills game on ESC
-    if (this.esc.isDown) {
-      // TODO | link to ThatGame.gameOver()
-      this.scene.game.scene.start("gameOver")
-      return;
-    }
+    if (!this.keyUp || !this.keyDown || !this.keyLeft || !this.keyRight) return;
 
     if (this.keyDown.isDown && this.sprite.body?.touching.down) {
       //this.sprite.setBodySize(32, 32, false);
@@ -87,15 +77,14 @@ export class ThatPlayer {
       this.sprite.setVelocityX(0);
       this.isSneaking = true;
     } else if (this.keyDown.isUp && this.isSneaking) {
-      //this.sprite.setBodySize(32, 64, false); // TODO | smaller hitbox
+      this.sprite.setBodySize(32, 64, false); // TODO | smaller hitbox
       this.sprite.setTexture(this.idleID);
       this.isSneaking = false;
-      // TODO | remove sneak bug/feature
-    } else if (this.keyRight.isDown) {
+    } else if (this.keyRight.isDown) { // Moving right
       this.sprite.setVelocityX(160);
-    } else if (this.keyLeft.isDown) {
+    } else if (this.keyLeft.isDown) { // moving left
       this.sprite.setVelocityX(-160);
-    } else {
+    } else { // No force
       this.sprite.setVelocityX(0);
     }
 

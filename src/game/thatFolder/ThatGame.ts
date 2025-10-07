@@ -53,6 +53,9 @@ export class ThatGame extends Phaser.Scene {
 
     // creates key for leaderboard
     generateCode().then(key => localStorage.setItem("key", key));
+
+    // End game on ESC
+    this.input.keyboard?.on('keydown-ESC', this.gameOver, this);
   }
 
   // Update
