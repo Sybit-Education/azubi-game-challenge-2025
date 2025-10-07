@@ -35,6 +35,7 @@ export class ThatPlayer {
     this.sprite.setOrigin(0, 1); // Bottom left
     this.sprite.setCollideWorldBounds(true);
     this.sprite.setGravityY(500);
+    this.sprite.setScale(2.25);
 
     // Create Score text
     this.scoreText = this.scene.add.text(globalConsts.gameWidth * 0.42, 100, this.getScore().toString(), {
