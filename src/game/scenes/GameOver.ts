@@ -53,9 +53,9 @@ export class GameOver extends Scene {
     score = parseInt(localStorage.getItem("score"), 10);
 
     // Game infos
-    new Button(150, 310, 4, "button_yourScore", this.scene.scene, () => {
+    new Button(130, 298, 4, "button_yourScore", this.scene.scene, () => {
     })
-    this.add.text(250, 290, formatTime(score), style).setOrigin(0, 0);
+    this.add.text(245, 290, formatTime(score), style).setOrigin(0, 0);
 
     // Renders leaderboard
     renderLeaderboard();
