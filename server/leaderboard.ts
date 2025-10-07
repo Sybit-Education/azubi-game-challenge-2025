@@ -2,6 +2,7 @@
 
 import fs from "fs";
 import {Express} from 'express';
+import * as path from 'node:path';
 
 // Config
 const json: string = "server/data/leaderboard.json";
@@ -23,7 +24,9 @@ function loadLeaderboard(): any {
 
 // Save the JSON file
 function saveLeaderboard(data: any): void {
-  fs.writeFileSync(json, data);
+  const folderPath: string = path.dirname(json); // path from json
+  if (!fs.existsSync(folderPath)) fs.mkdirSync(folderPath, { recursive: true }); // creates folder if not exist
+  fs.writeFileSync(json, data); // writes to file
 }
 
 // Generates Code
@@ -50,7 +53,7 @@ export function startLeaderboard(app: Express): void {
   app.get("/newCode", (_request, res) => {
     const code: string = generateCode(10);
     codes.push(code);
-    return res.status(201).json({code:code});
+    return res.status(201).json({code: code});
   });
 
   // [POST] new score

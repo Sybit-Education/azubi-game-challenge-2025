@@ -74,6 +74,7 @@ export class GameOver extends Scene {
 }
 
 function prompt(): void {
+  // TODO | disable this button when fething failed
   let prompt: string | null = window.prompt("please enter your abbreviation");
 
   if (prompt == null) return;
