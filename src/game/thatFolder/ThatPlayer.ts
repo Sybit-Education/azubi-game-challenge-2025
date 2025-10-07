@@ -71,8 +71,6 @@ export class ThatPlayer {
   updateMovement(): void {
     if (!this.keyUp || !this.keyDown || !this.keyLeft || !this.keyRight) return;
 
-    // ---===---
-
     // Apply direction
     if (this.keyRight.isDown) { // Right
       this.sprite.setVelocityX(160);
@@ -96,30 +94,9 @@ export class ThatPlayer {
 
     // wants to jump
     if (this.keyUp.isDown && this.sprite.body?.touching.down && !this.isSneaking) {
-      this.sprite.setVelocityY(-500);
+      this.sprite.setVelocityY(-100);
     }
 
-
-    // ---===---
-
-    // if (this.keyDown.isDown && this.sprite.body?.touching.down) { // Sneaking
-    //   this.sprite.body.reset(); // resets body size
-    //   this.sprite.setTexture(this.sneakingID);
-    //   this.sprite.setVelocityX(0);
-    //   this.isSneaking = true;
-    // } else if (this.keyDown.isUp && this.isSneaking) {
-    //   this.sprite.setBodySize(32, 64, false); // TODO | smaller hitbox
-    //   this.sprite.setTexture(this.sneakingID);
-    //   this.isSneaking = false;
-    // } else if (this.keyRight.isDown) { // Moving right
-    //   this.sprite.setVelocityX(160);
-    // } else if (this.keyLeft.isDown) { // moving left
-    //   this.sprite.setVelocityX(-160);
-    // } else { // No force
-    //   this.sprite.setVelocityX(0);
-    // }
-
-    //sneaking
     if (this.keyUp.isDown && this.sprite.body?.touching.down && !this.isSneaking) {
       this.sprite.setVelocityY(-500);
     }

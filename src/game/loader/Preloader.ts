@@ -38,10 +38,13 @@ export class Preloader extends Scene {
     this.load.image("house4", "house4.png");
     this.load.image('gameBackground', 'image1.png');
     this.load.image('gameBackground2', 'image2.png');
+    this.load.image('gameBackground3', 'image3.png');
 
     // Music
     this.load.setPath('sound')
     this.load.audio("gameMusic","main8Bit.wav");
+    this.load.audio("gameMusic1m","1m8Bit.wav");
+    this.load.audio("gameMusic30s","30s8Bit.wav");
   }
 
   // Loading done: start main menu scene

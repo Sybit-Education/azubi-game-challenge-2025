@@ -82,8 +82,7 @@ function prompt(): void {
     return;
   }
 
-  // Main prompt | hellu | was gibts?
-  //
+  // Main prompt
   let prompt: string | null = window.prompt("please enter your abbreviation");
 
   if (prompt == null) return;
