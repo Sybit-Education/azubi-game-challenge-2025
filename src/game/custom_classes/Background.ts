@@ -107,7 +107,7 @@ function spawnHouse(layer: Layer): void {
   }
 
   // Setter
-  const house: Image = currentScene.add.image(globalConsts.gameWidth + 100, layerDetails.y(), houseID);
+  const house: Image = currentScene.add.image(globalConsts.gameWidth + 300, layerDetails.y(), houseID);
   house.setOrigin(0.5, 1);
   house.setDepth(layerDetails.depth);
   house.setScale(layerDetails.scale());
