@@ -22,7 +22,7 @@ export class Boot extends Scene {
     this.load.image('button_back', 'back.png');
     this.load.image('button_close', 'close.png');
     this.load.image('button_credits', 'credits.png');
-    this.load.image('button_deinScore', 'deinScore.png');
+    this.load.image('button_yourScore', 'yourScore.png');
     this.load.image('button_gifts', 'gifts.png');
     this.load.image('button_highscore', 'highscore.png');
     this.load.image('button_knöpfe', 'knoepfe.png');
@@ -34,7 +34,7 @@ export class Boot extends Scene {
     this.load.image('button_sound', 'sound.png');
     this.load.image('button_soundActive', 'soundActive.png');
     this.load.image('button_soundMute', 'soundMute.png');
-    this.load.image('button_steuerung', 'steuerung.png');
+    this.load.image('button_controls', 'controls.png');
   }
 
   // Loading done: load theme elements
