@@ -24,6 +24,13 @@ export class ThatGame extends Phaser.Scene {
     // Displays debug
     displayDebug(this.scene.scene);
 
+    // Plays Music :) | WIP
+    // this.sound.play('gameMusic')
+    //
+    // if (localStorage.getItem("isActive.music") == "true") {
+    //   console.log("musicactive")
+    // }
+
     // Creates player
     this.player = new ThatPlayer(this.scene.scene);
     this.player.setScore(0);
@@ -53,6 +60,9 @@ export class ThatGame extends Phaser.Scene {
 
     // creates key for leaderboard
     generateCode().then(key => localStorage.setItem("key", key));
+
+    // End game on ESC
+    this.input.keyboard?.on('keydown-ESC', this.gameOver, this);
   }
 
   // Update

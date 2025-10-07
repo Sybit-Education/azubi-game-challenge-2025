@@ -3,6 +3,7 @@ import {displayPlayer, globalConsts} from '../main.ts';
 import {formatTime} from '../thatFolder/ThatPlayer.ts';
 import {Button} from '../custom_classes/Button.ts';
 import Text = Phaser.GameObjects.Text;
+import Rectangle = Phaser.GameObjects.Rectangle;
 
 // config
 const range: number = 2; // config
@@ -22,6 +23,7 @@ const leaderboardLines: Text[] = [];
 let leaderboardText: Phaser.GameObjects.Text;
 let gameOverImage: Phaser.GameObjects.Image;
 let saveButton: Button;
+let leaderboardIsLoaded: boolean = false;
 
 // Scene class
 export class GameOver extends Scene {
@@ -62,7 +64,7 @@ export class GameOver extends Scene {
     saveButton = new Button(700, 700, 7, "button_save", scene, () => prompt());
 
     // Clicker
-    const blocker = this.add.rectangle(0, 0, globalConsts.gameWidth, globalConsts.gameHeight, 0x000000, 0.001)
+    const blocker: Rectangle = this.add.rectangle(0, 0, globalConsts.gameWidth, globalConsts.gameHeight, 0x000000, 0.001)
       .setOrigin(0)
       .setInteractive();
     blocker.setDepth(-1);
@@ -74,7 +76,14 @@ export class GameOver extends Scene {
 }
 
 function prompt(): void {
-  // TODO | disable this button when fething failed
+  // Check if leaderboard is loaded
+  if (!leaderboardIsLoaded) {
+    alert("The leaderboard could not be loaded\nAnd therefore no score can be uploaded");
+    return;
+  }
+
+  // Main prompt | hellu | was gibts?
+  //
   let prompt: string | null = window.prompt("please enter your abbreviation");
 
   if (prompt == null) return;
@@ -134,6 +143,9 @@ function clearsLeaderboardLine(): void {
 
 // Renders leaderboard
 async function renderLeaderboard(): Promise<void> {
+  // save state
+  leaderboardIsLoaded = false;
+
   // Set loading text
   leaderboardText.setText("loading leaderboard...");
 
@@ -178,6 +190,9 @@ async function renderLeaderboard(): Promise<void> {
 
   // Removes "loading leaderboard" text
   leaderboardText.setText("");
+
+  // save state
+  leaderboardIsLoaded = true;
 }
 
 // Sort record
