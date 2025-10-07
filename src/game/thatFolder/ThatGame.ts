@@ -24,6 +24,13 @@ export class ThatGame extends Phaser.Scene {
     // Displays debug
     displayDebug(this.scene.scene);
 
+    // Plays Music :) | WIP
+    // this.sound.play('gameMusic')
+    //
+    // if (localStorage.getItem("isActive.music") == "true") {
+    //   console.log("musicactive")
+    // }
+
     // Creates player
     this.player = new ThatPlayer(this.scene.scene);
     this.player.setScore(0);

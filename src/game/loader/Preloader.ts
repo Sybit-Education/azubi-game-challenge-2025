@@ -22,10 +22,10 @@ export class Preloader extends Scene {
     this.load.image("playerSneaking", "playerSneaking.png");
     this.load.image("playerSneaking2", "playerSneaking2.png");
     this.load.image("trash", "trash.png");
-    this.load.image("birdBlue","birdBlue.png");
-    this.load.image("birdPink","birdPink.png");
-    this.load.image("snowman","snowman.png");
-    this.load.image("stone","stone.png");
+    this.load.image("birdBlue", "birdBlue.png");
+    this.load.image("birdPink", "birdPink.png");
+    this.load.image("snowman", "snowman.png");
+    this.load.image("stone", "stone.png");
 
     // Background
     this.load.setPath('background');
@@ -38,6 +38,10 @@ export class Preloader extends Scene {
     this.load.image("house4", "house4.png");
     this.load.image('gameBackground', 'image1.png');
     this.load.image('gameBackground2', 'image2.png');
+
+    // Music
+    this.load.setPath('sound')
+    this.load.audio("gameMusic","main8Bit.wav");
   }
 
   // Loading done: start main menu scene

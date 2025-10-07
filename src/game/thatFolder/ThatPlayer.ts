@@ -6,7 +6,7 @@ import Text = Phaser.GameObjects.Text;
 export class ThatPlayer {
   // Config
   spriteID: string = "player2"
-  idleID: string = "playerSneaking2";
+  sneakingID: string = "playerSneaking2";
   keyIdUp: string = "W";
   keyIdDown: string = "S";
   keyIdLeft: string = "A";
@@ -32,7 +32,7 @@ export class ThatPlayer {
     // Create sprite
     this.sprite = currentScene.physics.add.sprite(startX, startY, this.spriteID);
     //this.sprite.setBodySize(32, 64, false); // NOTE: setBodySize und nicht setSize!!! Origin is not in center.
-    this.sprite.setOrigin(0.5, 1);
+    this.sprite.setOrigin(0, 1); // Bottom left
     this.sprite.setCollideWorldBounds(true);
     this.sprite.setGravityY(500);
 
@@ -71,22 +71,53 @@ export class ThatPlayer {
   updateMovement(): void {
     if (!this.keyUp || !this.keyDown || !this.keyLeft || !this.keyRight) return;
 
-    if (this.keyDown.isDown && this.sprite.body?.touching.down) {
-      //this.sprite.setBodySize(32, 32, false);
-      this.sprite.setTexture(this.idleID);
-      this.sprite.setVelocityX(0);
-      this.isSneaking = true;
-    } else if (this.keyDown.isUp && this.isSneaking) {
-      this.sprite.setBodySize(32, 64, false); // TODO | smaller hitbox
-      this.sprite.setTexture(this.idleID);
-      this.isSneaking = false;
-    } else if (this.keyRight.isDown) { // Moving right
+    // ---===---
+
+    // Apply direction
+    if (this.keyRight.isDown) { // Right
       this.sprite.setVelocityX(160);
-    } else if (this.keyLeft.isDown) { // moving left
+    } else if (this.keyLeft.isDown) { // Left
       this.sprite.setVelocityX(-160);
-    } else { // No force
+    } else { // Reset force
       this.sprite.setVelocityX(0);
     }
+
+    // Sneaking
+    if (this.keyDown.isDown) { // is pressing down button && is touching ground
+      this.sprite.setTexture(this.sneakingID);
+      this.isSneaking = true;
+    } else {
+      this.sprite.setTexture(this.spriteID);
+      this.isSneaking = false;
+    }
+
+    // Sets the body to sprite size
+    this.sprite.body?.setSize();
+
+    // wants to jump
+    if (this.keyUp.isDown && this.sprite.body?.touching.down && !this.isSneaking) {
+      this.sprite.setVelocityY(-500);
+    }
+
+
+    // ---===---
+
+    // if (this.keyDown.isDown && this.sprite.body?.touching.down) { // Sneaking
+    //   this.sprite.body.reset(); // resets body size
+    //   this.sprite.setTexture(this.sneakingID);
+    //   this.sprite.setVelocityX(0);
+    //   this.isSneaking = true;
+    // } else if (this.keyDown.isUp && this.isSneaking) {
+    //   this.sprite.setBodySize(32, 64, false); // TODO | smaller hitbox
+    //   this.sprite.setTexture(this.sneakingID);
+    //   this.isSneaking = false;
+    // } else if (this.keyRight.isDown) { // Moving right
+    //   this.sprite.setVelocityX(160);
+    // } else if (this.keyLeft.isDown) { // moving left
+    //   this.sprite.setVelocityX(-160);
+    // } else { // No force
+    //   this.sprite.setVelocityX(0);
+    // }
 
     //sneaking
     if (this.keyUp.isDown && this.sprite.body?.touching.down && !this.isSneaking) {
@@ -95,7 +126,9 @@ export class ThatPlayer {
   }
 }
 
-export function formatTime(milliseconds: number): string {
+export function
+
+formatTime(milliseconds: number): string {
   milliseconds *= 100;
   const minutes: number = Math.floor(milliseconds / 60000);
   const seconds: number = Math.floor((milliseconds % 60000) / 1000);
