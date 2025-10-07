@@ -17,7 +17,7 @@ const santaYPosition: number = 680;
 const background: number = 0xd3d1fa;
 const debugMode: boolean = false;
 const pixelFontName: string = "pixelFont";
-const api: string = "localhost:3000";
+const api: string = "http://localhost:3000"; // Dont forget the http(s)
 const getRandomInt: Function = (min: number, max: number): number => {//return a random number between min(inclusive) and max(inclusive)
   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);

@@ -16,19 +16,19 @@ const layers: Layer[] = [Layer.FRONT, Layer.MIDDLE, Layer.BACK]
 const houseKeys: string[] = ["house1", "house2", "house3", "house4", "church"];
 const layerPropertiesMap: Record<Layer, LayerProperties> = {
   [Layer.FRONT]: {
-    delay: 2100,
-    scale: () => 6 + Math.random() * 0.4,
+    delay: 3200,
+    scale: () => 10 + Math.random() * 0.4,
     depth: -1,
     y: () => globalConsts.gameHeight - 64,
     speed: 2,
-    opacity: 0.7,
+    opacity: 0.8,
     // Data
     lastHouse: "",
     houses: []
   },
   [Layer.MIDDLE]: {
     delay: 2500,
-    scale: () => 3 + Math.random() * 0.3,
+    scale: () => 6 + Math.random() * 0.3,
     depth: -2,
     y: () => globalConsts.gameHeight - 60,
     speed: 1.2,
@@ -38,8 +38,8 @@ const layerPropertiesMap: Record<Layer, LayerProperties> = {
     houses: []
   },
   [Layer.BACK]: {
-    delay: 4000,
-    scale: () => 2 + Math.random() * 0.2,
+    delay: 1500,
+    scale: () => 4 + Math.random() * 0.2,
     depth: -3,
     y: () => globalConsts.gameHeight - 10,
     speed: 0.3,
@@ -88,7 +88,7 @@ export function spawnHouses(scene: Scene): void {
 
 // Create Background
 function createBackground(): Phaser.GameObjects.Image {
-  const background: Image = currentScene.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight / 2.2, "gameBackground");
+  const background: Image = currentScene.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight / 2.2, "gameBackground3");
   background.setScale(4.5);
   background.setDepth(-4);
   return background;
