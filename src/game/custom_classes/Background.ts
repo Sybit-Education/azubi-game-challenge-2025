@@ -1,20 +1,19 @@
-import { Scene } from 'phaser';
+import {Scene} from 'phaser';
 import Image = Phaser.GameObjects.Image;
-import { globalConsts } from '../main';  // Pfad anpassen
-
-
+import {globalConsts} from '../main';
 
 // Layers enum
 export enum Layer {
   FRONT = "FRONT",
   MIDDLE = "MIDDLE",
- /* BACK = "BACK" */
+  /* BACK = "BACK" */
 }
 
 // All layers as array
 const layers: Layer[] = [Layer.FRONT, Layer.MIDDLE, /*Layer.BACK*/];
 
 // Config
+const backgroundSpeed: number = 1;
 const houseKeys: string[] = ["house1", "house2", "house3", "house4", "church"];
 const layerPropertiesMap: Record<Layer, LayerProperties> = {
   [Layer.FRONT]: {
@@ -23,7 +22,7 @@ const layerPropertiesMap: Record<Layer, LayerProperties> = {
     depth: -1,
     y: () => globalConsts.gameHeight - 64,
     speed: 2,
-    opacity: 0.925, // 0.9
+    opacity: 0.925,
     // Data
     lastHouse: "",
     houses: []
@@ -34,23 +33,18 @@ const layerPropertiesMap: Record<Layer, LayerProperties> = {
     depth: -2,
     y: () => globalConsts.gameHeight - 58,
     speed: 1.2,
-    opacity: 0.8, // 0.6
+    opacity: 0.8,
     // Data
     lastHouse: "",
     houses: []
   },
-<<<<<<< Updated upstream
-  [Layer.BACK]: {
-    delay: 4000,
-=======
   /* [Layer.BACK]: {
-    delay: 1500,
->>>>>>> Stashed changes
+    delay: 4000,
     scale: () => 4 + Math.random() * 0.2,
     depth: -3,
     y: () => globalConsts.gameHeight - 55,
     speed: 0.6,
-    opacity: 0.6, // 0.4
+    opacity: 0.6,
     // Data
     lastHouse: "",
     houses: []
@@ -73,12 +67,8 @@ interface LayerProperties {
 
 // Variables
 let currentScene: Scene;
-
-let backgroundA: Image; // erstes Hintergrundbild
-let backgroundB: Image; // zweites Hintergrundbild
-
-// NEU: Variable für den Hintergrund
-let background: Image; //  hinzugefügt
+let backgroundA: Image;
+let backgroundB: Image;
 
 // Spawn house for every layer
 export function spawnHouses(scene: Scene): void {
@@ -132,44 +122,18 @@ function spawnHouse(layer: Layer): void {
 
 // Moves every house on every layer
 export function updateMovement(): void {
-  for (let layer of layers) moveHouses(getLayerDetails(layer).houses, getLayerDetails(layer).speed);
-
-  //  NEU: Hintergrund bewegen
-  moveBackground(); // ️ hinzugefügt
-
-  function updateMovement(): void {
-    for (let layer of layers) moveHouses(getLayerDetails(layer).houses, getLayerDetails(layer).speed);
-
-    moveBackground();  // Hintergrund bewegen
-  }
+  for (let layer of layers) moveHouses(getLayerDetails(layer).houses, getLayerDetails(layer).speed); // Moves houses
+  moveBackground(); // ️ Moves Background
 }
 
+// Moves background
 function moveBackground(): void {
-  const speed = 1; // Bewegungsgeschwindigkeit
+  backgroundA.x -= backgroundSpeed;
+  backgroundB.x -= backgroundSpeed;
 
-  backgroundA.x -= speed;
-  backgroundB.x -= speed;
-
-  if (backgroundA.x <= -backgroundA.displayWidth / 2) {
-    backgroundA.x = backgroundB.x + backgroundB.displayWidth;
-  }
-
-  if (backgroundB.x <= -backgroundB.displayWidth / 2) {
-    backgroundB.x = backgroundA.x + backgroundA.displayWidth;
-  }
-  // ️ NEUE FUNKTION: bewegt den Hintergrund langsam
-  function moveBackground(): void {
-    if (!background) return; // ️ Sicherheitsabfrage
-    background.x -= 0.2; // ️ Bewegungsgeschwindigkeit – kannst du anpassen
-    // ️ Wenn Hintergrund aus dem Bild ist, wieder rechts einblenden
-    if (background.x < -background.width / 2) { // ️ Loop-Effekt
-      background.x = globalConsts.gameWidth + background.width / 2;
-    }
-  }
+  if (backgroundA.x <= -backgroundA.displayWidth / 2) backgroundA.x = backgroundB.x + backgroundB.displayWidth;
+  if (backgroundB.x <= -backgroundB.displayWidth / 2) backgroundB.x = backgroundA.x + backgroundA.displayWidth;
 }
-
-
-
 
 
 // Moves every house on specified layer
