@@ -21,12 +21,11 @@ export class Boot extends Scene {
     this.load.setPath('hud/buttons');
     this.load.image('button_back', 'back.png');
     this.load.image('button_close', 'close.png');
+    this.load.image('button_controls', 'controls.png');
     this.load.image('button_credits', 'credits.png');
-    this.load.image('button_yourScore', 'yourScore.png');
     this.load.image('button_gifts', 'gifts.png');
     this.load.image('button_highscore', 'highscore.png');
     this.load.image('button_keyboard', 'keyboard.png');
-    this.load.image('button_knöpfe', 'knoepfe.png');
     this.load.image('button_music', 'music.png');
     this.load.image('button_options', 'options.png');
     this.load.image('button_play', 'play.png');
@@ -35,7 +34,7 @@ export class Boot extends Scene {
     this.load.image('button_sound', 'sound.png');
     this.load.image('button_soundActive', 'soundActive.png');
     this.load.image('button_soundMute', 'soundMute.png');
-    this.load.image('button_controls', 'controls.png');
+    this.load.image('button_yourScore', 'yourScore.png');
   }
 
   // Loading done: load theme elements

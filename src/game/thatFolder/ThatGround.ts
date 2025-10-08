@@ -8,7 +8,7 @@ export class ThatGround {
   // Constructor
   constructor(currentScene: Scene) {
     // Creates sprite
-    this.sprite = currentScene.physics.add.sprite(globalConsts.gameWidth * 0.5, globalConsts.gameHeight -10, "ground");
+    this.sprite = currentScene.physics.add.sprite(globalConsts.gameWidth * 0.5, globalConsts.gameHeight - 10, "ground");
     this.sprite.setImmovable(false);
     this.sprite.setPushable(false);
     this.sprite.setDepth(0);

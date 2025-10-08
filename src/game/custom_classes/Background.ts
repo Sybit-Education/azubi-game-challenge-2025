@@ -90,10 +90,12 @@ export function spawnHouses(scene: Scene): void {
 
 // Create Background
 function createBackground(): void {
+  // Background A
   backgroundA = currentScene.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight / 2.2, "gameBackground3");
   backgroundA.setScale(4.5);
   backgroundA.setDepth(-4);
 
+  // Background B
   backgroundB = currentScene.add.image(globalConsts.gameWidth / 2 + backgroundA.displayWidth, globalConsts.gameHeight / 2.2, "gameBackground3");
   backgroundB.setScale(4.5);
   backgroundB.setDepth(-4);
@@ -105,17 +107,20 @@ function spawnHouse(layer: Layer): void {
   const layerDetails: LayerProperties = getLayerDetails(layer);
   let houseID: string;
 
+  // Gets random house
   while (true) {
     houseID = Phaser.Utils.Array.GetRandom(houseKeys);
     if (houseID != layerDetails.lastHouse) break;
   }
 
+  // Places image
   const house: Image = currentScene.add.image(globalConsts.gameWidth + 300, layerDetails.y(), houseID);
   house.setOrigin(0.5, 1);
   house.setDepth(layerDetails.depth);
   house.setScale(layerDetails.scale());
   house.setAlpha(layerDetails.opacity);
 
+  // Adds to array
   layerDetails.houses.push(house);
   layerDetails.lastHouse = houseID;
 }

@@ -85,7 +85,10 @@ function prompt(): void {
   // Main prompt
   let prompt: string | null = window.prompt("please enter your abbreviation");
 
+  // Cancel
   if (prompt == null) return;
+
+  // YOU cannot be used
   if (prompt.toUpperCase() == "YOU") {
     alert("This cannot be used as name");
     return;
@@ -176,9 +179,7 @@ async function renderLeaderboard(): Promise<void> {
   // Display other score
   yCoord = 500;
   const index: number = leaderboard.findIndex(item => item.name === displayName);
-  //console.log("> " + index);
   for (let i: number = index - range; i < index + range + 1; i++) {
-    //console.log(i);
     try {
       leaderboardLines.push(scene.add.text(525, yCoord, `${i + 1}. ${leaderboard[i].name} - ${formatTime(leaderboard[i].score)}`, style).setColor(leaderboard[i].name == displayName ? "#000000" : style.color));
     } catch (e) {

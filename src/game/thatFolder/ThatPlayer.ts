@@ -115,7 +115,6 @@ export class ThatPlayer {
     if (isOnGround && this.keyUp.isDown) {
       this.jumpTimeleft = this.maxJumpTime;
       this.sprite.setVelocityY(this.startVelocity);
-      console.log("start");
       return; // Check on next frame again
     }
 
