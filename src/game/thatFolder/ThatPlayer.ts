@@ -5,17 +5,27 @@ import Text = Phaser.GameObjects.Text;
 
 export class ThatPlayer {
   // Config
+  // Gravity
+  normalGravity: number = 500;
+  sneakGravity: number = 3000;
+
+  // Textures
   spriteID: string = "player2"
   sneakingID: string = "playerSneaking2";
+  // Keys
   keyIdUp: string = "W";
   keyIdDown: string = "S";
   keyIdLeft: string = "A";
   keyIdRight: string = "D";
+  // Jumping
+  maxJumpTime: number = 180; // 185
+  startVelocity: number = -250; //-400
 
   // Types
   // Values
   isSneaking: boolean = false;
   score: number = 0;
+  jumpTimeleft: number = 0;
   // Values by constructor
   scene: Scene;
   sprite: Sprite;
@@ -34,7 +44,7 @@ export class ThatPlayer {
     //this.sprite.setBodySize(32, 64, false); // NOTE: setBodySize und nicht setSize!!! Origin is not in center.
     this.sprite.setOrigin(0, 1); // Bottom left
     this.sprite.setCollideWorldBounds(true);
-    this.sprite.setGravityY(500);
+    this.sprite.setGravityY(this.normalGravity);
     this.sprite.setScale(2.25);
 
     // Create Score text
@@ -71,6 +81,7 @@ export class ThatPlayer {
   // Updates movement
   updateMovement(): void {
     if (!this.keyUp || !this.keyDown || !this.keyLeft || !this.keyRight) return;
+    const isOnGround: boolean | undefined = this.sprite.body?.touching.down;
 
     // Apply direction
     if (this.keyRight.isDown) { // Right
@@ -93,20 +104,43 @@ export class ThatPlayer {
     // Sets the body to sprite size
     this.sprite.body?.setSize();
 
-    // wants to jump
-    if (this.keyUp.isDown && this.sprite.body?.touching.down && !this.isSneaking) {
-      this.sprite.setVelocityY(-100);
+
+    // Fast fall when sneaking
+    this.sprite.setGravityY(!isOnGround && this.keyDown?.isDown ? this.sneakGravity : this.normalGravity); // Heavier gravity while sneaking in air
+
+    // Sneaking -> end
+    if (this.isSneaking) return;
+
+    // start jumping
+    if (isOnGround && this.keyUp.isDown) {
+      this.jumpTimeleft = this.maxJumpTime;
+      this.sprite.setVelocityY(this.startVelocity);
+      console.log("start");
+      return; // Check on next frame again
     }
 
-    if (this.keyUp.isDown && this.sprite.body?.touching.down && !this.isSneaking) {
-      this.sprite.setVelocityY(-500);
+    // Sneaking in air
+    if (!isOnGround && this.keyDown.isDown) {
+      this.sprite.setGravityY(500);
+      return;
+    }
+
+    // No lime left. No extra jump-height/checks
+    if (this.jumpTimeleft <= 0) return;
+
+    // Extra velocity while button is pressed down
+    if (this.keyUp.isDown) {
+      const velocity: number = (this.jumpTimeleft) / 1000 + 1;
+      this.jumpTimeleft -= this.scene.game.loop.delta;
+      const current: number = this.sprite.body?.velocity.y ?? 0;
+      this.sprite.setVelocityY(current * velocity);
+    } else {
+      this.jumpTimeleft = 0;
     }
   }
 }
 
-export function
-
-formatTime(milliseconds: number): string {
+export function formatTime(milliseconds: number): string {
   milliseconds *= 100;
   const minutes: number = Math.floor(milliseconds / 60000);
   const seconds: number = Math.floor((milliseconds % 60000) / 1000);

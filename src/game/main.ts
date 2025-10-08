@@ -5,7 +5,7 @@ import {AUTO, Game, Scene} from 'phaser';
 import {Preloader} from './loader/Preloader.ts';
 import {Options} from './scenes/Options.ts';
 import {Credits} from './scenes/Credits.ts';
-import {Steuerung} from './scenes/Steuerung.ts';
+import {Controls} from './scenes/Controls.ts';
 import Image = Phaser.GameObjects.Image;
 import {ThatGame} from './thatFolder/ThatGame.ts';
 
@@ -19,8 +19,8 @@ const debugMode: boolean = false;
 const pixelFontName: string = "pixelFont";
 const api: string = "http://localhost:3000"; // Dont forget the http(s)
 const getRandomInt: Function = (min: number, max: number): number => {//return a random number between min(inclusive) and max(inclusive)
-  const minCeiled = Math.ceil(min);
-  const maxFloored = Math.floor(max);
+  const minCeiled: number = Math.ceil(min);
+  const maxFloored: number = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
 }
 
@@ -61,7 +61,7 @@ const config: Phaser.Types.Core.GameConfig = {
     GameOver,
     MainMenu,
     Options,
-    Steuerung,
+    Controls,
   ]
 };
 

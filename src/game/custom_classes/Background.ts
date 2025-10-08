@@ -16,34 +16,34 @@ const layers: Layer[] = [Layer.FRONT, Layer.MIDDLE, Layer.BACK]
 const houseKeys: string[] = ["house1", "house2", "house3", "house4", "church"];
 const layerPropertiesMap: Record<Layer, LayerProperties> = {
   [Layer.FRONT]: {
-    delay: 3200,
+    delay: 3000,
     scale: () => 10 + Math.random() * 0.4,
     depth: -1,
     y: () => globalConsts.gameHeight - 64,
     speed: 2,
-    opacity: 0.8,
+    opacity: 0.925, // 0.9
     // Data
     lastHouse: "",
     houses: []
   },
   [Layer.MIDDLE]: {
-    delay: 2500,
-    scale: () => 6 + Math.random() * 0.3,
+    delay: 3000,
+    scale: () => 6 + Math.random() * 0.25,
     depth: -2,
-    y: () => globalConsts.gameHeight - 60,
+    y: () => globalConsts.gameHeight - 58,
     speed: 1.2,
-    opacity: 0.5,
+    opacity: 0.8, // 0.6
     // Data
     lastHouse: "",
     houses: []
   },
   [Layer.BACK]: {
-    delay: 1500,
+    delay: 4000,
     scale: () => 4 + Math.random() * 0.2,
     depth: -3,
-    y: () => globalConsts.gameHeight - 10,
-    speed: 0.3,
-    opacity: 1,
+    y: () => globalConsts.gameHeight - 55,
+    speed: 0.6,
+    opacity: 0.6, // 0.4
     // Data
     lastHouse: "",
     houses: []
@@ -130,7 +130,7 @@ function moveHouses(houses: Phaser.GameObjects.Image[], speed: number): void {
   });
 
   for (let i = houses.length - 3; i >= 0; i--) {
-    if (houses[i].x < -houses[i].width - (houses[i].width * 3)) {
+    if (houses[i].x < -houses[i].width * 4 - 50) {
       houses[i].destroy();
       houses.splice(i, 1);
     }
