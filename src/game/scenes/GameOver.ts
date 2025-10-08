@@ -6,8 +6,8 @@ import Text = Phaser.GameObjects.Text;
 import Rectangle = Phaser.GameObjects.Rectangle;
 
 // config
-const range: number = 2; // config
-type leaderboardEntry = { name: string, score: number };
+const range: number = 2;
+export type leaderboardEntry = { name: string, score: number };
 const style = {
   font: "20px pixelFont",
   color: "#ffffff",
@@ -50,7 +50,8 @@ export class GameOver extends Scene {
     leaderboardText = scene.add.text(500, 290, "", style).setOrigin(0, 0);
 
     // gets score
-    score = parseInt(localStorage.getItem("score"), 10);
+    const item = localStorage.getItem("score");
+    score = parseInt(item ? item : "0", 10);
 
     // Game infos
     new Button(130, 298, 4, "button_yourScore", this.scene.scene, () => {
@@ -62,6 +63,7 @@ export class GameOver extends Scene {
 
     // Save score button
     saveButton = new Button(700, 700, 7, "button_save", scene, () => prompt());
+    // TODO | add "to full leaderboard" button
 
     // Clicker
     const blocker: Rectangle = this.add.rectangle(0, 0, globalConsts.gameWidth, globalConsts.gameHeight, 0x000000, 0.001)
@@ -216,7 +218,7 @@ export async function generateCode(): Promise<string | undefined> {
 }
 
 // [POST] new score
-async function saveLeaderboard(name: string, key: string, value: number): Promise<Response | undefined> {
+async function saveLeaderboard(name: string, key: string | null, value: number): Promise<Response | undefined> {
   // Request info
   try {
     const myHeaders = new Headers();
