@@ -35,6 +35,9 @@ export class Controls extends Phaser.Scene {
     this.keyboardImage = this.add.image(512, 400, 'button_keyboard');
     this.keyboardImage.setScale(0.7);
 
+    // Resets currentY
+    this.currentY = this.startY;
+
     // Text
     this.scene.scene.add.text(this.x, this.getY(), "ESC - Exit active Game", this.style).setOrigin(0, 0);
     this.scene.scene.add.text(this.x, this.getY(), " W  - Jump", this.style).setOrigin(0, 0);
