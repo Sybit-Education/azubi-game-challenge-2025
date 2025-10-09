@@ -50,7 +50,7 @@ export class GameOver extends Scene {
     leaderboardText = scene.add.text(500, 290, "", style).setOrigin(0, 0);
 
     // gets score
-    const item = localStorage.getItem("score");
+    const item: string | null = localStorage.getItem("score");
     score = parseInt(item ? item : "0", 10);
 
     // Game infos
@@ -93,6 +93,12 @@ function prompt(): void {
   // YOU cannot be used
   if (prompt.toUpperCase() == "YOU") {
     alert("This cannot be used as name");
+    return;
+  }
+
+  /// Neither does xxx
+  if (prompt.toLowerCase() == "xxx") {
+    alert("xxx doesn't work either");
     return;
   }
 
