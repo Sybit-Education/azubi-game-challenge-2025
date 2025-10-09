@@ -8,6 +8,7 @@ import {Credits} from './scenes/Credits.ts';
 import {Controls} from './scenes/Controls.ts';
 import Image = Phaser.GameObjects.Image;
 import {ThatGame} from './thatFolder/ThatGame.ts';
+import {Leaderboard} from './scenes/Leaderboard.ts';
 
 // Config
 const gameW: number = 1024;
@@ -62,6 +63,7 @@ const config: Phaser.Types.Core.GameConfig = {
     MainMenu,
     Options,
     Controls,
+    Leaderboard
   ]
 };
 

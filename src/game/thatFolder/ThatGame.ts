@@ -57,8 +57,9 @@ export class ThatGame extends Phaser.Scene {
     this.collisionPlayerAndGround = this.physics.add.collider(this.player.sprite, this.ground.sprite);
 
     // creates key for leaderboard
-
-    generateCode().then(key => localStorage.setItem("key", key));
+    generateCode().then(key => {
+      if (key) localStorage.setItem("key", key);
+    });
 
     // End game on ESC
     this.input.keyboard?.on('keydown-ESC', this.gameOver, this);

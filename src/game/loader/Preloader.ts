@@ -5,15 +5,15 @@ export class Preloader extends Scene {
 
   // Constructor
   constructor() {
-    super('preloader-main');
+    super("preloader-main");
   }
 
   // Load all theme related assets
   preload(): void {
     // Sprites
-    this.load.setPath('sprites');
-    this.load.image('bench', 'bench.png');
-    this.load.image('gift1', 'gift1.png');
+    this.load.setPath("sprites");
+    this.load.image("bench", "bench.png");
+    this.load.image("gift1", "gift1.png");
     this.load.image("gift2", "gift2.png");
     this.load.image("gift3", "gift3.png");
     this.load.image("gift4", "gift4.png");
@@ -28,17 +28,17 @@ export class Preloader extends Scene {
     this.load.image("stone", "stone.png");
 
     // Background
-    this.load.setPath('background');
-    this.load.image('church', 'church.png');
-    this.load.image('cloud1', 'cloud1.png');
-    this.load.image('ground', 'ground.png');
+    this.load.setPath("background");
+    this.load.image("church", "church.png");
+    this.load.image("cloud1", "cloud1.png");
+    this.load.image("ground", "ground.png");
     this.load.image("house1", "house1.png");
     this.load.image("house2", "house2.png");
     this.load.image("house3", "house3.png");
     this.load.image("house4", "house4.png");
-    this.load.image('gameBackground', 'image1.png');
-    this.load.image('gameBackground2', 'image2.png');
-    this.load.image('gameBackground3', 'image3.png');
+    this.load.image("gameBackground", "image1.png");
+    this.load.image("gameBackground2", "image2.png");
+    this.load.image("gameBackground3", "image3.png");
 
     // Music
     this.load.setPath('sound')
