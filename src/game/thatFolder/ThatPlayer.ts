@@ -1,22 +1,31 @@
 import {Scene} from 'phaser';
 import {globalConsts} from '../main.ts';
 import Sprite = Phaser.Physics.Arcade.Sprite;
-import ESC = Phaser.Input.Keyboard.KeyCodes.ESC;
 import Text = Phaser.GameObjects.Text;
 
 export class ThatPlayer {
   // Config
+  // Gravity
+  normalGravity: number = 500;
+  sneakGravity: number = 3000;
+
+  // Textures
   spriteID: string = "player2"
   sneakingID: string = "playerSneaking2";
+  // Keys
   keyIdUp: string = "W";
   keyIdDown: string = "S";
   keyIdLeft: string = "A";
   keyIdRight: string = "D";
+  // Jumping
+  maxJumpTime: number = 180; // 185
+  startVelocity: number = -250; //-400
 
   // Types
   // Values
   isSneaking: boolean = false;
   score: number = 0;
+  jumpTimeleft: number = 0;
   // Values by constructor
   scene: Scene;
   sprite: Sprite;
@@ -25,7 +34,6 @@ export class ThatPlayer {
   keyDown: Phaser.Input.Keyboard.Key | null | undefined;
   keyLeft: Phaser.Input.Keyboard.Key | null | undefined;
   keyRight: Phaser.Input.Keyboard.Key | null | undefined;
-  esc: Phaser.Input.Keyboard.Key | null | undefined;
 
   // Constructor
   constructor(currentScene: Scene, startX: number = 100, startY: number = globalConsts.gameHeight - 100) {
@@ -36,10 +44,8 @@ export class ThatPlayer {
     //this.sprite.setBodySize(32, 64, false); // NOTE: setBodySize und nicht setSize!!! Origin is not in center.
     this.sprite.setOrigin(0, 1); // Bottom left
     this.sprite.setCollideWorldBounds(true);
-    this.sprite.setGravityY(500);
-    this.sprite.setScale(1.75);
-    this.sprite.setBodySize(80,32);
-    this.sprite.setOffset(7,10);
+    this.sprite.setGravityY(this.normalGravity);
+    this.sprite.setScale(2.25);
 
     // Create Score text
     this.scoreText = this.scene.add.text(globalConsts.gameWidth * 0.42, 100, this.getScore().toString(), {
@@ -53,7 +59,6 @@ export class ThatPlayer {
     this.keyDown = currentScene.input.keyboard?.addKey(this.keyIdDown);
     this.keyLeft = currentScene.input.keyboard?.addKey(this.keyIdLeft);
     this.keyRight = currentScene.input.keyboard?.addKey(this.keyIdRight);
-    this.esc = currentScene.input.keyboard?.addKey(ESC);
   }
 
   // Score
@@ -76,8 +81,7 @@ export class ThatPlayer {
   // Updates movement
   updateMovement(): void {
     if (!this.keyUp || !this.keyDown || !this.keyLeft || !this.keyRight) return;
-
-    // ---===---
+    const isOnGround: boolean | undefined = this.sprite.body?.touching.down;
 
     // Apply direction
     if (this.keyRight.isDown) { // Right
@@ -100,34 +104,37 @@ export class ThatPlayer {
     // Sets the body to sprite size
     this.sprite.body?.setSize();
 
-    // wants to jump
-    if (this.keyUp.isDown && this.sprite.body?.touching.down && !this.isSneaking) {
-      this.sprite.setVelocityY(-500);
+
+    // Fast fall when sneaking
+    this.sprite.setGravityY(!isOnGround && this.keyDown?.isDown ? this.sneakGravity : this.normalGravity); // Heavier gravity while sneaking in air
+
+    // Sneaking -> end
+    if (this.isSneaking) return;
+
+    // start jumping
+    if (isOnGround && this.keyUp.isDown) {
+      this.jumpTimeleft = this.maxJumpTime;
+      this.sprite.setVelocityY(this.startVelocity);
+      return; // Check on next frame again
     }
 
+    // Sneaking in air
+    if (!isOnGround && this.keyDown.isDown) {
+      this.sprite.setGravityY(500);
+      return;
+    }
 
-    // ---===---
+    // No lime left. No extra jump-height/checks
+    if (this.jumpTimeleft <= 0) return;
 
-    // if (this.keyDown.isDown && this.sprite.body?.touching.down) { // Sneaking
-    //   this.sprite.body.reset(); // resets body size
-    //   this.sprite.setTexture(this.sneakingID);
-    //   this.sprite.setVelocityX(0);
-    //   this.isSneaking = true;
-    // } else if (this.keyDown.isUp && this.isSneaking) {
-    //   this.sprite.setBodySize(32, 64, false); // TODO | smaller hitbox
-    //   this.sprite.setTexture(this.sneakingID);
-    //   this.isSneaking = false;
-    // } else if (this.keyRight.isDown) { // Moving right
-    //   this.sprite.setVelocityX(160);
-    // } else if (this.keyLeft.isDown) { // moving left
-    //   this.sprite.setVelocityX(-160);
-    // } else { // No force
-    //   this.sprite.setVelocityX(0);
-    // }
-
-    //sneaking
-    if (this.keyUp.isDown && this.sprite.body?.touching.down && !this.isSneaking) {
-      this.sprite.setVelocityY(-500);
+    // Extra velocity while button is pressed down
+    if (this.keyUp.isDown) {
+      const velocity: number = (this.jumpTimeleft) / 1000 + 1;
+      this.jumpTimeleft -= this.scene.game.loop.delta;
+      const current: number = this.sprite.body?.velocity.y ?? 0;
+      this.sprite.setVelocityY(current * velocity);
+    } else {
+      this.jumpTimeleft = 0;
     }
   }
 }

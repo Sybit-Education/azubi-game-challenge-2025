@@ -1,6 +1,7 @@
 import {Scene} from "phaser"
 import {globalConsts} from '../main.ts';
 
+// TODO: Add package
 export enum obstacleType {
   BIRDBLUE = "BIRDBLUE",
   BIRDPINK = "BIRDPINK",
@@ -9,6 +10,7 @@ export enum obstacleType {
   MARKER = "MARKER"
 }
 
+// All obstacle array
 export const viableObstacles: obstacleType[] = [obstacleType.BIRDBLUE, obstacleType.BIRDPINK, obstacleType.SNOWMAN, obstacleType.ROCKS];
 
 interface obstacleProperties {
@@ -22,7 +24,8 @@ interface obstacleProperties {
   weight: number
 }
 
-const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {//TODO: change weight config
+//TODO: change weight config
+const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   [obstacleType.BIRDBLUE]: {
     y: () => globalConsts.getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.8),
     sprite: "birdBlue",
@@ -31,8 +34,9 @@ const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {//TODO:
     offsetX: 8,
     offsetY: 14,
     scale: 2,
-    weight: 100},
-    [obstacleType.BIRDPINK]: {
+    weight: 100
+  },
+  [obstacleType.BIRDPINK]: {
     y: () => globalConsts.getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.8),
     sprite: "birdPink",
     width: 16,
@@ -40,7 +44,8 @@ const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {//TODO:
     offsetX: 6,
     offsetY: 6,
     scale: 2,
-    weight: 100},
+    weight: 100
+  },
   [obstacleType.SNOWMAN]: {
     y: () => globalConsts.gameHeight - 96,
     sprite: "snowman",
@@ -88,9 +93,9 @@ export class ThatObstacle {
 
     this.sprite = this.scene.physics.add.sprite(this.x, this.y, !marker ? this.image : "");
     this.sprite.setAlpha(!marker ? 1 : 0);
-    
-    if(!marker) this.sprite.setBodySize(obstaclePropertiesMap[type].width,obstaclePropertiesMap[type].height);
+
+    if (!marker) this.sprite.setBodySize(obstaclePropertiesMap[type].width, obstaclePropertiesMap[type].height);
     this.sprite.setScale(obstaclePropertiesMap[type].scale);
-    this.sprite.setOffset(obstaclePropertiesMap[type].offsetX,obstaclePropertiesMap[type].offsetY);
+    this.sprite.setOffset(obstaclePropertiesMap[type].offsetX, obstaclePropertiesMap[type].offsetY);
   }
 }

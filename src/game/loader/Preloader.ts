@@ -42,9 +42,9 @@ export class Preloader extends Scene {
 
     // Music
     this.load.setPath('sound')
-    this.load.audio("gameMusic","main8Bit.wav");
-    this.load.audio("gameMusic1m","1m8Bit.wav");
-    this.load.audio("gameMusic30s","30s8Bit.wav");
+    this.load.audio("gameMusic", "main8Bit.wav");
+    this.load.audio("gameMusic1m", "1m8Bit.wav");
+    this.load.audio("gameMusic30s", "30s8Bit.wav");
   }
 
   // Loading done: start main menu scene

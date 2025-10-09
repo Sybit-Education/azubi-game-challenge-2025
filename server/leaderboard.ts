@@ -65,7 +65,6 @@ export function startLeaderboard(app: Express): void {
     if (codes.indexOf(code) === -1) {
       return res.status(401).json({error: "Unauthorized"});
     }
-    codes = codes.filter(item => item != code); // removes code
     const leaderboard: any = loadLeaderboard(); // Json
     const contains: boolean = leaderboard.hasOwnProperty(name);
     // Old score was better
@@ -73,6 +72,7 @@ export function startLeaderboard(app: Express): void {
       res.status(208).json({success: false}); // 208 = ALREADY REPORTED
       return;
     }
+    codes = codes.filter(item => item != code); // removes code
     leaderboard[name.toLowerCase()] = score;
     saveLeaderboard(JSON.stringify(leaderboard, null, 2));
     res.status(contains ? 200 : 201).json({success: true}); // 200 = OK | 201 = CREATED

@@ -32,7 +32,7 @@ export class ThatSection {
   }
 
   generateObstacles(marker: boolean, offset: number): ThatObstacle {
-    return new ThatObstacle(Phaser.Utils.Array.GetRandom(viableObstacles),this.generateRandomX(16) + globalConsts.gameWidth * offset, this.scene, marker);
+    return new ThatObstacle(Phaser.Utils.Array.GetRandom(viableObstacles), this.generateRandomX(16) + globalConsts.gameWidth * offset, this.scene, marker);
   }
 
   generateRandomX(margin: number): number {//generates a random x coordinate and checks if the new x value is within a certain margin
@@ -63,6 +63,7 @@ export class ThatSection {
     }
   }
 
+  // Destroys all obstacles in the section
   destroyAll(): void {
     for (let obstacle of this.obstacles) {
       obstacle.sprite.body?.destroy();

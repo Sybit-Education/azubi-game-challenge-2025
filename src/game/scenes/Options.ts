@@ -38,7 +38,7 @@ export class Options extends Scene {
     this.player_image.setScale(8);
 
 
-    // Musik: Toggle
+    // Music: Toggle
     this.buttonMusic = new Button(380, 400, 4, localStorage.getItem("isActive.music") == "true" ? 'button_soundActive' : 'button_soundMute', this, () => this.toggle("isActive.music", this.buttonMusic));
 
     // Music: Label
@@ -46,6 +46,7 @@ export class Options extends Scene {
     this.player_image.setScale(8);
   }
 
+  // Helper methode
   toggle(localStorageKey: string, button: Button): void {
     button.setImage(localStorage.getItem(localStorageKey) == "true" ? "button_soundMute" : "button_soundActive");
     localStorage.setItem(localStorageKey, (localStorage.getItem(localStorageKey) != "true").toString());
