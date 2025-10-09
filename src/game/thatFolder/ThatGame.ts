@@ -14,6 +14,8 @@ export class ThatGame extends Phaser.Scene {
   // Collusion
   collisionPlayerAndGround: Phaser.Physics.Arcade.Collider;
 
+
+
   // Constructor
   constructor() {
     super("thatGame");
@@ -55,10 +57,33 @@ export class ThatGame extends Phaser.Scene {
     this.collisionPlayerAndGround = this.physics.add.collider(this.player.sprite, this.ground.sprite);
 
     // creates key for leaderboard
+
     generateCode().then(key => localStorage.setItem("key", key));
 
     // End game on ESC
     this.input.keyboard?.on('keydown-ESC', this.gameOver, this);
+
+    //  Hinweis anzeigen, sobald das Spiel startet
+    const infoText = this.add.text(
+      this.cameras.main.centerX, // Mitte der Kamera
+      200,                       // Y-Position
+      " Collect the gifts to get extra points!",
+      {
+        fontSize: "28px",
+        color: "#ffffff",
+        fontStyle: "bold"
+      }
+    ).setOrigin(0.5);
+
+    // Nach 3 Sekunden ausblenden und löschen
+    this.tweens.add({
+      targets: infoText,
+      alpha: 0,
+      delay: 2500,  // nach 2,5 Sekunden starten
+      duration: 500 // sanft ausblenden
+    });
+
+    this.time.delayedCall(3000, () => infoText.destroy());
   }
 
   // Update
