@@ -8,11 +8,7 @@ export enum obstacleType {
   SNOWMAN = "SNOWMAN",
   ROCKS = "ROCKS",
   MARKER = "MARKER",
-<<<<<<< HEAD
   GIFT = "GIFT"
-=======
-
->>>>>>> 926fb0e370eb1c0a52d15bf7dd1fdd75a773ca08
 }
 
 // All obstacle array
@@ -81,7 +77,6 @@ const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     scale: 1,
     weight: 0
   },
-<<<<<<< HEAD
   [obstacleType.GIFT]: {
     y: () => globalConsts.getRandomInt(globalConsts.gameHeight * 0.6, globalConsts.gameHeight * 0.8),
     sprites: ["gift1","gift2","gift3","gift4"],
@@ -92,8 +87,6 @@ const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     scale: 2,
     weight: 0
   }
-=======
->>>>>>> 926fb0e370eb1c0a52d15bf7dd1fdd75a773ca08
 }
 
 
