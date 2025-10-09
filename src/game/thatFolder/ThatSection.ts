@@ -5,9 +5,10 @@ import {obstacleType, ThatObstacle, viableObstacles} from './ThatObstacle.ts';
 export class ThatSection {
 
   // config
-  readonly speed: number = -200;
-  readonly amountObstacle: number = 3;
-  readonly probability: number = 25;
+  readonly speed: number = -200;// speed of setion -> obstacles move at that speed
+  readonly amountObstacle: number = 3;// amount of obstacles per section
+  readonly breakProbability: number = 25;// Probability for a "break" section (section without obstacles). lower number -> more probable (max: 0 -> 100%)
+  readonly giftProbability: number = 0;// Probability for a gift to spawn in a section. lower number -> more probable (max: 0 -> 100%)
 
   // Types
   // Values by constructor
@@ -15,6 +16,8 @@ export class ThatSection {
   // Values
   obstacles: ThatObstacle[] = [];
   marker: ThatObstacle;
+  gift: ThatObstacle;
+  hasGift: boolean;
   randomVoidOut: number = globalConsts.getRandomInt(-10, -200)
 
   // Constructor
@@ -22,17 +25,23 @@ export class ThatSection {
     this.scene = currentScene;
 
     // Marker
-    this.marker = new ThatObstacle(obstacleType.MARKER, globalConsts.gameWidth * offset, this.scene, true);
-    this.marker.sprite.setAlpha(!pause ? (globalConsts.getRandomInt(0, this.probability) == 0 ? 0 : 1) : 1);
+    this.marker = new ThatObstacle(obstacleType.MARKER, globalConsts.gameWidth * offset, this.scene, true, false);
+    this.marker.sprite.setAlpha(!pause ? (globalConsts.getRandomInt(0, this.breakProbability) == 0 ? 0 : 1) : 1);
     this.marker.sprite.setVisible(false);
     this.obstacles.push(this.marker);
 
+    // Gift
+    this.hasGift = globalConsts.getRandomInt(0, this.giftProbability) == 0;
+    if (this.hasGift){
+      this.gift = new ThatObstacle(obstacleType.GIFT, this.generateRandomX(16) + globalConsts.gameWidth * (offset - 1), this.scene, false, true);
+      this.obstacles.push(this.gift);
+    }
     // Generate Obstacles
     if (!pause) for (let i = 0; i < this.amountObstacle; i++) this.obstacles.push(this.generateObstacles(false, offset - 1));
   }
 
   generateObstacles(marker: boolean, offset: number): ThatObstacle {
-    return new ThatObstacle(Phaser.Utils.Array.GetRandom(viableObstacles), this.generateRandomX(16) + globalConsts.gameWidth * offset, this.scene, marker);
+    return new ThatObstacle(Phaser.Utils.Array.GetRandom(viableObstacles), this.generateRandomX(16) + globalConsts.gameWidth * offset, this.scene, marker, false);
   }
 
   generateRandomX(margin: number): number {//generates a random x coordinate and checks if the new x value is within a certain margin
@@ -59,7 +68,7 @@ export class ThatSection {
         //console.log(obstacle); // this is like an error. because the body shouldn´t and isn´t null
         continue;
       }
-      obstacle.sprite.setVelocityX(this.speed)
+      obstacle.sprite.setVelocityX(this.speed);
     }
   }
 

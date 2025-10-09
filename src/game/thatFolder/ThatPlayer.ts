@@ -25,6 +25,7 @@ export class ThatPlayer {
   // Values
   isSneaking: boolean = false;
   score: number = 0;
+  gifts: number = 0;
   jumpTimeleft: number = 0;
   // Values by constructor
   scene: Scene;
@@ -73,9 +74,22 @@ export class ThatPlayer {
     // Updates text
     this.scoreText.setText(formatTime(newScore));
   }
-
+  
   increaseScore(plusScore: number): void {
     this.setScore(this.getScore() + plusScore);
+  }
+
+  // Gift
+  getGifts(): number {
+    return this.gifts;
+  }
+
+  setGifts(gifts: number): void {
+    this.gifts = gifts;
+  }
+
+  increaseGifts(plusGifts: number): void{
+    this.setGifts(this.getGifts() + plusGifts);
   }
 
   // Updates movement
