@@ -80,7 +80,6 @@ const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
 }
 
 
-
 export class ThatObstacle {
   x: number;
   y: number;

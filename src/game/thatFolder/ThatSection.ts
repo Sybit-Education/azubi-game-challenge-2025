@@ -1,7 +1,6 @@
 import {Scene} from 'phaser';
 import {globalConsts} from '../main.ts';
 import {obstacleType, ThatObstacle, viableObstacles} from './ThatObstacle.ts';
-import {ThatPlayer} from './ThatPlayer.ts';
 
 export class ThatSection {
 

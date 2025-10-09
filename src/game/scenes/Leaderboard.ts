@@ -11,7 +11,7 @@ import Image = Phaser.GameObjects.Image;
 const range: number = 15;
 const iconX: number = 150;
 const categoryX: number = 260;
-const refreshLimit:number = 10;
+const refreshLimit: number = 10;
 const style = {
   font: "20px pixelFont",
   color: "#ffffff",
