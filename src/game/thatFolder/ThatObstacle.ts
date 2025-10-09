@@ -7,7 +7,8 @@ export enum obstacleType {
   BIRDPINK = "BIRDPINK",
   SNOWMAN = "SNOWMAN",
   ROCKS = "ROCKS",
-  MARKER = "MARKER"
+  MARKER = "MARKER",
+
 }
 
 // All obstacle array
@@ -75,8 +76,10 @@ const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     offsetY: 0,
     scale: 1,
     weight: 0
-  }
+  },
 }
+
+
 
 export class ThatObstacle {
   x: number;

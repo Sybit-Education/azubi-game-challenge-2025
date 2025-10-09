@@ -1,6 +1,7 @@
 import {Scene} from 'phaser';
 import {globalConsts} from '../main.ts';
 import {obstacleType, ThatObstacle, viableObstacles} from './ThatObstacle.ts';
+import {ThatPlayer} from './ThatPlayer.ts';
 
 export class ThatSection {
 
@@ -8,6 +9,9 @@ export class ThatSection {
   readonly speed: number = -200;
   readonly amountObstacle: number = 3;
   readonly probability: number = 25;
+  readonly obstaclePropertiesMap = {}
+  GIFT1: `gift1`;
+  PLAYER: 'player2'
 
   // Types
   // Values by constructor
@@ -71,3 +75,15 @@ export class ThatSection {
     }
   }
 }
+
+/* this.image = this.physics.add.group({
+  key: 'gift1',
+  repeat: -1,
+  setXY: { x: 350, y: 90 },
+});
+this.physics.add.collider(this.image, 'ground');
+this.physics.add.overlap(this.player, this.gift1, this.collectGifts, null, this);
+this.gift.create(this.gameW, this.gameH, 'apple');
+*/
+
+
