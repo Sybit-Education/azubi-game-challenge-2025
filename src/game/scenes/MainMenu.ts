@@ -35,7 +35,8 @@ export class MainMenu extends Scene {
     this.buttonPlay = new Button(this.gameW * 0.5, this.gameH * 0.37, 7, 'button_play', this, () => this.scene.start('thatGame'));
     this.buttonOptions = new Button(this.gameW * 0.5, this.gameH * 0.5, 7, 'button_options', this, () => this.scene.start('options'));
     this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.75, 7, 'button_credits', this, () => this.scene.start('credits'));
-    this.buttonControl = new Button(this.gameW * 0.5, this.gameH * 0.63, 7, 'button_controls', this, () => this.scene.start('controls'))
+    this.buttonControl = new Button(this.gameW * 0.5, this.gameH * 0.63, 7, 'button_controls', this, () => this.scene.start('controls'));
+    this.buttonControl = new Button(this.gameW * 0.3, this.gameH * 0.63, 5, 'button_back', this, () => this.scene.start('leaderboard')); // TODO | add better texture
     if (window.opener != null) this.buttonClose = new Button(this.gameW * 0.5, this.gameH * 0.85, 6, 'button_close', this, () => window.close()); // This is a website close button
   }
 }

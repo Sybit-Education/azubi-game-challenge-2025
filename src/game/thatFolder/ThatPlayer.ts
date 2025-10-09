@@ -139,7 +139,9 @@ export class ThatPlayer {
   }
 }
 
-export function formatTime(milliseconds: number): string {
+export function
+
+formatTime(milliseconds: number): string {
   milliseconds *= 100;
   const minutes: number = Math.floor(milliseconds / 60000);
   const seconds: number = Math.floor((milliseconds % 60000) / 1000);

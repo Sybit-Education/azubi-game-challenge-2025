@@ -47,7 +47,7 @@ export class ThatSection {
         xWithinMargin = true
       }
     }
-    if (xWithinMargin) {
+    if (xWithinMargin) {// call method again if x is within the margin, creating a new random x (hopefully NOT within the margin again)
       // Similar to stack overflow
       console.log("oops, recursion time :p")
       return this.generateRandomX(margin);
