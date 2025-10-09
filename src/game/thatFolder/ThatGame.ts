@@ -1,11 +1,15 @@
 import {ThatPlayer} from './ThatPlayer.ts';
 import {ThatGround} from './ThatGround.ts';
-import {displayDebug} from '../main.ts';
+import {displayDebug, globalConsts} from '../main.ts';
 import {ThatSection} from './ThatSection.ts';
 import {spawnHouses, updateMovement} from '../custom_classes/Background.ts';
 import {generateCode} from '../scenes/GameOver.ts';
 import Sprite = Phaser.Physics.Arcade.Sprite;
+<<<<<<< HEAD
 import { obstacleType } from './ThatObstacle.ts';
+=======
+import Text = Phaser.GameObjects.Text;
+>>>>>>> 926fb0e370eb1c0a52d15bf7dd1fdd75a773ca08
 
 export class ThatGame extends Phaser.Scene {
   // Types
@@ -14,6 +18,7 @@ export class ThatGame extends Phaser.Scene {
   sections: ThatSection[] = [];
   // Collusion
   collisionPlayerAndGround: Phaser.Physics.Arcade.Collider;
+
 
   // Constructor
   constructor() {
@@ -63,6 +68,27 @@ export class ThatGame extends Phaser.Scene {
 
     // End game on ESC
     this.input.keyboard?.on('keydown-ESC', this.gameOver, this);
+
+    // Display a note that you can collect gifts when starting the game
+    const infoText: Text = this.add.text(
+      this.cameras.main.centerX, globalConsts.gameHeight * 0.25,
+      "Collect the gifts to get extra points!", {
+        font: "22px " + globalConsts.pixelFont,
+        color: "#ffffff",
+        fontStyle: "bold"
+      }
+    ).setOrigin(0.5);
+
+    // Fade-out
+    this.tweens.add({
+      targets: infoText,
+      alpha: 0,
+      delay: 2500, // start after 2.5s
+      duration: 500 // fade-out-duration
+    });
+
+    // Removes text from screen
+    this.time.delayedCall(3000, () => infoText.destroy());
   }
 
   // Update

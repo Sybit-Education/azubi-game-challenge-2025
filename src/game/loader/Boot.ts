@@ -21,7 +21,8 @@ export class Boot extends Scene {
     this.load.setPath("hud/buttons");
     this.load.image("button_back", "back.png");
     this.load.image("button_byName", "byName.png");
-    this.load.image("button_byPlace", "byScore.png");
+    this.load.image("button_byPlace", "byPlace.png");
+    this.load.image("button_byScore", "byScore.png");
     this.load.image("button_close", "close.png");
     this.load.image("button_controls", "controls.png");
     this.load.image("button_credits", "credits.png");
@@ -29,6 +30,7 @@ export class Boot extends Scene {
     this.load.image("button_gifts", "gifts.png");
     this.load.image("button_highscore", "highscore.png");
     this.load.image("button_keyboard", "keyboard.png");
+    this.load.image("button_leaderboard", "leaderboard.png");
     this.load.image("button_music", "music.png");
     this.load.image("button_options", "options.png");
     this.load.image("button_play", "play.png");

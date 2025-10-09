@@ -11,6 +11,7 @@ import Image = Phaser.GameObjects.Image;
 const range: number = 15;
 const iconX: number = 150;
 const categoryX: number = 260;
+const refreshLimit: number = 10;
 const style = {
   font: "20px pixelFont",
   color: "#ffffff",
@@ -19,13 +20,14 @@ const style = {
 
 // Variables
 type leaderboardCategory = "default" | "worst" | "byName" | "byPlace";
-let name: string | undefined = undefined;
+let value: string | number | undefined = undefined;
 let scene: Scene;
 const leaderboardLines: Text[] = [];
 let subtitle: Phaser.GameObjects.Text;
 let leaderboardText: Phaser.GameObjects.Text;
-let isLoaded: boolean = false
 let currentCategory: leaderboardCategory = "default";
+let sortedLeaderboard: leaderboardEntry[] | undefined;
+let clickedRefresh: number = 0;
 
 // Scene class
 export class Leaderboard extends Scene {
@@ -45,7 +47,7 @@ export class Leaderboard extends Scene {
     displayPlayer(scene);
 
     //  Title
-    scene.add.text(50, 50, "Leaderboard", {
+    scene.add.text(50, 50, "Leaderboards", {
       font: "80px pixelFont",
       color: "#ffffff",
       align: 'center'
@@ -61,8 +63,6 @@ export class Leaderboard extends Scene {
       align: 'center'
     });
 
-    // TODO | add/finish search buttons
-
     // Actions
     this.categoryButton("default", 250); // default/top
     this.categoryButton("worst", 300); // default/top
@@ -70,14 +70,21 @@ export class Leaderboard extends Scene {
     this.categoryButton("byName", 350); // Search by name
     this.searchIcon(400);
     this.categoryButton("byPlace", 400); // Search by place
-    new Button(categoryX, 450, 4.5, "button_refresh", this.scene.scene, rerenderLeaderboard); // refresh
+    new Button(categoryX, 450, 4.5, "button_refresh", this.scene.scene, () => {
+      if (clickedRefresh > refreshLimit) {
+        alert("STOP! Thats ENOUGH");
+        return;
+      }
+      fetchLeaderboard().then(() => rerenderLeaderboard())// refresh
+      clickedRefresh++;
+    });
 
     // Sets lines
     if (leaderboardLines.length == 0) {
-      let yCoord: number = 220;
+      let yCord: number = 220;
       for (let j: number = 0; j < range; j++) {
-        leaderboardLines.push(scene.add.text(490, yCoord, "", style));
-        yCoord += 35;
+        leaderboardLines.push(scene.add.text(490, yCord, "", style));
+        yCord += 35;
       }
     }
 
@@ -85,134 +92,209 @@ export class Leaderboard extends Scene {
     leaderboardText = scene.add.text(510, 450, "", style).setOrigin(0, 0);
 
     // Renders leaderboard
-    renderLeaderboard();
+    fetchLeaderboard().then(() => renderLeaderboard());
   }
 
+  // Search icon constructor
   searchIcon(y: number): void {
     const image: Image = this.add.image(iconX, y, "button_search");
     image.setScale(2.5);
   }
 
+  // Category button constructor
   categoryButton(category: leaderboardCategory, y: number): void {
     const imageID: string = ({
       "default": "button_top",
       "worst": "button_worst",
       "byName": "button_byName",
-      "byPlace": "button_byPlace"
-    })[category] || 'resultDefault';
+      "byPlace": "button_byPlace",
+    })[category];
     new Button(categoryX, y, 4.5, imageID, this.scene.scene, () => prompt(category));
   }
 }
 
+// On button press. Sometimes input
 function prompt(category: leaderboardCategory): void {
   // Check if leaderboard is loaded
-  if (!isLoaded) {
-    alert("The leaderboard could not be loaded\nAnd therefore no score can be uploaded");
+  if (sortedLeaderboard == undefined) {
+    alert("The leaderboard could not be loaded\nAnd therefore cannot be sorted");
     return;
   }
 
-  switch (category) {
-    case "worst":
-    case "default":
-      currentCategory = category;
-      rerenderLeaderboard();
-      return;
+  // These categories don´t need a prompt
+  if (category == "worst" || category == "default") {
+    currentCategory = category;
+    rerenderLeaderboard();
+    return;
   }
 
+  // Prompt text
+  const promptText: string | undefined = ({
+    "default": undefined,
+    "worst": undefined,
+    "byName": "Please enter the abbreviation you want to search for",
+    "byPlace": "Please enter the place you would like to see",
+  })[category];
 
-  // Main prompt
-  let prompt: string | null = window.prompt("please enter your abbreviation");
+  let prompt: string | null = window.prompt(promptText);
 
   // Cancel
   if (prompt == null) return;
 
-  // YOU cannot be used
-  if (prompt.toUpperCase() == "YOU") {
-    alert("This cannot be used as name");
+  // Logic
+  if (category == "byName") {
+    // To lowercase
+    prompt = prompt.toLowerCase()
+
+    // check if exists
+    if (!(sortedLeaderboard.some(entry => entry.name === prompt))) {
+      alert("The name " + prompt + " could not be found")
+      return;
+    }
+  } else if (category == "byPlace") {
+    const parsed: number = parseInt(prompt, 10);
+    // Is a number?
+    if (isNaN(parsed)) {
+      alert("This isn´t a number")
+      return;
+    }
+
+    // Are that many entries
+    if (sortedLeaderboard.length < parsed) {
+      alert("There aren't that many entries");
+      return;
+    }
+
+    // Over 0
+    if (0 >= parsed) {
+      alert("Nobody is so good that they are placed in the minus area");
+      return;
+    }
+
+  } else {
+    alert("404 - not found")
     return;
   }
 
-  // Lowercase
-  prompt = prompt.toLowerCase();
-
-  // Sets name
-  name = prompt;
+  // Success
+  currentCategory = category; // sets category
+  value = prompt; // sets name as value
+  rerenderLeaderboard(); // Rerenders leaderboard
 }
 
+// Clears and renders scoreboard
 function rerenderLeaderboard(): void {
   clearsLeaderboardLine();
-  renderLeaderboard();
+  renderLeaderboard().then(() => {
+  });
 }
 
+// Resets scoreboard lines
 function clearsLeaderboardLine(): void {
-  // Resets every lines content
-  for (let line of leaderboardLines) line.setText("");
+  // Resets every lines content + color
+  for (let line of leaderboardLines) {
+    line.setText("");
+    line.setColor(style.color);
+  }
 }
 
 // Renders leaderboard
 async function renderLeaderboard(): Promise<void> {
-  // save state
-  isLoaded = false;
-
   // Set loading text
   leaderboardText.setText("loading leaderboard...");
   subtitle.setText("Loading leaderboard");
 
-  // Fetch leaderboard
-  let leaderboardObj: Record<string, number> | undefined = await getLeaderboard();
-
   // Fetching failed
-  if (leaderboardObj == undefined) {
+  if (sortedLeaderboard == undefined) {
     leaderboardText.setText("loading leaderboard\nfailed");
     subtitle.setText("Not available");
     return;
   }
 
-  // Sort leaderboard
-  const leaderboard: leaderboardEntry[] = sort(leaderboardObj);
+  // Variables
+  let line: number = 0;
+  let nameIndex: number;
+  let startI: number;
+  let endI: number;
 
   // Display top 3 leaderboard
   switch (currentCategory) {
     case "default":
-      for (let i: number = 0; i <= (leaderboard.length > range ? range : leaderboard.length) - 1; i++) {
+      for (let i: number = 0; i <= (sortedLeaderboard.length > range ? range : sortedLeaderboard.length) - 1; i++) {
         const text: Text = leaderboardLines[i];
-        text.setText(formatText(i, leaderboard[i].name, leaderboard[i].score));
+        text.setText(formatText(i, sortedLeaderboard[i].name, sortedLeaderboard[i].score));
       }
       break;
     case "worst":
-      let line: number = 0;
-      for (let i: number = (leaderboard.length - range) > 0 ? leaderboard.length - range : 0; i <= leaderboard.length - 1; i++) {
+      for (let i: number = (sortedLeaderboard.length - range) > 0 ? sortedLeaderboard.length - range : 0; i <= sortedLeaderboard.length - 1; i++) {
         const text: Text = leaderboardLines[line];
-        text.setText(formatText(i, leaderboard[i].name, leaderboard[i].score));
+        text.setText(formatText(i, sortedLeaderboard[i].name, sortedLeaderboard[i].score));
         line++;
       }
-  }
+      break
+    case "byName":
+      nameIndex = sortedLeaderboard.findIndex(item => item.name === value); // index by name
+      startI = nameIndex - Math.round(range / 2) + 1;
+      if (startI < 0) startI = 0;
+      endI = nameIndex + (range / 2);
+      for (let i: number = startI; i <= endI; i++) {
+        const text: Text = leaderboardLines[line];
 
+        try {
+          const thatName: string = sortedLeaderboard[i].name;
+          const score: number = sortedLeaderboard[i].score;
+          text.setText(formatText(i, thatName, score));
+          if (thatName == value) text.setColor("#000000");
+        } catch (e) {
+          text.setText(formatText(i, "xxx", 0));
+        }
+
+        line++;
+      }
+      break
+    case "byPlace":
+      nameIndex = parseInt(<string>value, 10) - 1; // index by value
+      startI = nameIndex - Math.round(range / 2) + 1;
+      if (startI < 0) startI = 0;
+      endI = nameIndex + (range / 2);
+      for (let i: number = startI; i <= endI; i++) {
+        const text: Text = leaderboardLines[line];
+
+        try {
+          const thatName: string = sortedLeaderboard[i].name;
+          const score: number = sortedLeaderboard[i].score;
+          text.setText(formatText(i, thatName, score));
+          if (i == nameIndex) text.setColor("#000000");
+        } catch (e) {
+          text.setText(formatText(i, "xxx", 0));
+        }
+        line++;
+      }
+      break
+  }
 
   // Removes "loading leaderboard" text
   leaderboardText.setText("");
 
-  const entries: number = range > leaderboard.length ? leaderboard.length : range;
+  // Amount of entries
+  const entries: number = range > sortedLeaderboard.length ? sortedLeaderboard.length : range;
 
   // Sets subtitle
   const subtitleText: string = ({
     "default": "Top " + entries,
     "worst": "Worst " + entries,
-    "byName": "Leaderboard at @abc",
-    "byPlace": "Leaderboard at 1."
-  })[currentCategory] || 'resultDefault';
-
+    "byName": "Leaderboard at @ " + value,
+    "byPlace": "Leaderboard at " + value + ". place"
+  })[currentCategory] || 'This text failed';
   subtitle.setText(subtitleText);
-
-  // save state
-  isLoaded = true;
 }
 
+// Formates lines
 function formatText(i: number, name: string, score: number): string {
   return `${i + 1}. ${name} - ${formatTime(score)}`
 }
 
-// Sort record
+// Sort record/entries
 function sort(record: Record<string, number>): leaderboardEntry[] {
   return Object.entries(record)
     .map(([name, score]): leaderboardEntry => ({name, score: Number(score)}))
@@ -220,12 +302,12 @@ function sort(record: Record<string, number>): leaderboardEntry[] {
 }
 
 // [GET] the current leaderboard
-async function getLeaderboard(): Promise<Record<string, number> | undefined> {
+async function fetchLeaderboard() {
   try {
     const res: Response = await fetch(globalConsts.apiURL + "/leaderboard", {method: "GET"});
     if (!res.ok) throw new Error(`HTTP ERROR ${res.status}`);
-    return await res.json();
+    sortedLeaderboard = sort(await res.json()); // sort and set
   } catch (e) {
-    return undefined;
+    sortedLeaderboard = undefined;
   }
 }

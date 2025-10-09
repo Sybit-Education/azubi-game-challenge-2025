@@ -5,10 +5,19 @@ import {obstacleType, ThatObstacle, viableObstacles} from './ThatObstacle.ts';
 export class ThatSection {
 
   // config
+<<<<<<< HEAD
   readonly speed: number = -200;// speed of setion -> obstacles move at that speed
   readonly amountObstacle: number = 3;// amount of obstacles per section
   readonly breakProbability: number = 25;// Probability for a "break" section (section without obstacles). lower number -> more probable (max: 0 -> 100%)
   readonly giftProbability: number = 0;// Probability for a gift to spawn in a section. lower number -> more probable (max: 0 -> 100%)
+=======
+  readonly speed: number = -200;
+  readonly amountObstacle: number = 3;
+  readonly probability: number = 25;
+  readonly obstaclePropertiesMap = {}
+  GIFT1: `gift1`;
+  PLAYER: 'player2'
+>>>>>>> 926fb0e370eb1c0a52d15bf7dd1fdd75a773ca08
 
   // Types
   // Values by constructor
@@ -80,3 +89,15 @@ export class ThatSection {
     }
   }
 }
+
+/* this.image = this.physics.add.group({
+  key: 'gift1',
+  repeat: -1,
+  setXY: { x: 350, y: 90 },
+});
+this.physics.add.collider(this.image, 'ground');
+this.physics.add.overlap(this.player, this.gift1, this.collectGifts, null, this);
+this.gift.create(this.gameW, this.gameH, 'apple');
+*/
+
+
