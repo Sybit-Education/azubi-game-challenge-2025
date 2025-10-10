@@ -32,4 +32,7 @@ export class Steuerung extends Phaser.Scene{
     this.buttonBack = new Button(this.gameW * 0.5, this.gameH * 0.25, 4, 'button_back', this, () => {
       this.scene.start('mainMenu')
     });
-  }}
+
+
+  }
+}
