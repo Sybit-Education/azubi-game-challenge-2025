@@ -12,14 +12,16 @@ const range: number = 15;
 const iconX: number = 150;
 const categoryX: number = 260;
 const refreshLimit: number = 10;
+const mainColor: string = "#ffffff";
+const selectedColor: string = "#000000";
 const style = {
   font: "20px pixelFont",
-  color: "#ffffff",
+  color: mainColor,
   align: 'center'
 }
 
 // Variables
-type leaderboardCategory = "default" | "worst" | "byName" | "byPlace";
+type leaderboardCategory = "default" | "worst" | "byName" | "byPlace" | "byScore";
 let value: string | number | undefined = undefined;
 let scene: Scene;
 const leaderboardLines: Text[] = [];
@@ -54,10 +56,10 @@ export class Leaderboard extends Scene {
     });
 
     // Back Button
-    new Button(130, 175, 3, "button_back", this.scene.scene, () => this.scene.start("mainMenu"))
+    new Button(70, 175, 3, "button_back", this.scene.scene, () => this.scene.start("mainMenu"))
 
     // Subtitle
-    subtitle = scene.add.text(180, 163, "Loading this text", {
+    subtitle = scene.add.text(110, 163, "Loading this text", {
       font: "30px pixelFont",
       color: "#ffffff",
       align: 'center'
@@ -70,9 +72,11 @@ export class Leaderboard extends Scene {
     this.categoryButton("byName", 350); // Search by name
     this.searchIcon(400);
     this.categoryButton("byPlace", 400); // Search by place
-    new Button(categoryX, 450, 4.5, "button_refresh", this.scene.scene, () => {
+    this.searchIcon(450);
+    this.categoryButton("byScore", 450); // Search by score
+    new Button(categoryX, 500, 4.5, "button_refresh", this.scene.scene, () => {
       if (clickedRefresh > refreshLimit) {
-        alert("STOP! Thats ENOUGH");
+        alert("STOP! That´s ENOUGH");
         return;
       }
       fetchLeaderboard().then(() => rerenderLeaderboard())// refresh
@@ -108,6 +112,7 @@ export class Leaderboard extends Scene {
       "worst": "button_worst",
       "byName": "button_byName",
       "byPlace": "button_byPlace",
+      "byScore": "button_byScore"
     })[category];
     new Button(categoryX, y, 4.5, imageID, this.scene.scene, () => prompt(category));
   }
@@ -134,6 +139,7 @@ function prompt(category: leaderboardCategory): void {
     "worst": undefined,
     "byName": "Please enter the abbreviation you want to search for",
     "byPlace": "Please enter the place you would like to see",
+    "byScore": "Enter a score to see what place it is"
   })[category];
 
   let prompt: string | null = window.prompt(promptText);
@@ -171,6 +177,14 @@ function prompt(category: leaderboardCategory): void {
       return;
     }
 
+  } else if (category == "byScore") {
+    const parsed: number | null = parseFlexibleTime(prompt);
+    // Is a number?
+    if (parsed == null || isNaN(parsed)) {
+      alert("This isn´t a valid format.\nPlease use following syntax: MMm SSs FFFms\nEvery unit can be used individually")
+      return;
+    }
+    prompt = <string><unknown>parsed;
   } else {
     alert("404 - not found")
     return;
@@ -244,7 +258,7 @@ async function renderLeaderboard(): Promise<void> {
           const thatName: string = sortedLeaderboard[i].name;
           const score: number = sortedLeaderboard[i].score;
           text.setText(formatText(i, thatName, score));
-          if (thatName == value) text.setColor("#000000");
+          if (thatName == value) text.setColor(selectedColor);
         } catch (e) {
           text.setText(formatText(i, "xxx", 0));
         }
@@ -264,7 +278,26 @@ async function renderLeaderboard(): Promise<void> {
           const thatName: string = sortedLeaderboard[i].name;
           const score: number = sortedLeaderboard[i].score;
           text.setText(formatText(i, thatName, score));
-          if (i == nameIndex) text.setColor("#000000");
+          if (i == nameIndex) text.setColor(selectedColor);
+        } catch (e) {
+          text.setText(formatText(i, "xxx", 0));
+        }
+        line++;
+      }
+      break
+    case "byScore":
+      nameIndex = getBestIndex(parseInt(<string>value, 10)); // index by closed value
+      startI = nameIndex - Math.round(range / 2) + 1;
+      if (startI < 0) startI = 0;
+      endI = nameIndex + (range / 2);
+      for (let i: number = startI; i <= endI; i++) {
+        const text: Text = leaderboardLines[line];
+
+        try {
+          const thatName: string = sortedLeaderboard[i].name;
+          const score: number = sortedLeaderboard[i].score;
+          text.setText(formatText(i, thatName, score));
+          if (i == nameIndex) text.setColor(selectedColor);
         } catch (e) {
           text.setText(formatText(i, "xxx", 0));
         }
@@ -284,9 +317,59 @@ async function renderLeaderboard(): Promise<void> {
     "default": "Top " + entries,
     "worst": "Worst " + entries,
     "byName": "Leaderboard at @ " + value,
-    "byPlace": "Leaderboard at " + value + ". place"
-  })[currentCategory] || 'This text failed';
+    "byPlace": "Leaderboard at " + value + ". place",
+    "byScore": "Leaderboard at score " + formatTime(<number>value), // TODO/NOTE: if minutes are available it goes over the edge of the screen
+  })[currentCategory];
   subtitle.setText(subtitleText);
+}
+
+// get closest index to value
+function getBestIndex(target: number): number {
+  if (sortedLeaderboard == undefined) return 0;
+  const entries: [string, leaderboardEntry][] = Object.entries(sortedLeaderboard);
+  let closestIndex: number = -1;
+  let smallestDiff: number = Infinity;
+
+  for (let i: number = 0; i < entries.length; i++) {
+    const [, value] = entries[i];
+    const diff: number = Math.abs(value.score - target);
+    if (diff < smallestDiff) {
+      smallestDiff = diff;
+      closestIndex = i;
+    }
+  }
+
+  return closestIndex;
+}
+
+// Parses prompt to usable ms
+function parseFlexibleTime(input: string): number | null {
+  const regex = /(\d+(?:\.\d+)?)(ms|s|m)/g;
+  let match;
+  let totalMs: number = 0;
+
+  while ((match = regex.exec(input.toLowerCase())) !== null) {
+    const value: number = parseFloat(match[1]);
+    const unit: string = match[2];
+
+    switch (unit) {
+      case "ms":
+        totalMs += value;
+        break;
+      case "s":
+        totalMs += value * 1000;
+        break;
+      case "m":
+        totalMs += value * 60 * 1000;
+        break;
+    }
+  }
+
+  // 0ms -> failed
+  if (totalMs === 0) return null;
+
+  // Conversion in 100 ms steps
+  return Math.round(totalMs / 100);
 }
 
 // Formates lines
@@ -302,7 +385,7 @@ function sort(record: Record<string, number>): leaderboardEntry[] {
 }
 
 // [GET] the current leaderboard
-async function fetchLeaderboard() {
+async function fetchLeaderboard(): Promise<void> {
   try {
     const res: Response = await fetch(globalConsts.apiURL + "/leaderboard", {method: "GET"});
     if (!res.ok) throw new Error(`HTTP ERROR ${res.status}`);
