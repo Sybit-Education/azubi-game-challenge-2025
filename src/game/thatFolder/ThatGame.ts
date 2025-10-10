@@ -5,17 +5,21 @@ import {ThatSection} from './ThatSection.ts';
 import {spawnHouses, updateMovement} from '../custom_classes/Background.ts';
 import {generateCode} from '../scenes/GameOver.ts';
 import Sprite = Phaser.Physics.Arcade.Sprite;
-import { obstacleType } from './ThatObstacle.ts';
+import {obstacleType} from './ThatObstacle.ts';
 import Text = Phaser.GameObjects.Text;
+import {fetchLeaderboard, sortedLeaderboard} from '../scenes/Leaderboard.ts';
 
 export class ThatGame extends Phaser.Scene {
+  // Config
+  displayTop: number = 0.25; // Percentage [0-1] are possible too
+
   // Types
   player: ThatPlayer;
   ground: ThatGround;
   sections: ThatSection[] = [];
+  leaderboardText: Text;
   // Collusion
   collisionPlayerAndGround: Phaser.Physics.Arcade.Collider;
-
 
   // Constructor
   constructor() {
@@ -69,7 +73,8 @@ export class ThatGame extends Phaser.Scene {
     // Display a note that you can collect gifts when starting the game
     const infoText: Text = this.add.text(
       this.cameras.main.centerX, globalConsts.gameHeight * 0.25,
-      "Collect the gifts to get extra points!", {
+      "Collect the gifts to get extra points!",
+      {
         font: "22px " + globalConsts.pixelFont,
         color: "#ffffff",
         fontStyle: "bold"
@@ -86,6 +91,15 @@ export class ThatGame extends Phaser.Scene {
 
     // Removes text from screen
     this.time.delayedCall(3000, () => infoText.destroy());
+
+    // Creates leaderboard Text
+    this.leaderboardText = this.add.text(50, globalConsts.gameHeight * 0.955, "", {
+      font: "20px " + globalConsts.pixelFont,
+      color: "#ffffff",
+    });
+
+    // Fetches leaderboard
+    fetchLeaderboard().then();
   }
 
   // Update
@@ -109,6 +123,22 @@ export class ThatGame extends Phaser.Scene {
       // Moves all obstacles
       section.updateMovement()
     });
+
+    // Top x display
+    if (sortedLeaderboard != undefined) {
+
+      // Rank
+      const rank: number = sortedLeaderboard.findIndex(entry => this.player.score >= entry.score);
+
+      // Display
+      if (this.displayTop > 1) { // Normal
+        if (rank != -1 && rank <= this.displayTop) this.leaderboardText.setText("You´re top " + (rank + 1));
+      } else { // Percentage
+        const topPercent: number = (1 - (sortedLeaderboard.length - rank) / sortedLeaderboard.length) * 100; // Get %
+        if (topPercent == 0) this.leaderboardText.setText("You´re top 1"); // Best player
+        else if (rank != -1 && topPercent <= this.displayTop * 100) this.leaderboardText.setText("You´re top " + topPercent.toFixed(2) + "%");
+      }
+    }
   }
 
   createSection(alpha: number, offset?: number): void {
@@ -116,11 +146,13 @@ export class ThatGame extends Phaser.Scene {
     this.sections.push(thatSection);
     const obstacles: Sprite[] = [];
     const gift: Sprite = thatSection.gift.sprite;
-    for (let obstacle of thatSection.obstacles) if(obstacle.type != obstacleType.GIFT) obstacles.push(obstacle.sprite)
+    for (let obstacle of thatSection.obstacles) if (obstacle.type != obstacleType.GIFT) obstacles.push(obstacle.sprite)
     // collision player and harmful obstacles
-    this.physics.add.collider(this.player.sprite, obstacles, () => {}, () => this.gameOver());
+    this.physics.add.collider(this.player.sprite, obstacles, () => {
+    }, () => this.gameOver());
     // collision player and gift
-    if(thatSection.hasGift) this.physics.add.overlap(this.player.sprite, gift, () => {}, () => this.collectGift(gift));
+    if (thatSection.hasGift) this.physics.add.overlap(this.player.sprite, gift, () => {
+    }, () => this.collectGift(gift));
   }
 
   gameOver(): void {
@@ -144,7 +176,7 @@ export class ThatGame extends Phaser.Scene {
 
   // handle gift collecting
   collectGift(gift: Sprite): void {
-    gift.destroy();// delete the sprite 
+    gift.destroy();// delete the sprite
     this.player.increaseGifts(1);// increase gifts by 1
     console.log(this.player.getGifts());
   }

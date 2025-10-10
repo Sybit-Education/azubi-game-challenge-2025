@@ -28,7 +28,7 @@ const leaderboardLines: Text[] = [];
 let subtitle: Phaser.GameObjects.Text;
 let leaderboardText: Phaser.GameObjects.Text;
 let currentCategory: leaderboardCategory = "default";
-let sortedLeaderboard: leaderboardEntry[] | undefined;
+export let sortedLeaderboard: leaderboardEntry[] | undefined;
 let clickedRefresh: number = 0;
 
 // Scene class
@@ -384,8 +384,20 @@ function sort(record: Record<string, number>): leaderboardEntry[] {
     .sort((a: leaderboardEntry, b: leaderboardEntry): number => b.score - a.score);
 }
 
+// This bricks the current leaderboard
+export function sortLeaderboard(): void {
+  if (sortedLeaderboard == undefined) return;
+  sortedLeaderboard = sort(
+    sortedLeaderboard.reduce((acc, entry) => {
+      acc[entry.name] = entry.score;
+      return acc;
+    }, {} as Record<string, number>)
+  );
+}
+
+
 // [GET] the current leaderboard
-async function fetchLeaderboard(): Promise<void> {
+export async function fetchLeaderboard(): Promise<void> {
   try {
     const res: Response = await fetch(globalConsts.apiURL + "/leaderboard", {method: "GET"});
     if (!res.ok) throw new Error(`HTTP ERROR ${res.status}`);
