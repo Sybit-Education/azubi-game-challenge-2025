@@ -1,5 +1,16 @@
 {
-  "development": ["Jimmy", "Julian", "Tobias","Thiara","Fiona"],
-  "design": ["Fiona", "Thiara"],
-  "sound design": ["Jimmy"]
+  "development": [
+    "Tobias",
+    "Julian",
+    "Thiara",
+    "Jimmy",
+    "Fiona"
+  ],
+  "design": [
+    "Fiona",
+    "Thiara"
+  ],
+  "sound design": [
+    "Jimmy"
+  ]
 }
