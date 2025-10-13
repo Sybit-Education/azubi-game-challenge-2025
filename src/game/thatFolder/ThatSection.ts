@@ -68,7 +68,7 @@ export class ThatSection {
         //console.log(obstacle); // this is like an error. because the body shouldn´t and isn´t null
         continue;
       }
-      obstacle.sprite.setVelocityX(this.speed);
+      obstacle.sprite.setVelocityX(this.speed * globalConsts.currentSpeed);
     }
   }
 

@@ -49,6 +49,17 @@ export class ThatGame extends Phaser.Scene {
       loop: true
     });
 
+    //Timer // ToDo muss noch einstellen
+    this.time.addEvent({
+      delay: 10000,
+      callback: () => {
+        console.log("Speed") ;
+        globalConsts.currentSpeed += 2;
+      },
+      callbackScope: this,
+      loop: true
+    })
+
     // Creates Ground
     this.ground = new ThatGround(this.scene.scene);
 
