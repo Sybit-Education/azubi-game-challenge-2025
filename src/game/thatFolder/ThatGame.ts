@@ -20,6 +20,7 @@ export class ThatGame extends Phaser.Scene {
   // Constructor
   constructor() {
     super("thatGame");
+
   }
 
   // Create
@@ -120,7 +121,10 @@ export class ThatGame extends Phaser.Scene {
     // collision player and harmful obstacles
     this.physics.add.collider(this.player.sprite, obstacles, () => {}, () => this.gameOver());
     // collision player and gift
-    if(thatSection.hasGift) this.physics.add.overlap(this.player.sprite, gift, () => {}, () => this.collectGift(gift));
+    if(thatSection.hasGift)
+      this.physics.add.overlap(this.player.sprite, gift, () => {
+
+      }, () => this.collectGift(gift));
   }
 
   gameOver(): void {
@@ -144,8 +148,9 @@ export class ThatGame extends Phaser.Scene {
 
   // handle gift collecting
   collectGift(gift: Sprite): void {
-    gift.destroy();// delete the sprite 
+    gift.destroy();// delete the sprite
     this.player.increaseGifts(1);// increase gifts by 1
-    console.log(this.player.getGifts());
+    this.player.jumpLefts ++;
+
   }
 }

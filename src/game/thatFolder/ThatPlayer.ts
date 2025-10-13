@@ -2,6 +2,8 @@ import {Scene} from 'phaser';
 import {globalConsts} from '../main.ts';
 import Sprite = Phaser.Physics.Arcade.Sprite;
 import Text = Phaser.GameObjects.Text;
+import {ThatGame} from './ThatGame.ts';
+import {ThatSection} from './ThatSection.ts';
 
 export class ThatPlayer {
   // Config
@@ -12,6 +14,7 @@ export class ThatPlayer {
   // Textures
   spriteID: string = "player2"
   sneakingID: string = "playerSneaking2";
+  ground: Phaser.Types.Physics.Arcade.ArcadeColliderType
   // Keys
   keyIdUp: string = "W";
   keyIdDown: string = "S";
@@ -27,6 +30,10 @@ export class ThatPlayer {
   score: number = 0;
   gifts: number = 0;
   jumpTimeleft: number = 0;
+
+
+  jumpLefts: number = 0;
+
   // Values by constructor
   scene: Scene;
   sprite: Sprite;
@@ -74,7 +81,7 @@ export class ThatPlayer {
     // Updates text
     this.scoreText.setText(formatTime(newScore));
   }
-  
+
   increaseScore(plusScore: number): void {
     this.setScore(this.getScore() + plusScore);
   }
@@ -88,13 +95,13 @@ export class ThatPlayer {
     this.gifts = gifts;
   }
 
-  increaseGifts(plusGifts: number): void{
+  increaseGifts(plusGifts: number): void {
     this.setGifts(this.getGifts() + plusGifts);
   }
 
   // Updates movement
   updateMovement(): void {
-    if (!this.keyUp || !this.keyDown || !this.keyLeft || !this.keyRight) return;
+    if (this.keyUp == undefined || this.keyDown == undefined || this.keyLeft == undefined || this.keyRight == undefined) return;
     const isOnGround: boolean | undefined = this.sprite.body?.touching.down;
 
     // Apply direction
@@ -118,7 +125,6 @@ export class ThatPlayer {
     // Sets the body to sprite size
     this.sprite.body?.setSize();
 
-
     // Fast fall when sneaking
     this.sprite.setGravityY(!isOnGround && this.keyDown?.isDown ? this.sneakGravity : this.normalGravity); // Heavier gravity while sneaking in air
 
@@ -138,8 +144,15 @@ export class ThatPlayer {
       return;
     }
 
-    // No lime left. No extra jump-height/checks
-    if (this.jumpTimeleft <= 0) return;
+    // No lime left. No extra jump-height/checks.doubleJump
+
+    if (this.jumpTimeleft <= 0) {
+      if (!isOnGround && this.keyUp.isDown && this.jumpLefts > 0) {
+        this.sprite.setVelocityY(-500);
+        this.jumpLefts --;
+      }
+      return;
+    }
 
     // Extra velocity while button is pressed down
     if (this.keyUp.isDown) {
@@ -149,13 +162,12 @@ export class ThatPlayer {
       this.sprite.setVelocityY(current * velocity);
     } else {
       this.jumpTimeleft = 0;
+
     }
   }
 }
 
-export function
-
-formatTime(milliseconds: number): string {
+export function formatTime(milliseconds: number): string {
   milliseconds *= 100;
   const minutes: number = Math.floor(milliseconds / 60000);
   const seconds: number = Math.floor((milliseconds % 60000) / 1000);
@@ -168,3 +180,4 @@ formatTime(milliseconds: number): string {
   else result += "000ms"
   return result.trim();
 }
+

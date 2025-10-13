@@ -77,18 +77,9 @@ export class ThatSection {
     for (let obstacle of this.obstacles) {
       obstacle.sprite.body?.destroy();
       obstacle.sprite.destroy(true);
+
     }
   }
 }
-
-/* this.image = this.physics.add.group({
-  key: 'gift1',
-  repeat: -1,
-  setXY: { x: 350, y: 90 },
-});
-this.physics.add.collider(this.image, 'ground');
-this.physics.add.overlap(this.player, this.gift1, this.collectGifts, null, this);
-this.gift.create(this.gameW, this.gameH, 'apple');
-*/
 
 
