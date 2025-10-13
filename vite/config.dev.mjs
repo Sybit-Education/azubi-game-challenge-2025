@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: 'azubi-game-challenge-2025/',
+  base: './',
   build: {
     rollupOptions: {
       output: {
