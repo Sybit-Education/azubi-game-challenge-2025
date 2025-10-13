@@ -4,6 +4,7 @@ import {formatTime} from '../thatFolder/ThatPlayer.ts';
 import {Button} from '../custom_classes/Button.ts';
 import Text = Phaser.GameObjects.Text;
 import Rectangle = Phaser.GameObjects.Rectangle;
+import {fetchLeaderboard, sortedLeaderboard, sortLeaderboard} from './Leaderboard.ts';
 
 // config
 const range: number = 2;
@@ -59,7 +60,7 @@ export class GameOver extends Scene {
     this.add.text(245, 290, formatTime(score), style).setOrigin(0, 0);
 
     // Renders leaderboard
-    renderLeaderboard();
+    renderLeaderboard().then();
 
     // Save score button
     saveButton = new Button(700, 700, 7, "button_save", scene, () => prompt());
@@ -159,11 +160,11 @@ async function renderLeaderboard(): Promise<void> {
   // Set loading text
   leaderboardText.setText("loading leaderboard...");
 
-  // Fetch leaderboard
-  let leaderboardObj: Record<string, number> | undefined = await getLeaderboard();
+  // Try fetching leaderboard again
+  if (sortedLeaderboard == undefined) await fetchLeaderboard();
 
   // Fetching failed
-  if (leaderboardObj == undefined) {
+  if (sortedLeaderboard == undefined) {
     leaderboardText.setText("loading leaderboard\nfailed");
     return;
   }
@@ -172,24 +173,27 @@ async function renderLeaderboard(): Promise<void> {
   displayName = name != undefined ? name : "YOU";
 
   // adds yourself
-  leaderboardObj[displayName] = score
+  sortedLeaderboard.push({
+    name: displayName,
+    score: score
+  });
 
-  // Sort leaderboard
-  const leaderboard: leaderboardEntry[] = sort(leaderboardObj);
+  // sort
+  sortLeaderboard();
 
   // Display top 3 leaderboard
   let yCoord: number = 290;
-  for (let i: number = 0; i <= (leaderboard.length > 3 ? 3 : leaderboard.length) - 1; i++) {
-    leaderboardLines.push(scene.add.text(525, yCoord, `${i + 1}. ${leaderboard[i].name} - ${formatTime(leaderboard[i].score)}`, style).setColor(leaderboard[i].name == displayName ? "#000000" : style.color));
+  for (let i: number = 0; i <= (sortedLeaderboard.length > 3 ? 3 : sortedLeaderboard.length) - 1; i++) {
+    leaderboardLines.push(scene.add.text(525, yCoord, `${i + 1}. ${sortedLeaderboard[i].name} - ${formatTime(sortedLeaderboard[i].score)}`, style).setColor(sortedLeaderboard[i].name == displayName ? "#000000" : style.color));
     yCoord += 30;
   }
 
   // Display other score
   yCoord = 500;
-  const index: number = leaderboard.findIndex(item => item.name === displayName);
+  const index: number = sortedLeaderboard.findIndex(item => item.name === displayName);
   for (let i: number = index - range; i < index + range + 1; i++) {
     try {
-      leaderboardLines.push(scene.add.text(525, yCoord, `${i + 1}. ${leaderboard[i].name} - ${formatTime(leaderboard[i].score)}`, style).setColor(leaderboard[i].name == displayName ? "#000000" : style.color));
+      leaderboardLines.push(scene.add.text(525, yCoord, `${i + 1}. ${sortedLeaderboard[i].name} - ${formatTime(sortedLeaderboard[i].score)}`, style).setColor(sortedLeaderboard[i].name == displayName ? "#000000" : style.color));
     } catch (e) {
       leaderboardLines.push(scene.add.text(525, yCoord, `${i + 1 > 0 ? i + 1 : 0}. xxx - ` + formatTime(0), style));
     }
@@ -202,14 +206,6 @@ async function renderLeaderboard(): Promise<void> {
   // save state
   leaderboardIsLoaded = true;
 }
-
-// Sort record
-function sort(record: Record<string, number>): leaderboardEntry[] {
-  return Object.entries(record)
-    .map(([name, score]): leaderboardEntry => ({name, score: Number(score)}))
-    .sort((a: leaderboardEntry, b: leaderboardEntry): number => b.score - a.score);
-}
-
 
 // [GET] a new key
 export async function generateCode(): Promise<string | undefined> {
@@ -240,17 +236,6 @@ async function saveLeaderboard(name: string, key: string | null, value: number):
         "code": key
       }),
     });
-  } catch (e) {
-    return undefined;
-  }
-}
-
-// [GET] the current leaderboard
-async function getLeaderboard(): Promise<Record<string, number> | undefined> {
-  try {
-    const res: Response = await fetch(globalConsts.apiURL + "/leaderboard", {method: "GET"});
-    if (!res.ok) throw new Error(`HTTP ERROR ${res.status}`);
-    return await res.json();
   } catch (e) {
     return undefined;
   }

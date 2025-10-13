@@ -149,7 +149,7 @@ export class ThatPlayer {
     if (this.jumpTimeleft <= 0) {
       if (!isOnGround && this.keyUp.isDown && this.jumpLefts > 0) {
         this.sprite.setVelocityY(-500);
-        this.jumpLefts --;
+        this.jumpLefts--;
       }
       return;
     }

@@ -108,11 +108,6 @@ export class ThatObstacle {
     this.sprite = this.scene.physics.add.sprite(this.x, this.y, !isMarker ? this.image : "");
     this.sprite.setAlpha(!isMarker ? 1 : 0);
 
-    if(isGift){
-      //this.sprite.setImmovable(false);
-      this.sprite.setPushable(false);
-    }
-
     if (!isMarker) this.sprite.setBodySize(obstaclePropertiesMap[type].width, obstaclePropertiesMap[type].height);
     this.sprite.setScale(obstaclePropertiesMap[type].scale);
     this.sprite.setOffset(obstaclePropertiesMap[type].offsetX, obstaclePropertiesMap[type].offsetY);

@@ -24,6 +24,7 @@ const getRandomInt: Function = (min: number, max: number): number => {//return a
   const maxFloored: number = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
 }
+let speed: number = 1;
 
 // Global variables
 export const globalConsts = {
@@ -36,6 +37,7 @@ export const globalConsts = {
   pixelFont: pixelFontName,
   apiURL: api,
   getRandomInt: getRandomInt,
+  currentSpeed: speed,
 };
 
 // Config for Game
