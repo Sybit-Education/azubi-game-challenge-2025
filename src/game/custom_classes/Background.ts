@@ -43,6 +43,7 @@ const layerPropertiesMap: Record<Layer, LayerProperties> = {
     scale: () => 4 + Math.random() * 0.2,
     depth: -3,
     y: () => globalConsts.gameHeight - 55,
+    speed: () => 1.2 * globalConsts.houseSpeed  
     speed: () => 0.6,
     opacity: 0.6,
     // Data
