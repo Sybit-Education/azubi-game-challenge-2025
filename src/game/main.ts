@@ -37,7 +37,9 @@ export const globalConsts = {
   pixelFont: pixelFontName,
   apiURL: api,
   getRandomInt: getRandomInt,
-  currentSpeed: speed,
+  backgroundSpeed: speed,
+  houseSpeed: speed,
+  spriteSpeed: speed,
 };
 
 // Config for Game

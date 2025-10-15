@@ -107,8 +107,12 @@ export class ThatSection {
   // Moves all obstacles
   updateMovement(): void {
     for (let obstacle of this.obstacles) {
-      if (!obstacle.sprite.body) continue;
-      obstacle.sprite.setVelocityX(this.speed * globalConsts.currentSpeed);
+      if (obstacle.sprite.body == undefined) {
+        //console.log(obstacle); // this is like an error. because the body shouldn´t and isn´t null
+        continue;
+      }
+      obstacle.sprite.setVelocityX(this.speed * globalConsts.spriteSpeed);
+
     }
   }
 

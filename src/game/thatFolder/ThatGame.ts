@@ -49,12 +49,14 @@ export class ThatGame extends Phaser.Scene {
       loop: true
     });
 
-    //Timer // ToDo muss noch einstellen
+    //Timer
     this.time.addEvent({
-      delay: 10000,
+      delay: 1000,
       callback: () => {
         console.log("Speed");
-        globalConsts.currentSpeed += 2;
+        globalConsts.backgroundSpeed += 0.02;
+        globalConsts.houseSpeed += 0.04;
+        globalConsts.spriteSpeed += 0.06;
       },
       callbackScope: this,
       loop: true
@@ -84,7 +86,8 @@ export class ThatGame extends Phaser.Scene {
     // Display a note that you can collect gifts when starting the game
     const infoText: Text = this.add.text(
       this.cameras.main.centerX, globalConsts.gameHeight * 0.25,
-      "Collect the gifts to get extra points!", {
+      "Collect the gifts to double Jump!",
+      {
         font: "22px " + globalConsts.pixelFont,
         color: "#ffffff",
         fontStyle: "bold"
