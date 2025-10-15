@@ -29,6 +29,7 @@ export class ThatPlayer {
   gifts: number = 0;
   jumpTimeleft: number = 0;
   jumpLefts: number = 0;
+  wasJumpKeyDownLastFrame = false;
 
   // Values by constructor
   scene: Scene;
@@ -113,16 +114,16 @@ export class ThatPlayer {
     const isOnGround: boolean | undefined = this.sprite.body?.touching.down;
 
     // Apply direction
-    if (this.keyRight.isDown) { // Right
+    if (this.keyRight.isDown) {
       this.sprite.setVelocityX(160);
-    } else if (this.keyLeft.isDown) { // Left
+    } else if (this.keyLeft.isDown) {
       this.sprite.setVelocityX(-160);
-    } else { // Reset force
+    } else {
       this.sprite.setVelocityX(0);
     }
 
     // Sneaking
-    if (this.keyDown.isDown) { // is pressing down button && is touching ground
+    if (this.keyDown.isDown) {
       this.sprite.setTexture(this.sneakingID);
       this.isSneaking = true;
     } else {
@@ -130,47 +131,39 @@ export class ThatPlayer {
       this.isSneaking = false;
     }
 
-    // Sets the body to sprite size
     this.sprite.body?.setSize();
+    this.sprite.setGravityY(!isOnGround && this.keyDown?.isDown ? this.sneakGravity : this.normalGravity);
 
-    // Fast fall when sneaking
-    this.sprite.setGravityY(!isOnGround && this.keyDown?.isDown ? this.sneakGravity : this.normalGravity); // Heavier gravity while sneaking in air
-
-    // Sneaking -> end
+    // Returns if sneaking
     if (this.isSneaking) return;
 
-    // start jumping
+    // Start jump from the ground
     if (isOnGround && this.keyUp.isDown) {
       this.jumpTimeleft = this.maxJumpTime;
       this.sprite.setVelocityY(this.startVelocity);
-      return; // Check on next frame again
-    }
-
-    // Sneaking in air
-    if (!isOnGround && this.keyDown.isDown) {
-      this.sprite.setGravityY(500);
+      this.wasJumpKeyDownLastFrame = true;
       return;
     }
 
-    // Double jump
-    if (this.jumpTimeleft <= 0) {
-      if (!isOnGround && this.keyUp.isDown && this.jumpLefts > 0) {
-        this.sprite.setVelocityY(-500);
-        this.jumpLefts--;
-      }
-      return;
+    // Detect double jump
+    const justPressedJump: boolean = this.keyUp.isDown && !this.wasJumpKeyDownLastFrame;
+    if (!isOnGround && justPressedJump && this.jumpLefts > 0 && this.jumpTimeleft <= 0) {
+      this.sprite.setVelocityY(-500); // Boost
+      this.jumpLefts--;
     }
 
-    // Extra velocity while button is pressed down
-    if (this.keyUp.isDown) {
+    // Jump-hold mechanic
+    if (this.jumpTimeleft > 0 && this.keyUp.isDown) {
       const velocity: number = (this.jumpTimeleft) / 1000 + 1;
       this.jumpTimeleft -= this.scene.game.loop.delta;
       const current: number = this.sprite.body?.velocity.y ?? 0;
       this.sprite.setVelocityY(current * velocity);
-    } else {
+    } else if (!this.keyUp.isDown) {
       this.jumpTimeleft = 0;
-
     }
+
+    // Update previous key state
+    this.wasJumpKeyDownLastFrame = this.keyUp.isDown;
   }
 }
 
