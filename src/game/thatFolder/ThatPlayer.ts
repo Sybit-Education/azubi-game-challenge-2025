@@ -2,8 +2,6 @@ import {Scene} from 'phaser';
 import {globalConsts} from '../main.ts';
 import Sprite = Phaser.Physics.Arcade.Sprite;
 import Text = Phaser.GameObjects.Text;
-import {ThatGame} from './ThatGame.ts';
-import {ThatSection} from './ThatSection.ts';
 
 export class ThatPlayer {
   // Config
@@ -30,8 +28,6 @@ export class ThatPlayer {
   score: number = 0;
   gifts: number = 0;
   jumpTimeleft: number = 0;
-
-
   jumpLefts: number = 0;
 
   // Values by constructor
@@ -99,6 +95,18 @@ export class ThatPlayer {
     this.setGifts(this.getGifts() + plusGifts);
   }
 
+  getJumpsLeft(): number {
+    return this.jumpLefts;
+  }
+
+  setJumpLefts(jumps: number): void {
+    this.jumpLefts = jumps;
+  }
+
+  increaseJump(): void {
+    this.setJumpLefts(this.getJumpsLeft() + 1);
+  }
+
   // Updates movement
   updateMovement(): void {
     if (this.keyUp == undefined || this.keyDown == undefined || this.keyLeft == undefined || this.keyRight == undefined) return;
@@ -144,8 +152,7 @@ export class ThatPlayer {
       return;
     }
 
-    // No lime left. No extra jump-height/checks.doubleJump
-
+    // Double jump
     if (this.jumpTimeleft <= 0) {
       if (!isOnGround && this.keyUp.isDown && this.jumpLefts > 0) {
         this.sprite.setVelocityY(-500);

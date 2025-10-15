@@ -1,85 +1,122 @@
 import {Scene} from 'phaser';
 import {globalConsts} from '../main.ts';
-import {obstacleType, ThatObstacle, viableObstacles} from './ThatObstacle.ts';
+import {getRandomObstacleType, obstaclePropertiesMap, obstacleType, ThatObstacle} from './ThatObstacle.ts';
+
+// Position type
+type position = {
+  x: number;
+  y: number;
+};
 
 export class ThatSection {
+  // Config
+  readonly speed: number = -200;
+  readonly amountObstacle: number = 2;
+  readonly breakProbability: number = 25;
+  readonly giftProbability: number = 3;
+  readonly postionOverflowLimit: number = 25;
+  readonly obstaclePadding: number = 25;
+  readonly maxVoidout: number = -200;
+  readonly minVoidout: number = -10;
 
-  // config
-  readonly speed: number = -200;// speed of setion -> obstacles move at that speed
-  readonly amountObstacle: number = 3;// amount of obstacles per section
-  readonly breakProbability: number = 25;// Probability for a "break" section (section without obstacles). lower number -> more probable (max: 0 -> 100%)
-  readonly giftProbability: number = 0;// Probability for a gift to spawn in a section. lower number -> more probable (max: 0 -> 100%)
-
-  // Types
-  // Values by constructor
+  // Variables
   scene: Scene;
-  // Values
   obstacles: ThatObstacle[] = [];
   marker: ThatObstacle;
-  gift: ThatObstacle;
-  hasGift: boolean;
-  randomVoidOut: number = globalConsts.getRandomInt(-10, -200)
+  gift: ThatObstacle | undefined;
+  randomVoidOut: number;
 
   // Constructor
   constructor(currentScene: Scene, pause: boolean, offset: number = 2) {
     this.scene = currentScene;
+    this.randomVoidOut = globalConsts.getRandomInt(this.minVoidout, this.maxVoidout);
+
+    // Gift generation
+    if (globalConsts.getRandomInt(0, this.giftProbability) == 1) {
+      const gift = this.generateObstacle(offset - 1, obstacleType.GIFT);
+      this.gift = gift;
+      this.obstacles.push(gift);
+    }
 
     // Marker
-    this.marker = new ThatObstacle(obstacleType.MARKER, globalConsts.gameWidth * offset, this.scene, true, false);
-    this.marker.sprite.setAlpha(!pause ? (globalConsts.getRandomInt(0, this.breakProbability) == 0 ? 0 : 1) : 1);
+    this.marker = new ThatObstacle(
+      obstacleType.MARKER,
+      this.scene,
+      globalConsts.gameWidth * offset,
+    );
+    // This lines controls if the next should be a break
+    this.marker.sprite.setAlpha(
+      !pause ? (globalConsts.getRandomInt(0, this.breakProbability) == 0 ? 0 : 1) : 1
+    );
     this.marker.sprite.setVisible(false);
     this.obstacles.push(this.marker);
 
-    // Gift
-    this.hasGift = globalConsts.getRandomInt(0, this.giftProbability) == 0;
-    if (this.hasGift){
-      this.gift = new ThatObstacle(obstacleType.GIFT, this.generateRandomX(16) + globalConsts.gameWidth * (offset - 1), this.scene, false, true);
-      this.obstacles.push(this.gift);
-    }
-    // Generate Obstacles
-    if (!pause) for (let i = 0; i < this.amountObstacle; i++) this.obstacles.push(this.generateObstacles(false, offset - 1));
-  }
-
-  generateObstacles(marker: boolean, offset: number): ThatObstacle {
-    return new ThatObstacle(Phaser.Utils.Array.GetRandom(viableObstacles), this.generateRandomX(16) + globalConsts.gameWidth * offset, this.scene, marker, false);
-  }
-
-  generateRandomX(margin: number): number {//generates a random x coordinate and checks if the new x value is within a certain margin
-    let newX: number = globalConsts.getRandomInt(globalConsts.gameWidth * 0.2, globalConsts.gameWidth)
-    let xWithinMargin: boolean = false;
-    for (const obstacle of this.obstacles) {
-      if (newX >= obstacle.x - margin && newX <= obstacle.x + margin) {
-        xWithinMargin = true
+    // Generates Obstacles
+    if (!pause) {
+      for (let i = 0; i < this.amountObstacle; i++) {
+        this.obstacles.push(this.generateObstacle(offset - 1));
       }
     }
-    if (xWithinMargin) {// call method again if x is within the margin, creating a new random x (hopefully NOT within the margin again)
-      // Similar to stack overflow
-      console.log("oops, recursion time :p")
-      return this.generateRandomX(margin);
-    } else {
-      return newX;
+
+    // Debug
+    if (globalConsts.debug) {
+      console.log("Section spawned:", {
+        obstacleCount: this.obstacles.length - 1, // Because the marker still counts
+        pause
+      });
     }
   }
 
+  // This generates a new obstacle
+  generateObstacle(offset: number, inputType?: obstacleType) {
+    const type: obstacleType = inputType ?? getRandomObstacleType(); // gets random type
+    const position: position = this.getRandomPosition(type, offset); // Gets random y and x
+    return new ThatObstacle(type, this.scene, position.x, position.y);
+  }
+
+  // This methode generates a suitable postion for provided obsatcle type. Checks paddings
+  getRandomPosition(type: obstacleType, offset: number): position {
+    const property = obstaclePropertiesMap[type];
+    let currentPos;
+    let tries: number = 0;
+    while (true) {
+      currentPos = {
+        x: globalConsts.getRandomInt(globalConsts.gameWidth * 0.2, globalConsts.gameWidth) + offset * globalConsts.gameWidth,
+        y: property.y()
+      };
+      let valid: boolean = true;
+      for (let obstacle of this.obstacles) {
+        if (!this.checkCoords(currentPos, {x: obstacle.x, y: obstacle.y})) valid = false
+      }
+      if (valid) break;
+      tries++;
+      if (tries >= this.postionOverflowLimit) {
+        console.warn("StackOverlow");
+        break;
+      }
+    }
+    return currentPos;
+  }
+
+  // This checks coords
+  checkCoords(pos1: position, pos2: position): boolean {
+    const distanceSquared: number = Phaser.Math.Distance.BetweenPointsSquared(pos1, pos2) / 1000;
+    return distanceSquared >= this.obstaclePadding;
+  }
+
+  // Moves all obstacles
   updateMovement(): void {
-    // Moves every Obstacle
     for (let obstacle of this.obstacles) {
-      if (obstacle.sprite.body == undefined) {
-        //console.log(obstacle); // this is like an error. because the body shouldn´t and isn´t null
-        continue;
-      }
+      if (!obstacle.sprite.body) continue;
       obstacle.sprite.setVelocityX(this.speed * globalConsts.currentSpeed);
     }
   }
 
-  // Destroys all obstacles in the section
+  // Destroys all obstacles
   destroyAll(): void {
     for (let obstacle of this.obstacles) {
       obstacle.sprite.body?.destroy();
       obstacle.sprite.destroy(true);
-
     }
   }
 }
-
-

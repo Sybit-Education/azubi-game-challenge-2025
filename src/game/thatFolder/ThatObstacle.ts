@@ -1,7 +1,7 @@
-import {Scene} from "phaser"
+import {Scene} from "phaser";
 import {globalConsts} from '../main.ts';
 
-// TODO: Add package
+// Every obstacle
 export enum obstacleType {
   BIRDBLUE = "BIRDBLUE",
   BIRDPINK = "BIRDPINK",
@@ -11,22 +11,28 @@ export enum obstacleType {
   GIFT = "GIFT"
 }
 
-// All obstacle array
-export const viableObstacles: obstacleType[] = [obstacleType.BIRDBLUE, obstacleType.BIRDPINK, obstacleType.SNOWMAN, obstacleType.ROCKS];
+// Every obstacle that can be randomly generated
+export const viableObstacles: obstacleType[] = [
+  obstacleType.BIRDBLUE,
+  obstacleType.BIRDPINK,
+  obstacleType.SNOWMAN,
+  obstacleType.ROCKS
+];
 
+// All Properties per obstacle type
 interface obstacleProperties {
   y: () => number;
-  sprites: string[],
-  width: number,
-  height: number,
-  offsetX: number,
-  offsetY: number,
-  scale: number,
-  weight: number
+  sprites: string[];
+  width: number;
+  height: number;
+  offsetX: number;
+  offsetY: number;
+  scale: number;
+  weight: number;
 }
 
-//TODO: change weight config
-const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
+// Settings for every obstacle
+export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   [obstacleType.BIRDBLUE]: {
     y: () => globalConsts.getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.8),
     sprites: ["birdBlue"],
@@ -69,7 +75,7 @@ const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   },
   [obstacleType.MARKER]: {
     y: () => globalConsts.gameHeight,
-    sprites: ["player"],
+    sprites: [""],
     width: 0,
     height: 0,
     offsetX: 0,
@@ -79,7 +85,7 @@ const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   },
   [obstacleType.GIFT]: {
     y: () => globalConsts.getRandomInt(globalConsts.gameHeight * 0.6, globalConsts.gameHeight * 0.8),
-    sprites: ["gift1","gift2","gift3","gift4"],
+    sprites: ["gift1", "gift2", "gift3", "gift4"],
     width: 18,
     height: 18,
     offsetX: 6,
@@ -87,29 +93,47 @@ const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     scale: 2,
     weight: 0
   }
+};
+
+// Gets random type
+export function getRandomObstacleType(): obstacleType {
+  const totalWeight = viableObstacles.reduce((sum, type) => sum + obstaclePropertiesMap[type].weight, 0);
+  let random = Math.random() * totalWeight;
+  for (const type of viableObstacles) {
+    random -= obstaclePropertiesMap[type].weight;
+    if (random <= 0) return type;
+  }
+  return viableObstacles[viableObstacles.length - 1]; // Fallback
 }
 
-
+// Class
 export class ThatObstacle {
   x: number;
   y: number;
   image: string;
   scene: Scene;
-  sprite: Phaser.Physics.Arcade.Sprite
-  type: obstacleType
+  sprite: Phaser.Physics.Arcade.Sprite;
+  type: obstacleType;
 
-  constructor(type: obstacleType, x: number, currentScene: Scene, isMarker: boolean, isGift: boolean) {
+  constructor(type: obstacleType, currentScene: Scene, x: number, y?: number) {
     this.x = x;
-    this.y = obstaclePropertiesMap[type].y();
-    this.image = !isGift ? obstaclePropertiesMap[type].sprites[0] : Phaser.Utils.Array.GetRandom(obstaclePropertiesMap.GIFT.sprites);
     this.scene = currentScene;
     this.type = type;
 
-    this.sprite = this.scene.physics.add.sprite(this.x, this.y, !isMarker ? this.image : "");
-    this.sprite.setAlpha(!isMarker ? 1 : 0);
+    const props = obstaclePropertiesMap[type];
+    this.y = y ?? props.y();
 
-    if (!isMarker) this.sprite.setBodySize(obstaclePropertiesMap[type].width, obstaclePropertiesMap[type].height);
-    this.sprite.setScale(obstaclePropertiesMap[type].scale);
-    this.sprite.setOffset(obstaclePropertiesMap[type].offsetX, obstaclePropertiesMap[type].offsetY);
+    // Get random image ID
+    this.image = Phaser.Utils.Array.GetRandom(props.sprites);
+
+    // Creates sprite
+    this.sprite = this.scene.physics.add.sprite(this.x, this.y, this.image);
+    this.sprite.setAlpha(type == obstacleType.MARKER ? 0 : 1);
+
+    if (type != obstacleType.MARKER) {
+      this.sprite.setBodySize(props.width, props.height);
+      this.sprite.setScale(props.scale);
+      this.sprite.setOffset(props.offsetX, props.offsetY);
+    }
   }
 }

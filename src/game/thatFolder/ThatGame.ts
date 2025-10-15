@@ -5,7 +5,7 @@ import {ThatSection} from './ThatSection.ts';
 import {spawnHouses, updateMovement} from '../custom_classes/Background.ts';
 import {generateCode} from '../scenes/GameOver.ts';
 import Sprite = Phaser.Physics.Arcade.Sprite;
-import {obstacleType} from './ThatObstacle.ts';
+import {obstacleType, ThatObstacle} from './ThatObstacle.ts';
 import Text = Phaser.GameObjects.Text;
 import {fetchLeaderboard, sortedLeaderboard} from '../scenes/Leaderboard.ts';
 
@@ -24,7 +24,6 @@ export class ThatGame extends Phaser.Scene {
   // Constructor
   constructor() {
     super("thatGame");
-
   }
 
   // Create
@@ -85,8 +84,7 @@ export class ThatGame extends Phaser.Scene {
     // Display a note that you can collect gifts when starting the game
     const infoText: Text = this.add.text(
       this.cameras.main.centerX, globalConsts.gameHeight * 0.25,
-      "Collect the gifts to get extra points!",
-      {
+      "Collect the gifts to get extra points!", {
         font: "22px " + globalConsts.pixelFont,
         color: "#ffffff",
         fontStyle: "bold"
@@ -153,21 +151,23 @@ export class ThatGame extends Phaser.Scene {
     }
   }
 
-  createSection(alpha: number, offset?: number): void {
+  // This creates a new section
+  createSection(alpha: number, offset: number = 2): void {
     const thatSection: ThatSection = new ThatSection(this.scene.scene, alpha == 0, offset);
     this.sections.push(thatSection);
     const obstacles: Sprite[] = [];
-    const gift: Sprite = thatSection.gift.sprite;
+    const gift: ThatObstacle | undefined = thatSection.gift;
     for (let obstacle of thatSection.obstacles) if (obstacle.type != obstacleType.GIFT) obstacles.push(obstacle.sprite)
     // collision player and harmful obstacles
     this.physics.add.collider(this.player.sprite, obstacles, () => {
     }, () => this.gameOver());
     // collision player and gift
-    if (thatSection.hasGift) this.physics.add.overlap(this.player.sprite, gift, () => {
-    }, () => this.collectGift(gift));
+    if (gift != undefined) this.physics.add.overlap(this.player.sprite, gift.sprite, () => {
+    }, () => this.collectGift(gift.sprite));
 
   }
 
+  // The main game over function
   gameOver(): void {
     // Pauses Game so it isn't ticking anymore
     this.game.pause();
@@ -190,8 +190,7 @@ export class ThatGame extends Phaser.Scene {
   // handle gift collecting
   collectGift(gift: Sprite): void {
     gift.destroy();// delete the sprite
-    this.player.increaseGifts(1);// increase gifts by 1
-    this.player.jumpLefts++;
-
+    this.player.increaseGifts(1); // increase gifts by 1
+    this.player.increaseJump(); // increases jumps left by 1
   }
 }
