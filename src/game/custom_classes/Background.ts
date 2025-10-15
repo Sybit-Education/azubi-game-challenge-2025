@@ -21,7 +21,7 @@ const layerPropertiesMap: Record<Layer, LayerProperties> = {
     scale: () => 10 + Math.random() * 0.4,
     depth: -1,
     y: () => globalConsts.gameHeight - 64,
-    speed: () => 2 * globalConsts.currentSpeed,
+    speed: () => 2 * globalConsts.houseSpeed,
     opacity: 0.925,
     // Data
     lastHouse: "",
@@ -32,7 +32,7 @@ const layerPropertiesMap: Record<Layer, LayerProperties> = {
     scale: () => 6 + Math.random() * 0.25,
     depth: -2,
     y: () => globalConsts.gameHeight - 58,
-    speed: () =>  1.2 * globalConsts.currentSpeed,
+    speed: () =>  1.2 * globalConsts.houseSpeed,
     opacity: 0.8,
     // Data
     lastHouse: "",
@@ -133,8 +133,8 @@ export function updateMovement(): void {
 
 // Moves background
 function moveBackground(): void {
-  backgroundA.x -= backgroundSpeed * globalConsts.currentSpeed;
-  backgroundB.x -= backgroundSpeed * globalConsts.currentSpeed;
+  backgroundA.x -= backgroundSpeed * globalConsts.backgroundSpeed;
+  backgroundB.x -= backgroundSpeed * globalConsts.backgroundSpeed;
 
 
   if (backgroundA.x <= -backgroundA.displayWidth / 2) backgroundA.x = backgroundB.x + backgroundB.displayWidth;
