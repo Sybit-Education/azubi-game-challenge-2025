@@ -4,7 +4,7 @@ import {formatTime} from '../thatFolder/ThatPlayer.ts';
 import {Button} from '../custom_classes/Button.ts';
 import Text = Phaser.GameObjects.Text;
 import Rectangle = Phaser.GameObjects.Rectangle;
-import {fetchLeaderboard, sortedLeaderboard, sortLeaderboard} from './Leaderboard.ts';
+import {fetchLeaderboard, removeEntry, sortedLeaderboard, sortLeaderboard} from './Leaderboard.ts';
 
 // config
 const range: number = 2;
@@ -160,7 +160,7 @@ async function renderLeaderboard(): Promise<void> {
   // Set loading text
   leaderboardText.setText("loading leaderboard...");
 
-  // Try fetching leaderboard again
+  // Try fetching the leaderboard again
   if (sortedLeaderboard == undefined) await fetchLeaderboard();
 
   // Fetching failed
@@ -188,7 +188,7 @@ async function renderLeaderboard(): Promise<void> {
     yCoord += 30;
   }
 
-  // Display other score
+  // Display another score
   yCoord = 500;
   const index: number = sortedLeaderboard.findIndex(item => item.name === displayName);
   for (let i: number = index - range; i < index + range + 1; i++) {
@@ -205,10 +205,16 @@ async function renderLeaderboard(): Promise<void> {
 
   // save state
   leaderboardIsLoaded = true;
+
+  // removes self
+  removeEntry("YOU");
 }
 
 // [GET] a new key
 export async function generateCode(): Promise<string | undefined> {
+  // Local-storage
+  if (globalConsts.apiURL == undefined) return;
+
   // Main fetch
   try {
     const response: Response = await fetch(globalConsts.apiURL + "/newCode", {method: "GET"});
@@ -221,6 +227,14 @@ export async function generateCode(): Promise<string | undefined> {
 
 // [POST] new score
 async function saveLeaderboard(name: string, key: string | null, value: number): Promise<Response | undefined> {
+  // Local-storage
+  if (globalConsts.apiURL == undefined) {
+    sortedLeaderboard?.push({name: name, score: value}); // Adds entry
+    sortedLeaderboard?.filter(entry => entry.name !== "YOU"); // Removes YOU
+    localStorage.setItem("leaderboard", JSON.stringify(sortedLeaderboard, null, 0))
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
+  }
+
   // Request info
   try {
     const myHeaders = new Headers();

@@ -67,7 +67,7 @@ export function startLeaderboard(app: Express): void {
     }
     const leaderboard: any = loadLeaderboard(); // Json
     const contains: boolean = leaderboard.hasOwnProperty(name);
-    // Old score was better
+    // The old score was better
     if (contains && leaderboard[name] >= score) {
       res.status(208).json({success: false}); // 208 = ALREADY REPORTED
       return;

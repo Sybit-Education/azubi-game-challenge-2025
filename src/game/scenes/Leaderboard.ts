@@ -79,7 +79,7 @@ export class Leaderboard extends Scene {
         alert("STOP! That´s ENOUGH");
         return;
       }
-      fetchLeaderboard().then(() => rerenderLeaderboard())// refresh
+      fetchLeaderboard().then(() => rerenderLeaderboard()); // refresh
       clickedRefresh++;
     });
 
@@ -309,7 +309,7 @@ async function renderLeaderboard(): Promise<void> {
   // Removes "loading leaderboard" text
   leaderboardText.setText("");
 
-  // Amount of entries
+  // Number of entries
   const entries: number = range > sortedLeaderboard.length ? sortedLeaderboard.length : range;
 
   // Sets subtitle
@@ -374,7 +374,7 @@ function parseFlexibleTime(input: string): number | null {
 
 // Formates lines
 function formatText(i: number, name: string, score: number): string {
-  return `${i + 1}. ${name} - ${formatTime(score)}`
+  return `${i + 1}. ${name} - ${formatTime(score)}`;
 }
 
 // Sort record/entries
@@ -398,11 +398,63 @@ export function sortLeaderboard(): void {
 
 // [GET] the current leaderboard
 export async function fetchLeaderboard(): Promise<void> {
+  // Local-storage
+  if (globalConsts.apiURL == undefined) {
+    sortedLeaderboard = sort(getLeaderboardFromLocalStorage()); // sort and set
+    return;
+  }
+
   try {
     const res: Response = await fetch(globalConsts.apiURL + "/leaderboard", {method: "GET"});
     if (!res.ok) throw new Error(`HTTP ERROR ${res.status}`);
-    sortedLeaderboard = sort(await res.json()); // sort and set
+
   } catch (e) {
     sortedLeaderboard = undefined;
   }
+}
+
+function getLeaderboardFromLocalStorage(): Record<string, number> {
+  const rawData: string | null = localStorage.getItem("leaderboard");
+
+  // No data
+  if (!rawData) return {};
+
+  try {
+    const parsed: unknown = JSON.parse(rawData);
+
+    // Validierung
+    if (
+      Array.isArray(parsed) &&
+      parsed.every(
+        (entry) =>
+          typeof entry === "object" &&
+          entry !== null &&
+          typeof entry.name === "string" &&
+          typeof entry.score === "number"
+      )
+    ) {
+      const record: Record<string, number> = {};
+      for (const entry of parsed as leaderboardEntry[]) {
+        if (entry.name == "YOU") continue; // Skip YOU
+        record[entry.name] = entry.score;
+      }
+      return record;
+    } else {
+      console.warn("Ungültiges Format in localStorage für 'leaderboard'");
+      return {};
+    }
+  } catch (error) {
+    console.error("Fehler beim Parsen von localStorage 'leaderboard':", error);
+    return {};
+  }
+}
+
+// Can overwrite the current array
+export function set(newArray: leaderboardEntry[]): void {
+  sortedLeaderboard = newArray;
+}
+
+// Removes specific entry
+export function removeEntry(name: string): void {
+  sortedLeaderboard = sortedLeaderboard?.filter(entry => entry.name !== name);
 }
