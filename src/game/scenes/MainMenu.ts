@@ -43,7 +43,7 @@ export class MainMenu extends Scene {
     this.buttonControl = new Button(this.gameW * 0.5, this.gameH * 0.63, 7, 'button_controls', this, () => this.scene.start('controls'), 'T', 2, this.buttonManager);
     
     // Leaderboard button
-    const leaderboardBtn = new Button(this.gameW * 0.3, this.gameH * 0.63, 5, 'button_back', this, () => this.scene.start('leaderboard'), 'L', 4, this.buttonManager); // TODO | add better texture
+    new Button(this.gameW * 0.3, this.gameH * 0.63, 5, 'button_back', this, () => this.scene.start('leaderboard'), 'L', 4, this.buttonManager); // TODO | add better texture
     
     // Close button (only if opened in a popup)
     if (window.opener != null) {

@@ -29,7 +29,7 @@ export class ThatPlayer {
   gifts: number = 0;
   jumpTimeleft: number = 0;
   jumpLefts: number = 0;
-  wasJumpKeyDownLastFrame = false;
+  wasJumpKeyDownLastFrame: boolean = false;
   gamepad: Phaser.Input.Gamepad.Gamepad | null = null;
 
   // Values by constructor
@@ -73,7 +73,7 @@ export class ThatPlayer {
   // Setup gamepad detection
   setupGamepad(): void {
     // Check if gamepad is already connected
-    if (this.scene.input.gamepad?.gamepads.length > 0) {
+    if (this.scene.input.gamepad && this.scene.input.gamepad.gamepads.length > 0) {
       this.gamepad = this.scene.input.gamepad.getPad(0);
     }
     
@@ -178,7 +178,7 @@ export class ThatPlayer {
     }
 
     // Detect double jump
-    const justPressedJump: boolean = isUpDown && !this.wasJumpKeyDownLastFrame;
+    const justPressedJump = isUpDown && !this.wasJumpKeyDownLastFrame;
     if (!isOnGround && justPressedJump && this.jumpLefts > 0 && this.jumpTimeleft <= 0) {
       this.sprite.setVelocityY(-500); // Boost
       this.jumpLefts--;
@@ -195,7 +195,7 @@ export class ThatPlayer {
     }
 
     // Update previous key state
-    this.wasJumpKeyDownLastFrame = isUpDown;
+    this.wasJumpKeyDownLastFrame = !!isUpDown;
   }
 }
 
