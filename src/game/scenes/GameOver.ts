@@ -2,6 +2,7 @@ import {Scene} from 'phaser';
 import {displayPlayer, globalConsts} from '../main.ts';
 import {formatTime} from '../thatFolder/ThatPlayer.ts';
 import {Button} from '../custom_classes/Button.ts';
+import {ButtonManager} from '../custom_classes/ButtonManager.ts';
 import Text = Phaser.GameObjects.Text;
 import Rectangle = Phaser.GameObjects.Rectangle;
 import {fetchLeaderboard, removeEntry, sortedLeaderboard, sortLeaderboard} from './Leaderboard.ts';
@@ -25,6 +26,7 @@ let leaderboardText: Phaser.GameObjects.Text;
 let gameOverImage: Phaser.GameObjects.Image;
 let saveButton: Button;
 let leaderboardIsLoaded: boolean = false;
+let buttonManager: ButtonManager;
 
 // Scene class
 export class GameOver extends Scene {
@@ -42,6 +44,9 @@ export class GameOver extends Scene {
 
     // Display player
     displayPlayer(scene);
+    
+    // Create button manager
+    buttonManager = new ButtonManager(scene);
 
     // GameOver Image
     gameOverImage = this.add.image(512, 250, 'gameOverTitle');
@@ -56,14 +61,14 @@ export class GameOver extends Scene {
 
     // Game infos
     new Button(130, 298, 4, "button_yourScore", this.scene.scene, () => {
-    })
+    }, undefined, undefined, buttonManager)
     this.add.text(245, 290, formatTime(score), style).setOrigin(0, 0);
 
     // Renders leaderboard
     renderLeaderboard().then();
 
     // Save score button
-    saveButton = new Button(700, 700, 7, "button_save", scene, () => prompt());
+    saveButton = new Button(700, 700, 7, "button_save", scene, () => prompt(), 'S', 0, buttonManager);
     // TODO | add "to full leaderboard" button
 
     // Clicker
@@ -74,6 +79,18 @@ export class GameOver extends Scene {
     blocker.once('pointerdown', () => {
       window.location.reload();
     });
+    
+    // Add navigation instructions
+    scene.add.text(globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.95, 'Drücke S zum Speichern oder ENTER zum Neustarten', {
+      font: "16px " + globalConsts.pixelFont,
+      color: "#ffffff",
+      align: 'center'
+    }).setOrigin(0.5);
+    
+    // Add restart button (invisible but functional for keyboard/gamepad)
+    new Button(globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.85, 1, "button_play", scene, () => {
+      window.location.reload();
+    }, 'ENTER', 1, buttonManager).button.setAlpha(0);
 
   }
 }
