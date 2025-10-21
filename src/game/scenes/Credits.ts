@@ -1,5 +1,7 @@
 import {displayPlayer, globalConsts} from "../main";
 import Text = Phaser.GameObjects.Text;
+import {Button} from "../custom_classes/Button";
+import {ButtonManager} from "../custom_classes/ButtonManager";
 
 // Config
 const scrollSpeed: number = 150;
