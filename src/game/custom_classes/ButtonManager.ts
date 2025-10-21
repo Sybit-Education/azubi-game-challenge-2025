@@ -49,15 +49,34 @@ export class ButtonManager {
     
     // Check keyboard Tab navigation
     const tabKey = this.scene.input.keyboard?.addKey('TAB');
+    const upKey = this.scene.input.keyboard?.addKey('UP');
+    const downKey = this.scene.input.keyboard?.addKey('DOWN');
+    const leftKey = this.scene.input.keyboard?.addKey('LEFT');
+    const rightKey = this.scene.input.keyboard?.addKey('RIGHT');
+    
     if (tabKey) {
       const tabDown = tabKey.isDown;
       if (tabDown && !this.lastKeyboardTabState) {
         // Tab was just pressed
-        const shiftKey = this.scene.input.keyboard?.isKeyDown('SHIFT');
-        this.navigateButtons(shiftKey ? -1 : 1);
+        const shiftKey = this.scene.input.keyboard?.addKey('SHIFT');
+        this.navigateButtons(shiftKey?.isDown ? -1 : 1);
       }
       this.lastKeyboardTabState = tabDown;
     }
+    
+    // Check cursor keys for navigation
+    if (upKey?.isDown && !this.lastUpKeyState) {
+      this.navigateButtons(-1);
+    }
+    if (downKey?.isDown && !this.lastDownKeyState) {
+      this.navigateButtons(1);
+    }
+    
+    // Store current keyboard state
+    this.lastUpKeyState = upKey?.isDown || false;
+    this.lastDownKeyState = downKey?.isDown || false;
+    this.lastLeftKeyState = leftKey?.isDown || false;
+    this.lastRightKeyState = rightKey?.isDown || false;
     
     // Check gamepad navigation
     const gamepad = this.scene.input.gamepad?.getPad(0);
