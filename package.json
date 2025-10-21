@@ -23,7 +23,6 @@
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",
-    "eslint-plugin-phaser": "^0.0.3",
     "typescript": "~5.9.2",
     "vite": "^7.1.3"
   },
