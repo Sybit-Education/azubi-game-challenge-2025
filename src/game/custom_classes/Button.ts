@@ -1,4 +1,5 @@
 import {GameObjects, Scene, Input} from "phaser";
+import { ButtonManager } from "./ButtonManager";
 
 //import via (import {Button} from "../custom_classes/Button")
 export class Button {
@@ -12,9 +13,10 @@ export class Button {
   isFocused: boolean = false;
   onButtonPressed: Function;
   gamepadCheckActive: boolean = false;
+  buttonManager?: ButtonManager;
 
   // Constructor
-  constructor(x: number, y: number, scale: number, image: string, curScene: Scene, onButtonPressed: Function, keyboardKey?: string, gamepadButtonIndex?: number) {
+  constructor(x: number, y: number, scale: number, image: string, curScene: Scene, onButtonPressed: Function, keyboardKey?: string, gamepadButtonIndex?: number, buttonManager?: ButtonManager) {
     //initialise variables
     this.x = x; //x position
     this.y = y; //y position
@@ -22,6 +24,7 @@ export class Button {
     this.scene = curScene; //the scene the buttons is in (this)
     this.onButtonPressed = onButtonPressed;
     this.gamepadButtonIndex = gamepadButtonIndex;
+    this.buttonManager = buttonManager;
 
     // add buttons to the current scene (just "this" in the scene you implement the buttons)
     this.button = this.scene.add.image(this.x, this.y, this.image);
@@ -42,7 +45,7 @@ export class Button {
     });
     
     // Calls function that is provided
-    this.button.on('pointerdown', () => this.onButtonPressed());
+    this.button.on('pointerdown', () => this.activate());
 
     // Setup keyboard key if provided
     if (keyboardKey) {
@@ -57,6 +60,11 @@ export class Button {
       this.gamepadCheckActive = true;
       this.scene.events.on('update', this.checkGamepadInput, this);
     }
+    
+    // Register with button manager if provided
+    if (this.buttonManager) {
+      this.buttonManager.addButton(this);
+    }
   }
 
   setFocus(focused: boolean): void {
@@ -69,14 +77,20 @@ export class Button {
     this.button.setTexture(newImage);
   }
   
-  checkKeyboardInput(): void {
-    if (this.keyboardKey && Phaser.Input.Keyboard.JustDown(this.keyboardKey)) {
-      this.setFocus(true);
-      this.onButtonPressed();
-      // Reset focus after a short delay
+  activate(): void {
+    this.setFocus(true);
+    this.onButtonPressed();
+    // Reset focus after a short delay if not managed by ButtonManager
+    if (!this.buttonManager) {
       this.scene.time.delayedCall(200, () => {
         this.setFocus(false);
       });
+    }
+  }
+  
+  checkKeyboardInput(): void {
+    if (this.keyboardKey && Phaser.Input.Keyboard.JustDown(this.keyboardKey)) {
+      this.activate();
     }
   }
   
@@ -89,12 +103,7 @@ export class Button {
     // Check if the button was just pressed
     if (pad.buttons[this.gamepadButtonIndex].pressed && pad.buttons[this.gamepadButtonIndex].value === 1) {
       if (!pad.buttons[this.gamepadButtonIndex].pressed) {
-        this.setFocus(true);
-        this.onButtonPressed();
-        // Reset focus after a short delay
-        this.scene.time.delayedCall(200, () => {
-          this.setFocus(false);
-        });
+        this.activate();
       }
     }
   }
