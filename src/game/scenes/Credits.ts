@@ -10,6 +10,8 @@ const jsonPath: string = "./src/game/scenes/creditsConfig.json";
 export class Credits extends Phaser.Scene {
   // Types
   creditTexts: Phaser.GameObjects.Text[];
+  buttonManager: ButtonManager;
+  back_button: Button;
 
   // Constructor
   constructor() {
@@ -34,6 +36,14 @@ export class Credits extends Phaser.Scene {
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
+
+    // Create button manager
+    this.buttonManager = new ButtonManager(this);
+
+    // Back button
+    this.back_button = new Button(globalConsts.gameWidth * 0.5, globalConsts.gameHeight * 0.25, 4, 'button_back', this, () => {
+      this.scene.start('mainMenu')
+    }, 'B', 0, this.buttonManager);
 
     // Variables
     this.creditTexts = [];
@@ -93,7 +103,20 @@ export class Credits extends Phaser.Scene {
     }).setOrigin(0, 0);
     this.creditTexts.push(footer);
 
-    // Onclick: MainMenu
+    // Add navigation instructions
+    this.add.text(gameW * 0.5, gameH * 0.9, 'Drücke B oder ESC zum Zurückkehren', {
+      font: "16px " + font,
+      color: roleColor,
+      align: 'center'
+    }).setOrigin(0.5, 0.5);
+
+    // Add ESC key handler
+    const escKey = this.input.keyboard?.addKey('ESC');
+    escKey?.on('down', () => {
+      this.scene.start('mainMenu');
+    });
+
+    // Onclick: MainMenu (keep for mouse users)
     this.input.once('pointerdown', () => {
       this.scene.start('mainMenu');
     });
