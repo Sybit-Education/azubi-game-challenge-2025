@@ -1,6 +1,7 @@
 import {displayPlayer, globalConsts} from '../main.ts';
 import Image = Phaser.GameObjects.Image;
 import {Button} from '../custom_classes/Button.ts';
+import {ButtonManager} from '../custom_classes/ButtonManager.ts';
 
 export class Controls extends Phaser.Scene {
   // Config
@@ -17,6 +18,7 @@ export class Controls extends Phaser.Scene {
   keyboardImage: Image;
   back_button: Button;
   currentY: number = this.startY;
+  buttonManager: ButtonManager;
 
   // Constructor
   constructor() {
@@ -30,6 +32,9 @@ export class Controls extends Phaser.Scene {
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
+
+    // Create button manager
+    this.buttonManager = new ButtonManager(this);
 
     // Main info
     this.keyboardImage = this.add.image(512, 400, 'button_keyboard');
@@ -48,6 +53,19 @@ export class Controls extends Phaser.Scene {
     // Back button
     this.back_button = new Button(globalConsts.gameWidth * 0.5, globalConsts.gameHeight * 0.25, 4, 'button_back', this, () => {
       this.scene.start('mainMenu')
+    }, 'B', 0, this.buttonManager);
+    
+    // Add navigation instructions
+    this.add.text(globalConsts.gameWidth * 0.5, globalConsts.gameHeight * 0.9, 'Drücke B oder ESC zum Zurückkehren', {
+      font: "16px " + globalConsts.pixelFont,
+      color: "#ffffff",
+      align: 'center'
+    }).setOrigin(0.5);
+    
+    // Add ESC key handler
+    const escKey = this.input.keyboard?.addKey('ESC');
+    escKey?.on('down', () => {
+      this.scene.start('mainMenu');
     });
   }
 
