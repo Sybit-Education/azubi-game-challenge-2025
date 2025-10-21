@@ -2,6 +2,7 @@ import {Scene} from 'phaser';
 import {displayPlayer, globalConsts} from '../main.ts';
 import {formatTime} from '../thatFolder/ThatPlayer.ts';
 import {Button} from '../custom_classes/Button.ts';
+import {ButtonManager} from '../custom_classes/ButtonManager.ts';
 import Text = Phaser.GameObjects.Text;
 
 import {leaderboardEntry} from './GameOver.ts';
@@ -30,6 +31,7 @@ let leaderboardText: Phaser.GameObjects.Text;
 let currentCategory: leaderboardCategory = "default";
 export let sortedLeaderboard: leaderboardEntry[] | undefined;
 let clickedRefresh: number = 0;
+let buttonManager: ButtonManager;
 
 // Scene class
 export class Leaderboard extends Scene {
@@ -48,6 +50,9 @@ export class Leaderboard extends Scene {
     // Display player
     displayPlayer(scene);
 
+    // Create button manager
+    buttonManager = new ButtonManager(scene);
+
     //  Title
     scene.add.text(50, 50, "Leaderboards", {
       font: "80px pixelFont",
@@ -56,7 +61,7 @@ export class Leaderboard extends Scene {
     });
 
     // Back Button
-    new Button(70, 175, 3, "button_back", this.scene.scene, () => this.scene.start("mainMenu"))
+    new Button(70, 175, 3, "button_back", this.scene.scene, () => this.scene.start("mainMenu"), 'B', undefined, buttonManager);
 
     // Subtitle
     subtitle = scene.add.text(110, 163, "Loading this text", {
@@ -81,7 +86,7 @@ export class Leaderboard extends Scene {
       }
       fetchLeaderboard().then(() => rerenderLeaderboard()); // refresh
       clickedRefresh++;
-    });
+    }, 'R', undefined, buttonManager);
 
     // Sets lines
     if (leaderboardLines.length == 0) {
@@ -94,6 +99,13 @@ export class Leaderboard extends Scene {
 
     // Sets text
     leaderboardText = scene.add.text(510, 450, "", style).setOrigin(0, 0);
+    
+    // Add navigation instructions
+    scene.add.text(this.sys.game.config.width as number / 2, globalConsts.gameHeight * 0.95, 'Navigation: Pfeiltasten, Tab/Shift+Tab oder Gamepad D-Pad/Stick', {
+      font: "16px " + globalConsts.pixelFont,
+      color: "#ffffff",
+      align: 'center'
+    }).setOrigin(0.5);
 
     // Renders leaderboard
     fetchLeaderboard().then(() => renderLeaderboard());
@@ -114,7 +126,17 @@ export class Leaderboard extends Scene {
       "byPlace": "button_byPlace",
       "byScore": "button_byScore"
     })[category];
-    new Button(categoryX, y, 4.5, imageID, this.scene.scene, () => prompt(category));
+    
+    // Assign keyboard shortcuts based on category
+    const keyboardKey = ({
+      "default": 'T',
+      "worst": 'W',
+      "byName": 'N',
+      "byPlace": 'P',
+      "byScore": 'S'
+    })[category];
+    
+    new Button(categoryX, y, 4.5, imageID, this.scene.scene, () => prompt(category), keyboardKey, undefined, buttonManager);
   }
 }
 
