@@ -7,6 +7,12 @@ export class ButtonManager {
   private scene: Scene;
   private lastGamepadState: { [key: number]: boolean } = {};
   private lastKeyboardTabState: boolean = false;
+  private lastUpKeyState: boolean = false;
+  private lastDownKeyState: boolean = false;
+  private lastLeftKeyState: boolean = false;
+  private lastRightKeyState: boolean = false;
+  private lastEnterKeyState: boolean = false;
+  private lastSpaceKeyState: boolean = false;
 
   constructor(scene: Scene) {
     this.scene = scene;
@@ -90,6 +96,18 @@ export class ButtonManager {
         this.activateFocusedButton();
       }
       this.lastGamepadState[0] = gamepad.A;
+    
+      // Check for Enter/Space key to activate focused button
+      const enterKey = this.scene.input.keyboard?.addKey('ENTER');
+      const spaceKey = this.scene.input.keyboard?.addKey('SPACE');
+    
+      if ((enterKey?.isDown && !this.lastEnterKeyState) || 
+          (spaceKey?.isDown && !this.lastSpaceKeyState)) {
+        this.activateFocusedButton();
+      }
+    
+      this.lastEnterKeyState = enterKey?.isDown || false;
+      this.lastSpaceKeyState = spaceKey?.isDown || false;
     }
   }
 

@@ -50,8 +50,8 @@ export class MainMenu extends Scene {
       this.buttonClose = new Button(this.gameW * 0.5, this.gameH * 0.85, 6, 'button_close', this, () => window.close(), 'X', 5, this.buttonManager); // This is a website close button
     }
     
-    // Add Tab navigation instructions
-    this.add.text(this.gameW * 0.5, this.gameH * 0.9, 'Navigation: Tab/Shift+Tab oder Gamepad D-Pad/Stick', {
+    // Add navigation instructions
+    this.add.text(this.gameW * 0.5, this.gameH * 0.9, 'Navigation: Pfeiltasten, Tab/Shift+Tab oder Gamepad D-Pad/Stick', {
       font: "16px " + globalConsts.pixelFont,
       color: "#ffffff",
       align: 'center'
