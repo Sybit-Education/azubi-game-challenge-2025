@@ -42,7 +42,7 @@ export class ButtonManager {
     if (this.buttons.length === 0) return;
     
     // Check keyboard Tab navigation
-    const tabKey = this.scene.input.keyboard?.getKey('TAB');
+    const tabKey = this.scene.input.keyboard?.addKey('TAB');
     if (tabKey) {
       const tabDown = tabKey.isDown;
       if (tabDown && !this.lastKeyboardTabState) {
