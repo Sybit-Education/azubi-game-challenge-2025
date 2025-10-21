@@ -51,7 +51,11 @@ const config: Phaser.Types.Core.GameConfig = {
   height: gameH, // Height of the game container
   parent: 'game-container', // ID of the div in which it should be displayed
   physics: arcade,
-  input: {keyboard: true, mouse: true,}, // Which inputs are enabled
+  input: {
+    keyboard: true, 
+    mouse: true,
+    gamepad: true, // Enable gamepad support
+  }, 
   render: {
     pixelArt: true, // Pixels are preserved
     antialias: false // Removes jagged edges
