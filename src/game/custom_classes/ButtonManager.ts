@@ -65,10 +65,10 @@ export class ButtonManager {
     }
 
     // Check cursor keys for navigation
-    if (upKey?.isDown && !this.lastUpKeyState) {
+    if (upKey?.isDown && !this.lastUpKeyState || leftKey?.isDown && !this.lastLeftKeyState) {
       this.navigateButtons(-1);
     }
-    if (downKey?.isDown && !this.lastDownKeyState) {
+    if (downKey?.isDown && !this.lastDownKeyState || rightKey?.isDown && !this.lastRightKeyState) {
       this.navigateButtons(1);
     }
 
@@ -94,9 +94,9 @@ export class ButtonManager {
       const leftStickRight = gamepad.leftStick.x > 0.5 && this.lastGamepadState[4] !== true;
 
       // Update navigation based on input
-      if (upPressed || leftStickUp) {
+      if (upPressed || leftPressed || leftStickUp || leftStickLeft) {
         this.navigateButtons(-1);
-      } else if (downPressed || leftStickDown) {
+      } else if (downPressed || rightPressed || leftStickDown || leftStickRight) {
         this.navigateButtons(1);
       }
 
