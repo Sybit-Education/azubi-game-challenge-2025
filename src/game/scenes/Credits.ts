@@ -43,7 +43,7 @@ export class Credits extends Phaser.Scene {
     this.buttonManager = new ButtonManager(this);
 
     // Back button
-    this.back_button = new Button(globalConsts.gameWidth * 0.5, globalConsts.gameHeight * 0.25, 4, 'button_back', this, () => {
+    this.back_button = new Button(globalConsts.gameWidth * 0.15, globalConsts.gameHeight * 0.1, 4, 'button_back', this, () => {
       this.scene.start('mainMenu')
     }, 'B', 0, this.buttonManager);
 
