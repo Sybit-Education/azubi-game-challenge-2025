@@ -53,10 +53,10 @@ export class ThatGame extends Phaser.Scene {
     this.time.addEvent({
       delay: 1000,
       callback: () => {
-        console.log("Speed");
-        globalConsts.backgroundSpeed += 0.02;
-        globalConsts.houseSpeed += 0.04;
-        globalConsts.spriteSpeed += 0.06;
+        if (globalConsts.debug) console.log("Speed up");
+        globalConsts.backgroundSpeed += 0.01;
+        globalConsts.houseSpeed += 0.02;
+        globalConsts.spriteSpeed += 0.03;
       },
       callbackScope: this,
       loop: true

@@ -11,11 +11,11 @@ type position = {
 export class ThatSection {
   // Config
   readonly speed: number = -200;
-  readonly amountObstacle: number = 2;
+  readonly amountObstacle: number = 3;
   readonly breakProbability: number = 25;
   readonly giftProbability: number = 3;
-  readonly postionOverflowLimit: number = 25;
-  readonly obstaclePadding: number = 25;
+  readonly postionOverflowLimit: number = 100;
+  readonly obstaclePadding: number = 120;
   readonly maxVoidout: number = -200;
   readonly minVoidout: number = -10;
 
@@ -83,13 +83,14 @@ export class ThatSection {
     let tries: number = 0;
     while (true) {
       currentPos = {
-        x: globalConsts.getRandomInt(globalConsts.gameWidth * 0.2, globalConsts.gameWidth) + offset * globalConsts.gameWidth,
+        x: globalConsts.getRandomInt(globalConsts.gameWidth * 0.1, globalConsts.gameWidth * 0.9) + offset * globalConsts.gameWidth,
         y: property.y()
       };
       let valid: boolean = true;
       for (let obstacle of this.obstacles) {
-        if (!this.checkCoords(currentPos, {x: obstacle.x, y: obstacle.y})) valid = false
+        if (!this.checkCoords(currentPos, {x: obstacle.x, y: obstacle.y})) valid = false; // to close
       }
+      if (globalConsts.debug) console.log("valid: " + valid);
       if (valid) break;
       tries++;
       if (tries >= this.postionOverflowLimit) {
@@ -103,6 +104,7 @@ export class ThatSection {
   // This checks coords
   checkCoords(pos1: position, pos2: position): boolean {
     const distanceSquared: number = Phaser.Math.Distance.BetweenPointsSquared(pos1, pos2) / 1000;
+    if (globalConsts.debug) console.log("|" + distanceSquared);
     return distanceSquared >= this.obstaclePadding;
   }
 
