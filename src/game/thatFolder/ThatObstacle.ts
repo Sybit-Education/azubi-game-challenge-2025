@@ -8,7 +8,8 @@ export enum obstacleType {
   SNOWMAN = "SNOWMAN",
   ROCKS = "ROCKS",
   MARKER = "MARKER",
-  GIFT = "GIFT"
+  GIFT = "GIFT",
+  BREAK ="BREAK",
 }
 
 // Every obstacle that can be randomly generated
@@ -92,7 +93,16 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     offsetY: 6,
     scale: 2,
     weight: 0
-  }
+  },
+    [obstacleType.BREAK]: {
+  y: () => globalConsts.gameHeight - 90,
+    sprites: ["sign"],
+    width: 164,
+    height: 100,
+    offsetX: 90,
+    offsetY: 70,
+    scale: 6,
+    weight: 100}
 };
 
 // Gets random type

@@ -56,6 +56,8 @@ export class ThatSection {
       for (let i = 0; i < this.amountObstacle; i++) {
         this.obstacles.push(this.generateObstacle(offset - 1));
       }
+    } else{
+      this.obstacles.push(new ThatObstacle(obstacleType.BREAK,this.scene,30+globalConsts.gameWidth*(offset-1) ))
     }
 
     // Debug
