@@ -30,6 +30,7 @@ export class ThatPlayer {
   jumpTimeleft: number = 0;
   jumpLefts: number = 0;
   wasJumpKeyDownLastFrame = false;
+  gamepad: Phaser.Input.Gamepad.Gamepad | null = null;
 
   // Values by constructor
   scene: Scene;
@@ -64,6 +65,31 @@ export class ThatPlayer {
     this.keyDown = currentScene.input.keyboard?.addKey(this.keyIdDown);
     this.keyLeft = currentScene.input.keyboard?.addKey(this.keyIdLeft);
     this.keyRight = currentScene.input.keyboard?.addKey(this.keyIdRight);
+    
+    // Setup gamepad detection
+    this.setupGamepad();
+  }
+  
+  // Setup gamepad detection
+  setupGamepad(): void {
+    // Check if gamepad is already connected
+    if (this.scene.input.gamepad?.gamepads.length > 0) {
+      this.gamepad = this.scene.input.gamepad.getPad(0);
+    }
+    
+    // Listen for gamepad connection
+    this.scene.input.gamepad?.on('connected', (pad: Phaser.Input.Gamepad.Gamepad) => {
+      console.log('Gamepad connected:', pad.id);
+      this.gamepad = pad;
+    });
+    
+    // Listen for gamepad disconnection
+    this.scene.input.gamepad?.on('disconnected', (pad: Phaser.Input.Gamepad.Gamepad) => {
+      console.log('Gamepad disconnected:', pad.id);
+      if (this.gamepad === pad) {
+        this.gamepad = null;
+      }
+    });
   }
 
   // Score
@@ -112,18 +138,24 @@ export class ThatPlayer {
   updateMovement(): void {
     if (this.keyUp == undefined || this.keyDown == undefined || this.keyLeft == undefined || this.keyRight == undefined) return;
     const isOnGround: boolean | undefined = this.sprite.body?.touching.down;
+    
+    // Check input from keyboard or gamepad
+    const isLeftDown = this.keyLeft.isDown || (this.gamepad && (this.gamepad.left || this.gamepad.leftStick.x < -0.5));
+    const isRightDown = this.keyRight.isDown || (this.gamepad && (this.gamepad.right || this.gamepad.leftStick.x > 0.5));
+    const isUpDown = this.keyUp.isDown || (this.gamepad && (this.gamepad.up || this.gamepad.A));
+    const isDownDown = this.keyDown.isDown || (this.gamepad && (this.gamepad.down || this.gamepad.B));
 
     // Apply direction
-    if (this.keyRight.isDown) {
+    if (isRightDown) {
       this.sprite.setVelocityX(160);
-    } else if (this.keyLeft.isDown) {
+    } else if (isLeftDown) {
       this.sprite.setVelocityX(-160);
     } else {
       this.sprite.setVelocityX(0);
     }
 
     // Sneaking
-    if (this.keyDown.isDown) {
+    if (isDownDown) {
       this.sprite.setTexture(this.sneakingID);
       this.isSneaking = true;
     } else {
@@ -132,13 +164,13 @@ export class ThatPlayer {
     }
 
     this.sprite.body?.setSize();
-    this.sprite.setGravityY(!isOnGround && this.keyDown?.isDown ? this.sneakGravity : this.normalGravity);
+    this.sprite.setGravityY(!isOnGround && isDownDown ? this.sneakGravity : this.normalGravity);
 
     // Returns if sneaking
     if (this.isSneaking) return;
 
     // Start jump from the ground
-    if (isOnGround && this.keyUp.isDown) {
+    if (isOnGround && isUpDown) {
       this.jumpTimeleft = this.maxJumpTime;
       this.sprite.setVelocityY(this.startVelocity);
       this.wasJumpKeyDownLastFrame = true;
@@ -146,24 +178,24 @@ export class ThatPlayer {
     }
 
     // Detect double jump
-    const justPressedJump: boolean = this.keyUp.isDown && !this.wasJumpKeyDownLastFrame;
+    const justPressedJump: boolean = isUpDown && !this.wasJumpKeyDownLastFrame;
     if (!isOnGround && justPressedJump && this.jumpLefts > 0 && this.jumpTimeleft <= 0) {
       this.sprite.setVelocityY(-500); // Boost
       this.jumpLefts--;
     }
 
     // Jump-hold mechanic
-    if (this.jumpTimeleft > 0 && this.keyUp.isDown) {
+    if (this.jumpTimeleft > 0 && isUpDown) {
       const velocity: number = (this.jumpTimeleft) / 1000 + 1;
       this.jumpTimeleft -= this.scene.game.loop.delta;
       const current: number = this.sprite.body?.velocity.y ?? 0;
       this.sprite.setVelocityY(current * velocity);
-    } else if (!this.keyUp.isDown) {
+    } else if (!isUpDown) {
       this.jumpTimeleft = 0;
     }
 
     // Update previous key state
-    this.wasJumpKeyDownLastFrame = this.keyUp.isDown;
+    this.wasJumpKeyDownLastFrame = isUpDown;
   }
 }
 
