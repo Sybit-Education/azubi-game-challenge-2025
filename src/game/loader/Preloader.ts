@@ -13,6 +13,8 @@ export class Preloader extends Scene {
     // Sprites
     this.load.setPath("sprites");
     this.load.image("bench", "bench.png");
+    this.load.image("birdBlue", "birdBlue.png");
+    this.load.image("birdPink", "birdPink.png");
     this.load.image("gift1", "gift1.png");
     this.load.image("gift2", "gift2.png");
     this.load.image("gift3", "gift3.png");
@@ -21,9 +23,8 @@ export class Preloader extends Scene {
     this.load.image("player2", "player2.png");
     this.load.image("playerSneaking", "playerSneaking.png");
     this.load.image("playerSneaking2", "playerSneaking2.png");
+    this.load.image("sign", "sign.png");
     this.load.image("trash", "trash.png");
-    this.load.image("birdBlue", "birdBlue.png");
-    this.load.image("birdPink", "birdPink.png");
     this.load.image("snowman", "snowman.png");
     this.load.image("stone", "stone.png");
 
