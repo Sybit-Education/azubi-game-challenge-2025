@@ -19,8 +19,8 @@ export class ThatPlayer {
   keyIdLeft: string = "A";
   keyIdRight: string = "D";
   // Jumping
-  maxJumpTime: number = 180; // 185
-  startVelocity: number = -250; //-400
+  maxJumpTime: number = 180;
+  startVelocity: number = -250;
 
   // Types
   // Values
@@ -65,24 +65,24 @@ export class ThatPlayer {
     this.keyDown = currentScene.input.keyboard?.addKey(this.keyIdDown);
     this.keyLeft = currentScene.input.keyboard?.addKey(this.keyIdLeft);
     this.keyRight = currentScene.input.keyboard?.addKey(this.keyIdRight);
-    
-    // Setup gamepad detection
+
+    // Set up gamepad detection
     this.setupGamepad();
   }
-  
+
   // Setup gamepad detection
   setupGamepad(): void {
     // Check if gamepad is already connected
     if (this.scene.input.gamepad && this.scene.input.gamepad.gamepads.length > 0) {
       this.gamepad = this.scene.input.gamepad.getPad(0);
     }
-    
+
     // Listen for gamepad connection
     this.scene.input.gamepad?.on('connected', (pad: Phaser.Input.Gamepad.Gamepad) => {
       console.log('Gamepad connected:', pad.id);
       this.gamepad = pad;
     });
-    
+
     // Listen for gamepad disconnection
     this.scene.input.gamepad?.on('disconnected', (pad: Phaser.Input.Gamepad.Gamepad) => {
       console.log('Gamepad disconnected:', pad.id);
@@ -138,12 +138,12 @@ export class ThatPlayer {
   updateMovement(): void {
     if (this.keyUp == undefined || this.keyDown == undefined || this.keyLeft == undefined || this.keyRight == undefined) return;
     const isOnGround: boolean | undefined = this.sprite.body?.touching.down;
-    
-    // Check input from keyboard or gamepad
+
+    // Check input from the keyboard or gamepad
     const isLeftDown = this.keyLeft.isDown || (this.gamepad && (this.gamepad.left || this.gamepad.leftStick.x < -0.5));
     const isRightDown = this.keyRight.isDown || (this.gamepad && (this.gamepad.right || this.gamepad.leftStick.x > 0.5));
-    const isUpDown = this.keyUp.isDown || (this.gamepad && (this.gamepad.up || this.gamepad.A));
-    const isDownDown = this.keyDown.isDown || (this.gamepad && (this.gamepad.down || this.gamepad.B));
+    const isUpDown = this.keyUp.isDown || (this.gamepad && (this.gamepad.up || get2(this.gamepad)));
+    const isDownDown = this.keyDown.isDown || (this.gamepad && (get3(this.gamepad) /*|| this.gamepad.leftStick.y > 0.5*/));
 
     // Apply direction
     if (isRightDown) {
@@ -213,3 +213,23 @@ export function formatTime(milliseconds: number): string {
   return result.trim();
 }
 
+// Helper methode
+export function get1(gamepad: Phaser.Input.Gamepad.Gamepad | null): boolean {
+  if (!gamepad) return false;
+  return gamepad.A || false;
+}
+
+export function get2(gamepad: Phaser.Input.Gamepad.Gamepad | null): boolean {
+  if (!gamepad) return false;
+  return gamepad.B || false;
+}
+
+export function get3(gamepad: Phaser.Input.Gamepad.Gamepad | null): boolean {
+  if (!gamepad) return false;
+  return gamepad.X || false;
+}
+
+export function get4(gamepad: Phaser.Input.Gamepad.Gamepad | null): boolean {
+  if (!gamepad) return false;
+  return gamepad.Y || false;
+}

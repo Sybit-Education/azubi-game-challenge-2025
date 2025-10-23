@@ -1,4 +1,4 @@
-import {displayPlayer, globalConsts} from "../main";
+import {displayPlayer, escapeOption, globalConsts} from "../main";
 import Text = Phaser.GameObjects.Text;
 import {Button} from "../custom_classes/Button";
 import {ButtonManager} from "../custom_classes/ButtonManager";
@@ -39,7 +39,7 @@ export class Credits extends Phaser.Scene {
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
-    // Create button manager
+    // Creates a button manager
     this.buttonManager = new ButtonManager(this);
 
     // Back button
@@ -90,7 +90,7 @@ export class Credits extends Phaser.Scene {
         startY += 40;
       }
 
-      // Extra space after role
+      // Extra space after a role
       startY += 50;
     }
 
@@ -105,18 +105,8 @@ export class Credits extends Phaser.Scene {
     }).setOrigin(0, 0);
     this.creditTexts.push(footer);
 
-    // Add navigation instructions
-    this.add.text(gameW * 0.5, gameH * 0.9, 'Drücke B oder ESC zum Zurückkehren', {
-      font: "16px " + font,
-      color: roleColor,
-      align: 'center'
-    }).setOrigin(0.5, 0.5);
-
     // Add ESC key handler
-    const escKey = this.input.keyboard?.addKey('ESC');
-    escKey?.on('down', () => {
-      this.scene.start('mainMenu');
-    });
+    escapeOption(this.scene.scene);
 
     // Onclick: MainMenu (keep for mouse users)
     this.input.once('pointerdown', () => {
@@ -139,7 +129,7 @@ export class Credits extends Phaser.Scene {
     }
   }
 
-  // Capitalize first letter
+  // Capitalize the first letter
   capitalize(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }

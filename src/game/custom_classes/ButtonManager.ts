@@ -1,5 +1,6 @@
-import { Button } from "./Button";
-import { Scene } from "phaser";
+import {Button} from "./Button";
+import {Scene} from "phaser";
+import {get2} from '../thatFolder/ThatPlayer.ts';
 
 export class ButtonManager {
   private buttons: Button[] = [];
@@ -11,8 +12,8 @@ export class ButtonManager {
   private lastDownKeyState: boolean = false;
   private lastLeftKeyState: boolean = false;
   private lastRightKeyState: boolean = false;
-  private lastEnterKeyState: boolean = false;
   private lastSpaceKeyState: boolean = false;
+  private blocker: boolean = true;
 
   constructor(scene: Scene) {
     this.scene = scene;
@@ -20,17 +21,13 @@ export class ButtonManager {
     // Add update event to check for navigation inputs
     this.scene.events.on('update', this.update, this);
 
-    // Clean up when scene is shutdown
+    // Clean up when the scene is shutdown
     this.scene.events.once('shutdown', this.destroy, this);
   }
 
+  // Adds Button
   addButton(button: Button): void {
     this.buttons.push(button);
-
-    // If this is the first button, give it focus
-    if (this.buttons.length === 1) {
-      this.setFocus(0);
-    }
   }
 
   private setFocus(index: number): void {
@@ -49,13 +46,22 @@ export class ButtonManager {
 
     // Check keyboard Tab navigation
     const tabKey = this.scene.input.keyboard?.addKey('TAB');
+    const spaceKey = this.scene.input.keyboard?.addKey('SPACE');
     const upKey = this.scene.input.keyboard?.addKey('UP');
     const downKey = this.scene.input.keyboard?.addKey('DOWN');
     const leftKey = this.scene.input.keyboard?.addKey('LEFT');
     const rightKey = this.scene.input.keyboard?.addKey('RIGHT');
 
+    // Check for Enter/Space keys to activate the focused button
+    if (spaceKey?.isDown && !this.lastSpaceKeyState) {
+      this.activateFocusedButton();
+    }
+
+    this.lastSpaceKeyState = spaceKey?.isDown || false;
+
+    // Next button
     if (tabKey) {
-      const tabDown = tabKey.isDown;
+      const tabDown: boolean = tabKey.isDown;
       if (tabDown && !this.lastKeyboardTabState) {
         // Tab was just pressed
         const shiftKey = this.scene.input.keyboard?.addKey('SHIFT');
@@ -72,7 +78,7 @@ export class ButtonManager {
       this.navigateButtons(1);
     }
 
-    // Store current keyboard state
+    // Store the current keyboard state
     this.lastUpKeyState = upKey?.isDown || false;
     this.lastDownKeyState = downKey?.isDown || false;
     this.lastLeftKeyState = leftKey?.isDown || false;
@@ -88,10 +94,10 @@ export class ButtonManager {
       const rightPressed = gamepad.right && !this.lastGamepadState[15];
 
       // Left stick navigation
-      const leftStickUp = gamepad.leftStick.y < -0.5 && this.lastGamepadState[1] !== true;
-      const leftStickDown = gamepad.leftStick.y > 0.5 && this.lastGamepadState[2] !== true;
-      const leftStickLeft = gamepad.leftStick.x < -0.5 && this.lastGamepadState[3] !== true;
-      const leftStickRight = gamepad.leftStick.x > 0.5 && this.lastGamepadState[4] !== true;
+      const leftStickUp = gamepad.leftStick.y < -0.5 && !this.lastGamepadState[1];
+      const leftStickDown = gamepad.leftStick.y > 0.5 && !this.lastGamepadState[2];
+      const leftStickLeft = gamepad.leftStick.x < -0.5 && !this.lastGamepadState[3];
+      const leftStickRight = gamepad.leftStick.x > 0.5 && !this.lastGamepadState[4];
 
       // Update navigation based on input
       if (upPressed || leftPressed || leftStickUp || leftStickLeft) {
@@ -100,7 +106,7 @@ export class ButtonManager {
         this.navigateButtons(1);
       }
 
-      // Store current gamepad state
+      // Store the current gamepad state
       this.lastGamepadState[12] = gamepad.up;
       this.lastGamepadState[13] = gamepad.down;
       this.lastGamepadState[14] = gamepad.left;
@@ -110,28 +116,19 @@ export class ButtonManager {
       this.lastGamepadState[3] = gamepad.leftStick.x < -0.5;
       this.lastGamepadState[4] = gamepad.leftStick.x > 0.5;
 
-      // Check if A button is pressed to activate the focused button
-      if (gamepad.A && !this.lastGamepadState[0]) {
-        this.activateFocusedButton();
-      }
-      this.lastGamepadState[0] = gamepad.A;
-
-      // Check for Enter/Space key to activate focused button
-      const enterKey = this.scene.input.keyboard?.addKey('ENTER');
-      const spaceKey = this.scene.input.keyboard?.addKey('SPACE');
-
-      if ((enterKey?.isDown && !this.lastEnterKeyState) ||
-          (spaceKey?.isDown && !this.lastSpaceKeyState)) {
-        this.activateFocusedButton();
-      }
-
-      this.lastEnterKeyState = enterKey?.isDown || false;
-      this.lastSpaceKeyState = spaceKey?.isDown || false;
+      // Check if button 2 is pressed to activate the focused button
+      if (get2(gamepad)) {
+        if (!this.blocker && !this.lastGamepadState[0]) {
+          this.activateFocusedButton();
+          this.blocker = true;
+        }
+      } else this.blocker = false;
+      this.lastGamepadState[0] = get2(gamepad);
     }
   }
 
   private navigateButtons(direction: number): void {
-    const newIndex = this.currentFocusIndex + direction;
+    const newIndex: number = this.currentFocusIndex + direction;
     this.setFocus(newIndex);
   }
 

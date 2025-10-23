@@ -1,5 +1,5 @@
 import {GameObjects, Scene} from "phaser";
-import {displayPlayer, globalConsts} from "../main";
+import {displayPlayer, escapeOption, globalConsts} from "../main";
 import {Button} from "../custom_classes/Button";
 import {ButtonManager} from "../custom_classes/ButtonManager";
 
@@ -26,8 +26,8 @@ export class Options extends Scene {
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
-    
-    // Create button manager
+
+    // Creates the button manager
     this.buttonManager = new ButtonManager(this);
 
     // Back button - with keyboard 'B' and gamepad button 1 (B/Circle)
@@ -48,20 +48,9 @@ export class Options extends Scene {
     // Music: Label
     this.player_image = this.add.image(700, 400, 'button_music');
     this.player_image.setScale(8);
-    
-    // Add instructions text
-    this.add.text(this.gameW * 0.5, this.gameH * 0.7, 'Steuerung: Maus, Tastatur (B,S,M) oder Gamepad', {
-      font: "16px " + globalConsts.pixelFont,
-      color: "#ffffff",
-      align: 'center'
-    }).setOrigin(0.5);
-    
-    // Add Tab navigation instructions
-    this.add.text(this.gameW * 0.5, this.gameH * 0.75, 'Navigation: Tab/Shift+Tab oder Gamepad D-Pad/Stick', {
-      font: "16px " + globalConsts.pixelFont,
-      color: "#ffffff",
-      align: 'center'
-    }).setOrigin(0.5);
+
+    // Add ESC key handler
+    escapeOption(this.scene.scene);
   }
 
   // Helper methode

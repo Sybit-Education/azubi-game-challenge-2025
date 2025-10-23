@@ -52,7 +52,7 @@ const config: Phaser.Types.Core.GameConfig = {
   parent: 'game-container', // ID of the div in which it should be displayed
   physics: arcade,
   input: {
-    keyboard: true, 
+    keyboard: true,
     mouse: true,
     gamepad: true, // Enable gamepad support
   },
@@ -76,8 +76,8 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 // Creates new Game instance
-export default function startGame() {
-  return new Game({...config});
+export default function startGame(): void {
+  new Game({...config});
 }
 
 // Displays player
@@ -91,4 +91,14 @@ export function displayDebug(scene: Scene): void {
   if (!debugMode) return;
   scene.add.graphics().setAlpha(0.75);
   scene.physics.world.createDebugGraphic();
+}
+
+// Adds a Shortcut to exit the current menu
+export function escapeOption(that: Scene): void {
+  const escKey = that.input.keyboard?.addKey('ESC');
+  escKey?.on('down', () => {
+    that.scene.start('mainMenu');
+  });
+
+  // TODO | add controller 2 -> mainMenu
 }

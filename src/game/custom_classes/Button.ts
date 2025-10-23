@@ -1,5 +1,6 @@
 import {GameObjects, Scene, Input} from "phaser";
 import { ButtonManager } from "./ButtonManager";
+import Gamepad = Phaser.Input.Gamepad.Gamepad;
 
 //import via (import {Button} from "../custom_classes/Button")
 export class Button {
@@ -21,7 +22,7 @@ export class Button {
     this.x = x; //x position
     this.y = y; //y position
     this.image = image; //image as string
-    this.scene = curScene; //the scene the buttons is in (this)
+    this.scene = curScene; //the scene the button is in (this)
     this.onButtonPressed = onButtonPressed;
     this.gamepadButtonIndex = gamepadButtonIndex;
     this.buttonManager = buttonManager;
@@ -43,25 +44,25 @@ export class Button {
     this.button.on('pointerout', () => {
       this.setFocus(false);
     });
-    
+
     // Calls function that is provided
     this.button.on('pointerdown', () => this.activate());
 
     // Setup keyboard key if provided
     if (keyboardKey) {
       this.keyboardKey = this.scene.input.keyboard?.addKey(keyboardKey);
-      
-      // Add update event to scene to check for key press
+
+      // Add update event to the scene to check for key press
       this.scene.events.on('update', this.checkKeyboardInput, this);
     }
-    
-    // Setup gamepad check if needed
+
+    // Set up gamepad check if needed
     if (gamepadButtonIndex !== undefined) {
       this.gamepadCheckActive = true;
       this.scene.events.on('update', this.checkGamepadInput, this);
     }
-    
-    // Register with button manager if provided
+
+    // Register with the button manager if provided
     if (this.buttonManager) {
       this.buttonManager.addButton(this);
     }
@@ -76,7 +77,7 @@ export class Button {
     this.image = newImage;
     this.button.setTexture(newImage);
   }
-  
+
   activate(): void {
     this.setFocus(true);
     this.onButtonPressed();
@@ -87,19 +88,19 @@ export class Button {
       });
     }
   }
-  
+
   checkKeyboardInput(): void {
     if (this.keyboardKey && Phaser.Input.Keyboard.JustDown(this.keyboardKey)) {
       this.activate();
     }
   }
-  
+
   checkGamepadInput(): void {
     if (!this.gamepadCheckActive || this.gamepadButtonIndex === undefined) return;
-    
-    const pad = this.scene.input.gamepad?.getPad(0);
+
+    const pad: Gamepad | undefined = this.scene.input.gamepad?.getPad(0);
     if (!pad) return;
-    
+
     // Check if the button was just pressed
     if (pad.buttons[this.gamepadButtonIndex].pressed && pad.buttons[this.gamepadButtonIndex].value === 1) {
       if (!pad.buttons[this.gamepadButtonIndex].pressed) {
@@ -107,7 +108,7 @@ export class Button {
       }
     }
   }
-  
+
   destroy(): void {
     // Clean up event listeners
     this.scene.events.off('update', this.checkKeyboardInput, this);

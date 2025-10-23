@@ -24,6 +24,7 @@ export class Boot extends Scene {
     this.load.image("button_byPlace", "byPlace.png");
     this.load.image("button_byScore", "byScore.png");
     this.load.image("button_close", "close.png");
+    this.load.image("button_controller", "controller.png");
     this.load.image("button_controls", "controls.png");
     this.load.image("button_credits", "credits.png");
     this.load.image("button_default", "default.png");

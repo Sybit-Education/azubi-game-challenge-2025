@@ -3,6 +3,7 @@ import Image = Phaser.GameObjects.Image;
 import {Button} from '../custom_classes/Button.ts';
 import {ButtonManager} from '../custom_classes/ButtonManager.ts';
 
+// TODO | add controller controls
 export class Controls extends Phaser.Scene {
   // Config
   x: number = 425;
@@ -33,7 +34,7 @@ export class Controls extends Phaser.Scene {
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
 
-    // Create button manager
+    // Creates the button manager
     this.buttonManager = new ButtonManager(this);
 
     // Main info
@@ -54,14 +55,14 @@ export class Controls extends Phaser.Scene {
     this.back_button = new Button(globalConsts.gameWidth * 0.5, globalConsts.gameHeight * 0.25, 4, 'button_back', this, () => {
       this.scene.start('mainMenu')
     }, 'B', 0, this.buttonManager);
-    
+
     // Add navigation instructions
     this.add.text(globalConsts.gameWidth * 0.5, globalConsts.gameHeight * 0.9, 'Drücke B oder ESC zum Zurückkehren', {
       font: "16px " + globalConsts.pixelFont,
       color: "#ffffff",
       align: 'center'
     }).setOrigin(0.5);
-    
+
     // Add ESC key handler
     const escKey = this.input.keyboard?.addKey('ESC');
     escKey?.on('down', () => {

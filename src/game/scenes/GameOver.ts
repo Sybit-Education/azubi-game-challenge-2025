@@ -44,9 +44,15 @@ export class GameOver extends Scene {
 
     // Display player
     displayPlayer(scene);
-    
-    // Create button manager
+
+    // Creates the button manager
     buttonManager = new ButtonManager(scene);
+
+    // Adds the restart button (invisible but functional for keyboard/gamepad)
+    new Button(globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.85, 1, "button_play", scene, () => {
+      window.location.reload();
+    }, 'ENTER', 2, buttonManager).button.setVisible(false);
+
 
     // GameOver Image
     gameOverImage = this.add.image(512, 250, 'gameOverTitle');
@@ -61,42 +67,41 @@ export class GameOver extends Scene {
 
     // Game infos
     new Button(130, 298, 4, "button_yourScore", this.scene.scene, () => {
-    }, undefined, undefined, buttonManager)
+    });
     this.add.text(245, 290, formatTime(score), style).setOrigin(0, 0);
 
     // Renders leaderboard
     renderLeaderboard().then();
 
     // Save score button
-    saveButton = new Button(700, 700, 7, "button_save", scene, () => prompt(), 'S', 0, buttonManager);
-    // TODO | add "to full leaderboard" button
+    saveButton = new Button(700, 650, 7, "button_save", scene, () => prompt(), 'S', 0, buttonManager);
 
     // Clicker
-    const blocker: Rectangle = this.add.rectangle(0, 0, globalConsts.gameWidth, globalConsts.gameHeight, 0x000000, 0.001)
+    const blocker: Rectangle = this.add.rectangle(0, 0, globalConsts.gameWidth, globalConsts.gameHeight, 0x000000, 0)
       .setOrigin(0)
       .setInteractive();
     blocker.setDepth(-1);
     blocker.once('pointerdown', () => {
       window.location.reload();
     });
-    
+
     // Add navigation instructions
-    scene.add.text(globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.95, 'Drücke S zum Speichern oder ENTER zum Neustarten', {
+    scene.add.text(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.92, "Press S to save", {
       font: "16px " + globalConsts.pixelFont,
       color: "#ffffff",
       align: 'center'
     }).setOrigin(0.5);
-    
-    // Add restart button (invisible but functional for keyboard/gamepad)
-    new Button(globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.85, 1, "button_play", scene, () => {
-      window.location.reload();
-    }, 'ENTER', 1, buttonManager).button.setAlpha(0);
 
+    scene.add.text(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.95, "Press ENTER to restart", {
+      font: "16px " + globalConsts.pixelFont,
+      color: "#ffffff",
+      align: 'center'
+    }).setOrigin(0.5);
   }
 }
 
 function prompt(): void {
-  // Check if leaderboard is loaded
+  // Check if the leaderboard is loaded
   if (!leaderboardIsLoaded) {
     alert("The leaderboard could not be loaded\nAnd therefore no score can be uploaded");
     return;
@@ -206,7 +211,7 @@ async function renderLeaderboard(): Promise<void> {
   }
 
   // Display another score
-  yCoord = 500;
+  yCoord = 450;
   const index: number = sortedLeaderboard.findIndex(item => item.name === displayName);
   for (let i: number = index - range; i < index + range + 1; i++) {
     try {
@@ -249,7 +254,7 @@ async function saveLeaderboard(name: string, key: string | null, value: number):
     sortedLeaderboard?.push({name: name, score: value}); // Adds entry
     sortedLeaderboard?.filter(entry => entry.name !== "YOU"); // Removes YOU
     localStorage.setItem("leaderboard", JSON.stringify(sortedLeaderboard, null, 0))
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    return new Response(JSON.stringify({success: true}), {status: 200});
   }
 
   // Request info
