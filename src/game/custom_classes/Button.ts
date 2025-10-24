@@ -12,19 +12,19 @@ export class Button {
   keyboardKey?: Input.Keyboard.Key;
   gamepadButtonIndex?: number;
   isFocused: boolean = false;
-  onButtonPressed: Function;
+  onButtonPressed?: Function;
   gamepadCheckActive: boolean = false;
   buttonManager?: ButtonManager;
 
   // Constructor
-  constructor(x: number, y: number, scale: number, image: string, curScene: Scene, onButtonPressed: Function, keyboardKey?: string, gamepadButtonIndex?: number, buttonManager?: ButtonManager) {
+  constructor(x: number, y: number, scale: number, image: string, curScene: Scene, onButtonPressed?: Function, keyboardKey?: string, gamepadButtonIndex?: number, buttonManager?: ButtonManager) {
     //initialise variables
     this.x = x; //x position
     this.y = y; //y position
     this.image = image; //image as string
-    this.scene = curScene; //the scene the button is in (this)
+    this.scene = curScene; //in the scene the button is in (this)
     this.onButtonPressed = onButtonPressed;
-    this.gamepadButtonIndex = gamepadButtonIndex;
+    this.gamepadButtonIndex = gamepadButtonIndex; // does this even work?
     this.buttonManager = buttonManager;
 
     // add buttons to the current scene (just "this" in the scene you implement the buttons)
@@ -80,7 +80,7 @@ export class Button {
 
   activate(): void {
     this.setFocus(true);
-    this.onButtonPressed();
+    if (this.onButtonPressed) this.onButtonPressed();
     // Reset focus after a short delay if not managed by ButtonManager
     if (!this.buttonManager) {
       this.scene.time.delayedCall(200, () => {

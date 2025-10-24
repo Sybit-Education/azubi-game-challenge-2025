@@ -54,7 +54,7 @@ export class Controls extends Phaser.Scene {
     // Back button
     this.back_button = new Button(globalConsts.gameWidth * 0.5, globalConsts.gameHeight * 0.25, 4, 'button_back', this, () => {
       this.scene.start('mainMenu')
-    }, 'B', 0, this.buttonManager);
+    }, 'B', 3, this.buttonManager);
 
     // Add navigation instructions
     this.add.text(globalConsts.gameWidth * 0.5, globalConsts.gameHeight * 0.9, 'Drücke B oder ESC zum Zurückkehren', {

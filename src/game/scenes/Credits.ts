@@ -9,6 +9,7 @@ const roleColor: string = '#000000';
 const nameColor: string = '#000000';
 const jsonPath: string = "./src/game/scenes/creditsConfig.json";
 
+// TODO | add "thanks to all testers"
 export class Credits extends Phaser.Scene {
   // Types
   creditTexts: Phaser.GameObjects.Text[];

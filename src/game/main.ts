@@ -9,6 +9,8 @@ import {Controls} from './scenes/Controls.ts';
 import Image = Phaser.GameObjects.Image;
 import {ThatGame} from './thatFolder/ThatGame.ts';
 import {Leaderboard} from './scenes/Leaderboard.ts';
+import Gamepad = Phaser.Input.Gamepad.Gamepad;
+import { get3 } from "./thatFolder/ThatPlayer.ts";
 
 // Config
 const gameW: number = 1024;
@@ -94,11 +96,18 @@ export function displayDebug(scene: Scene): void {
 }
 
 // Adds a Shortcut to exit the current menu
-export function escapeOption(that: Scene): void {
+export function escapeOption(that: Scene, gamepad?: Gamepad): void {
   const escKey = that.input.keyboard?.addKey('ESC');
   escKey?.on('down', () => {
     that.scene.start('mainMenu');
   });
+
+  if (gamepad) {
+    if (get3(gamepad)) {
+      that.scene.start('mainMenu');
+      return;
+    }
+  }
 
   // TODO | add controller 2 -> mainMenu
 }

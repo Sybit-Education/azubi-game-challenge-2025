@@ -192,7 +192,8 @@ export class ThatGame extends Phaser.Scene {
     }
 
     // Saves score
-    localStorage.setItem("score", String(1800)) // this.player.score.toString()
+    localStorage.setItem("last.score", this.player.score.toString());
+    localStorage.setItem("last.jumpsLeft", this.player.jumpLefts.toString());
 
     // Switch du different scene
     this.scene.start("gameOver");

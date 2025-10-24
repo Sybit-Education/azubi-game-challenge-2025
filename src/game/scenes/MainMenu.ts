@@ -50,9 +50,10 @@ export class MainMenu extends Scene {
     }
 
     // Add navigation instructions
-    this.add.text(this.gameW * 0.7, this.gameH * 0.9, 'Navigation: Arrow keys, Tab, Space\nor Gamepad D-Pad/Stick', {
+    this.add.text(this.gameW * 0.67, this.gameH * 0.9, 'Navigation: Arrow keys, Tab, Space\nor Gamepad Stick and 2', {
       font: "16px " + globalConsts.pixelFont,
       color: "#000000",
+      lineSpacing: 3,
       align: 'center'
     }).setOrigin(0.5);
   }

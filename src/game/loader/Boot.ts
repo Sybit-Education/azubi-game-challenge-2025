@@ -30,6 +30,7 @@ export class Boot extends Scene {
     this.load.image("button_default", "default.png");
     this.load.image("button_gifts", "gifts.png");
     this.load.image("button_highscore", "highscore.png");
+    this.load.image("button_jumpsLeft", "jumpsLeft.png");
     this.load.image("button_keyboard", "keyboard.png");
     this.load.image("button_leaderboard", "leaderboard.png");
     this.load.image("button_music", "music.png");
