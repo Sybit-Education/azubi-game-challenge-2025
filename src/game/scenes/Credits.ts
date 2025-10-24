@@ -1,5 +1,7 @@
-import {displayPlayer, globalConsts} from "../main";
+import {displayPlayer, escapeOption, globalConsts} from "../main";
 import Text = Phaser.GameObjects.Text;
+import {Button} from "../custom_classes/Button";
+import {ButtonManager} from "../custom_classes/ButtonManager";
 
 // Config
 const scrollSpeed: number = 150;
@@ -7,9 +9,12 @@ const roleColor: string = '#000000';
 const nameColor: string = '#000000';
 const jsonPath: string = "./src/game/scenes/creditsConfig.json";
 
+// TODO | add "thanks to all testers"
 export class Credits extends Phaser.Scene {
   // Types
   creditTexts: Phaser.GameObjects.Text[];
+  buttonManager: ButtonManager;
+  back_button: Button;
 
   // Constructor
   constructor() {
@@ -34,6 +39,14 @@ export class Credits extends Phaser.Scene {
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
+
+    // Creates a button manager
+    this.buttonManager = new ButtonManager(this);
+
+    // Back button
+    this.back_button = new Button(globalConsts.gameWidth * 0.15, globalConsts.gameHeight * 0.1, 4, 'button_back', this, () => {
+      this.scene.start('mainMenu')
+    }, 'B', 0, this.buttonManager);
 
     // Variables
     this.creditTexts = [];
@@ -78,7 +91,7 @@ export class Credits extends Phaser.Scene {
         startY += 40;
       }
 
-      // Extra space after role
+      // Extra space after a role
       startY += 50;
     }
 
@@ -93,7 +106,10 @@ export class Credits extends Phaser.Scene {
     }).setOrigin(0, 0);
     this.creditTexts.push(footer);
 
-    // Onclick: MainMenu
+    // Add ESC key handler
+    escapeOption(this.scene.scene);
+
+    // Onclick: MainMenu (keep for mouse users)
     this.input.once('pointerdown', () => {
       this.scene.start('mainMenu');
     });
@@ -114,7 +130,7 @@ export class Credits extends Phaser.Scene {
     }
   }
 
-  // Capitalize first letter
+  // Capitalize the first letter
   capitalize(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
