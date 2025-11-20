@@ -6,9 +6,9 @@ import {Preloader} from './loader/Preloader.ts';
 import {Options} from './scenes/Options.ts';
 import {Credits} from './scenes/Credits.ts';
 import {Controls} from './scenes/Controls.ts';
-import Image = Phaser.GameObjects.Image;
 import {ThatGame} from './thatFolder/ThatGame.ts';
 import {Leaderboard} from './scenes/Leaderboard.ts';
+import Image = Phaser.GameObjects.Image;
 
 // Config
 const gameW: number = 1024;
@@ -19,11 +19,6 @@ const background: number = 0xd3d1fa;
 const debugMode: boolean = false;
 const pixelFontName: string = "pixelFont";
 const api: string | undefined = undefined // "http://localhost:3000"; // Dont forget the http(s) | undefined -> localstorage
-const getRandomInt: Function = (min: number, max: number): number => {//return a random number between min(inclusive) and max(inclusive)
-  const minCeiled: number = Math.ceil(min);
-  const maxFloored: number = Math.floor(max);
-  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
-}
 let speed: number = 1;
 
 // Global variables
@@ -72,11 +67,11 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 // Creates new Game instance
-export default function startGame() {
-  return new Game({...config});
+export default function startGame(): void {
+  new Game({...config});
 }
 
-// Displays player
+// Displays player in the corner
 export function displayPlayer(that: any): void {
   const player: Image = that.add.image(globalConsts.santaX, globalConsts.santaY, 'player2');
   player.setScale(4);
@@ -87,4 +82,11 @@ export function displayDebug(scene: Scene): void {
   if (!debugMode) return;
   scene.add.graphics().setAlpha(0.75);
   scene.physics.world.createDebugGraphic();
+}
+
+// Get random Int between to points
+function getRandomInt(min: number, max: number): number {
+  const minCeiled: number = Math.ceil(min);
+  const maxFloored: number = Math.floor(max);
+  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
 }

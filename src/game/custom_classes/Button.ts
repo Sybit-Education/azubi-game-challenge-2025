@@ -1,6 +1,5 @@
 import {GameObjects, Scene} from "phaser";
 
-//import via (import {Button} from "../custom_classes/Button")
 export class Button {
   readonly x: number;
   readonly y: number;
@@ -13,7 +12,7 @@ export class Button {
     //initialise variables
     this.x = x; //x position
     this.y = y; //y position
-    this.image = image; //image as string
+    this.image = image; // imageID
     this.scene = curScene; //the scene the buttons is in (this)
 
     // add buttons to the current scene (just "this" in the scene you implement the buttons)
@@ -25,7 +24,7 @@ export class Button {
     // scales the button
     this.button.setScale(scale, scale);
 
-    // Buttons actions
+    // On (Un-)Hover
     this.button.on('pointerover', () => {
       this.button.setAlpha(0.7);
     });
@@ -33,10 +32,12 @@ export class Button {
     this.button.on('pointerout', () => {
       this.button.setAlpha(1);
     });
+
     // Calls function that is provided
     this.button.on('pointerdown', onButtonPressed);
   }
 
+  // Helper methode to change image
   setImage(newImage: string): void {
     this.image = newImage;
     this.button.setTexture(newImage)

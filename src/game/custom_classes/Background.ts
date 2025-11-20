@@ -13,6 +13,7 @@ export enum Layer {
 const layers: Layer[] = [Layer.FRONT, Layer.MIDDLE, /*Layer.BACK*/];
 
 // Config
+const backgroundImage: string = "gameBackground3";
 const backgroundSpeed: number = 1;
 const houseKeys: string[] = ["house1", "house2", "house3", "house4", "church"];
 const layerPropertiesMap: Record<Layer, LayerProperties> = {
@@ -43,7 +44,7 @@ const layerPropertiesMap: Record<Layer, LayerProperties> = {
     scale: () => 4 + Math.random() * 0.2,
     depth: -3,
     y: () => globalConsts.gameHeight - 55,
-    speed: () => 1.2 * globalConsts.houseSpeed  
+    speed: () => 1.2 * globalConsts.houseSpeed
     speed: () => 0.6,
     opacity: 0.6,
     // Data
@@ -92,12 +93,12 @@ export function spawnHouses(scene: Scene): void {
 // Create Background
 function createBackground(): void {
   // Background A
-  backgroundA = currentScene.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight / 2.2, "gameBackground3");
+  backgroundA = currentScene.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight / 2.2, backgroundImage);
   backgroundA.setScale(4.5);
   backgroundA.setDepth(-4);
 
   // Background B
-  backgroundB = currentScene.add.image(globalConsts.gameWidth / 2 + backgroundA.displayWidth, globalConsts.gameHeight / 2.2, "gameBackground3");
+  backgroundB = currentScene.add.image(globalConsts.gameWidth / 2 + backgroundA.displayWidth, globalConsts.gameHeight / 2.2, backgroundImage);
   backgroundB.setScale(4.5);
   backgroundB.setDepth(-4);
 }
@@ -129,14 +130,13 @@ function spawnHouse(layer: Layer): void {
 // Moves every house on every layer
 export function updateMovement(): void {
   for (let layer of layers) moveHouses(getLayerDetails(layer).houses, getLayerDetails(layer).speed()); // Moves houses
-  moveBackground(); // ️ Moves Background
+  moveBackground(); // ️ Moves Backgrounds
 }
 
 // Moves background
 function moveBackground(): void {
   backgroundA.x -= backgroundSpeed * globalConsts.backgroundSpeed;
   backgroundB.x -= backgroundSpeed * globalConsts.backgroundSpeed;
-
 
   if (backgroundA.x <= -backgroundA.displayWidth / 2) backgroundA.x = backgroundB.x + backgroundB.displayWidth;
   if (backgroundB.x <= -backgroundB.displayWidth / 2) backgroundB.x = backgroundA.x + backgroundA.displayWidth;
@@ -145,10 +145,12 @@ function moveBackground(): void {
 
 // Moves every house on specified layer
 function moveHouses(houses: Phaser.GameObjects.Image[], speed: number): void {
+  // Moves houses
   houses.forEach(house => {
     house.x -= speed;
   });
 
+  // Destroys houses when out of bounds
   for (let i = houses.length - 3; i >= 0; i--) {
     if (houses[i].x < -houses[i].width * 4 - 50) {
       houses[i].destroy();

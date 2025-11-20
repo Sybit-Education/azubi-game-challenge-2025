@@ -2,9 +2,9 @@ import {Scene} from 'phaser';
 import {displayPlayer, globalConsts} from '../main.ts';
 import {formatTime} from '../thatFolder/ThatPlayer.ts';
 import {Button} from '../custom_classes/Button.ts';
+import {fetchLeaderboard, removeEntry, sortedLeaderboard, sortLeaderboard} from './Leaderboard.ts';
 import Text = Phaser.GameObjects.Text;
 import Rectangle = Phaser.GameObjects.Rectangle;
-import {fetchLeaderboard, removeEntry, sortedLeaderboard, sortLeaderboard} from './Leaderboard.ts';
 
 // config
 const range: number = 2;
@@ -64,7 +64,6 @@ export class GameOver extends Scene {
 
     // Save score button
     saveButton = new Button(700, 700, 7, "button_save", scene, () => prompt());
-    // TODO | add "to full leaderboard" button
 
     // Clicker
     const blocker: Rectangle = this.add.rectangle(0, 0, globalConsts.gameWidth, globalConsts.gameHeight, 0x000000, 0.001)
@@ -91,7 +90,7 @@ function prompt(): void {
   // Cancel
   if (prompt == null) return;
 
-  // YOU cannot be used
+  // "YOU" cannot be used
   if (prompt.toUpperCase() == "YOU") {
     alert("This cannot be used as name");
     return;
@@ -133,7 +132,7 @@ function prompt(): void {
 
     // Removes and rerenders leaderboard
     clearsLeaderboardLine();
-    renderLeaderboard();
+    renderLeaderboard().then();
 
     // Resets button
     saveButton.setImage("button_saved");
@@ -229,10 +228,12 @@ export async function generateCode(): Promise<string | undefined> {
 async function saveLeaderboard(name: string, key: string | null, value: number): Promise<Response | undefined> {
   // Local-storage
   if (globalConsts.apiURL == undefined) {
+    const oldEntry: leaderboardEntry | undefined = getEntryByName(name);
+    if (oldEntry && oldEntry.score > value) return new Response(JSON.stringify({success: false}), {status: 208}); // Better score exists
     sortedLeaderboard?.push({name: name, score: value}); // Adds entry
     sortedLeaderboard?.filter(entry => entry.name !== "YOU"); // Removes YOU
     localStorage.setItem("leaderboard", JSON.stringify(sortedLeaderboard, null, 0))
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    return new Response(JSON.stringify({success: true}), {status: 200});
   }
 
   // Request info
@@ -253,4 +254,9 @@ async function saveLeaderboard(name: string, key: string | null, value: number):
   } catch (e) {
     return undefined;
   }
+}
+
+// Gets leaderboard entry by name
+function getEntryByName(name: string): leaderboardEntry | undefined {
+  return sortedLeaderboard?.find(entry => entry.name === name);
 }

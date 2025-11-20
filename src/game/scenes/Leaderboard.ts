@@ -31,7 +31,7 @@ let currentCategory: leaderboardCategory = "default";
 export let sortedLeaderboard: leaderboardEntry[] | undefined;
 let clickedRefresh: number = 0;
 
-// Scene class
+// Full Leaderboard
 export class Leaderboard extends Scene {
 
   // Constructor
@@ -60,7 +60,7 @@ export class Leaderboard extends Scene {
 
     // Subtitle
     subtitle = scene.add.text(110, 163, "Loading this text", {
-      font: "30px pixelFont",
+      font: "27px pixelFont",
       color: "#ffffff",
       align: 'center'
     });
