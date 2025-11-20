@@ -1,5 +1,5 @@
 import {Scene} from "phaser";
-import {globalConsts} from '../main.ts';
+import {getRandomInt, globalConsts} from '../main.ts';
 
 // Every obstacle
 export enum obstacleType {
@@ -9,7 +9,7 @@ export enum obstacleType {
   ROCKS = "ROCKS",
   MARKER = "MARKER",
   GIFT = "GIFT",
-  BREAK ="BREAK",
+  BREAK = "BREAK",
 }
 
 // Every obstacle that can be randomly generated
@@ -35,7 +35,7 @@ interface obstacleProperties {
 // Settings for every obstacle
 export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   [obstacleType.BIRDBLUE]: {
-    y: () => globalConsts.getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.8),
+    y: () => getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.8),
     sprites: ["birdBlue"],
     width: 16,
     height: 6,
@@ -45,7 +45,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     weight: 100
   },
   [obstacleType.BIRDPINK]: {
-    y: () => globalConsts.getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.8),
+    y: () => getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.8),
     sprites: ["birdPink"],
     width: 16,
     height: 6,
@@ -85,7 +85,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     weight: 0
   },
   [obstacleType.GIFT]: {
-    y: () => globalConsts.getRandomInt(globalConsts.gameHeight * 0.6, globalConsts.gameHeight * 0.8),
+    y: () => getRandomInt(globalConsts.gameHeight * 0.6, globalConsts.gameHeight * 0.8),
     sprites: ["gift1", "gift2", "gift3", "gift4"],
     width: 18,
     height: 18,
@@ -94,15 +94,16 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     scale: 2,
     weight: 0
   },
-    [obstacleType.BREAK]: {
-  y: () => globalConsts.gameHeight - 90,
+  [obstacleType.BREAK]: {
+    y: () => globalConsts.gameHeight - 90,
     sprites: ["sign"],
     width: 164,
     height: 100,
     offsetX: 90,
     offsetY: 70,
     scale: 6,
-    weight: 100}
+    weight: 100
+  }
 };
 
 // Gets random type

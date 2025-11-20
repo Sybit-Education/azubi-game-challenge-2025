@@ -8,8 +8,9 @@ import {Credits} from './scenes/Credits.ts';
 import {Controls} from './scenes/Controls.ts';
 import {ThatGame} from './thatFolder/ThatGame.ts';
 import {Leaderboard} from './scenes/Leaderboard.ts';
+import {get3} from "./thatFolder/ThatPlayer.ts";
 import Gamepad = Phaser.Input.Gamepad.Gamepad;
-import { get3 } from "./thatFolder/ThatPlayer.ts";
+import Image = Phaser.GameObjects.Image;
 
 // Config
 const gameW: number = 1024;
@@ -32,7 +33,6 @@ export const globalConsts = {
   debug: debugMode,
   pixelFont: pixelFontName,
   apiURL: api,
-  getRandomInt: getRandomInt,
   backgroundSpeed: speed,
   houseSpeed: speed,
   spriteSpeed: speed,
@@ -102,10 +102,11 @@ export function escapeOption(that: Scene, gamepad?: Gamepad): void {
       return;
     }
   }
+}
 
 
 // Get random Int between to points
-function getRandomInt(min: number, max: number): number {
+export function getRandomInt(min: number, max: number): number {
   const minCeiled: number = Math.ceil(min);
   const maxFloored: number = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
