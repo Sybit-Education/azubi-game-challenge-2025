@@ -2,7 +2,6 @@ import {GameObjects, Scene, Input} from "phaser";
 import { ButtonManager } from "./ButtonManager";
 import Gamepad = Phaser.Input.Gamepad.Gamepad;
 
-//import via (import {Button} from "../custom_classes/Button")
 export class Button {
   readonly x: number;
   readonly y: number;
@@ -36,7 +35,7 @@ export class Button {
     // scales the button
     this.button.setScale(scale, scale);
 
-    // Buttons actions
+    // On (Un-)Hover
     this.button.on('pointerover', () => {
       this.setFocus(true);
     });
@@ -73,6 +72,7 @@ export class Button {
     this.button.setAlpha(focused ? 0.7 : 1);
   }
 
+  // Helper methode to change image
   setImage(newImage: string): void {
     this.image = newImage;
     this.button.setTexture(newImage);

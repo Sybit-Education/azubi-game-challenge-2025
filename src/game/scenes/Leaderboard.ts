@@ -33,7 +33,7 @@ export let sortedLeaderboard: leaderboardEntry[] | undefined;
 let clickedRefresh: number = 0;
 let buttonManager: ButtonManager;
 
-// Scene class
+// Full Leaderboard
 export class Leaderboard extends Scene {
 
   // Constructor

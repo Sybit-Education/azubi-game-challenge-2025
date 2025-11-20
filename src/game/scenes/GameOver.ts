@@ -134,7 +134,7 @@ function prompt(): void {
   // Cancel
   if (prompt == null) return;
 
-  // YOU cannot be used
+  // "YOU" cannot be used
   if (prompt.toUpperCase() == "YOU") {
     alert("This cannot be used as name");
     return;
@@ -176,7 +176,7 @@ function prompt(): void {
 
     // Removes and rerenders leaderboard
     clearsLeaderboardLine();
-    renderLeaderboard();
+    renderLeaderboard().then();
 
     // Disables button
     saveButton.setImage("button_saved");
@@ -272,6 +272,8 @@ export async function generateCode(): Promise<string | undefined> {
 async function saveLeaderboard(name: string, key: string | null, value: number): Promise<Response | undefined> {
   // Local-storage
   if (globalConsts.apiURL == undefined) {
+    const oldEntry: leaderboardEntry | undefined = getEntryByName(name);
+    if (oldEntry && oldEntry.score > value) return new Response(JSON.stringify({success: false}), {status: 208}); // Better score exists
     sortedLeaderboard?.push({name: name, score: value}); // Adds entry
     sortedLeaderboard?.filter(entry => entry.name !== "YOU"); // Removes YOU
     localStorage.setItem("leaderboard", JSON.stringify(sortedLeaderboard, null, 0))
@@ -296,4 +298,9 @@ async function saveLeaderboard(name: string, key: string | null, value: number):
   } catch (e) {
     return undefined;
   }
+}
+
+// Gets leaderboard entry by name
+function getEntryByName(name: string): leaderboardEntry | undefined {
+  return sortedLeaderboard?.find(entry => entry.name === name);
 }

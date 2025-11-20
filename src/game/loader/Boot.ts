@@ -55,8 +55,6 @@ export class Boot extends Scene {
 }
 
 // When all assets are done
-// When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-// For example, you can define global animations here, so we can use them in other scenes.
 export function start(scene: Phaser.Scenes.ScenePlugin): void {
 
   // Switch to main menu
