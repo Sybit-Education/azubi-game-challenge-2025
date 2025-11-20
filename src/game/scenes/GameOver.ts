@@ -1,10 +1,11 @@
 import {Scene} from 'phaser';
 import {displayPlayer, globalConsts} from '../main.ts';
-import {formatTime} from '../thatFolder/ThatPlayer.ts';
+import {formatTime, get1, get3} from '../thatFolder/ThatPlayer.ts';
 import {Button} from '../custom_classes/Button.ts';
-import {fetchLeaderboard, removeEntry, sortedLeaderboard, sortLeaderboard} from './Leaderboard.ts';
+import {ButtonManager} from '../custom_classes/ButtonManager.ts';
 import Text = Phaser.GameObjects.Text;
-import Rectangle = Phaser.GameObjects.Rectangle;
+import {fetchLeaderboard, removeEntry, sortedLeaderboard, sortLeaderboard} from './Leaderboard.ts';
+import Gamepad = Phaser.Input.Gamepad.Gamepad;
 
 // config
 const range: number = 2;
@@ -25,6 +26,9 @@ let leaderboardText: Phaser.GameObjects.Text;
 let gameOverImage: Phaser.GameObjects.Image;
 let saveButton: Button;
 let leaderboardIsLoaded: boolean = false;
+let savedScore: boolean = false;
+let buttonManager: ButtonManager;
+let gamePad: Gamepad;
 
 // Scene class
 export class GameOver extends Scene {
@@ -43,6 +47,9 @@ export class GameOver extends Scene {
     // Display player
     displayPlayer(scene);
 
+    // Creates the button manager
+    buttonManager = new ButtonManager(scene);
+
     // GameOver Image
     gameOverImage = this.add.image(512, 250, 'gameOverTitle');
     gameOverImage.setScale(0.2);
@@ -51,34 +58,71 @@ export class GameOver extends Scene {
     leaderboardText = scene.add.text(500, 290, "", style).setOrigin(0, 0);
 
     // gets score
-    const item: string | null = localStorage.getItem("score");
+    const item: string | null = localStorage.getItem("last.score");
     score = parseInt(item ? item : "0", 10);
 
     // Game infos
-    new Button(130, 298, 4, "button_yourScore", this.scene.scene, () => {
-    })
-    this.add.text(245, 290, formatTime(score), style).setOrigin(0, 0);
+    new Button(70, 298, 4, "button_yourScore", this.scene.scene).button.setOrigin(0, 0.5);
+    this.add.text(265, 290, formatTime(score), style).setOrigin(0, 0);
+
+    new Button(70, 338, 4, "button_jumpsLeft", this.scene.scene).button.setOrigin(0, 0.5);
+    this.add.text(265, 330, localStorage.getItem("last.jumpsLeft") ?? "0", style).setOrigin(0, 0);
 
     // Renders leaderboard
     renderLeaderboard().then();
 
+
+    // Adds the restart button
+    new Button(globalConsts.gameWidth * 0.8, globalConsts.gameHeight * 0.85, 5, "button_play", scene, () => exit(), 'ENTER', 3, buttonManager).button.setVisible(true);
+
     // Save score button
-    saveButton = new Button(700, 700, 7, "button_save", scene, () => prompt());
+    saveButton = new Button(600, 650, 7, "button_save", scene, () => prompt(), 'S', 1, buttonManager);
 
-    // Clicker
-    const blocker: Rectangle = this.add.rectangle(0, 0, globalConsts.gameWidth, globalConsts.gameHeight, 0x000000, 0.001)
-      .setOrigin(0)
-      .setInteractive();
-    blocker.setDepth(-1);
-    blocker.once('pointerdown', () => {
-      window.location.reload();
-    });
+    // Add navigation instructions
+    scene.add.text(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.92, "Press S or 1 to save", {
+      font: "16px " + globalConsts.pixelFont,
+      color: "#ffffff",
+      align: 'center'
+    }).setOrigin(0.5);
 
+    scene.add.text(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.95, "Press ENTER or 3 to restart", {
+      font: "16px " + globalConsts.pixelFont,
+      color: "#ffffff",
+      align: 'center'
+    }).setOrigin(0.5);
+
+    // Sets gamepad
+    if (this.input.gamepad && this.input.gamepad.gamepads.length > 0) {
+      gamePad = this.input.gamepad.getPad(0);
+    }
+  }
+
+  update(): void {
+    // 1 -> Save
+    if (get1(gamePad)) {
+      prompt();
+      return;
+    }
+
+    // 3 -> back
+    if (get3(gamePad)) {
+      exit();
+      return
+    }
   }
 }
 
+// Exit to the main Menu
+function exit(): void {
+  window.location.reload();
+}
+
+// Prompt to save
 function prompt(): void {
-  // Check if leaderboard is loaded
+  // Already saved score | TODO | fix me
+  if (savedScore) return;
+
+  // Check if the leaderboard is loaded
   if (!leaderboardIsLoaded) {
     alert("The leaderboard could not be loaded\nAnd therefore no score can be uploaded");
     return;
@@ -96,7 +140,7 @@ function prompt(): void {
     return;
   }
 
-  /// Neither does xxx
+  // Neither does xxx
   if (prompt.toLowerCase() == "xxx") {
     alert("xxx doesn't work either");
     return;
@@ -134,9 +178,9 @@ function prompt(): void {
     clearsLeaderboardLine();
     renderLeaderboard().then();
 
-    // Resets button
+    // Disables button
     saveButton.setImage("button_saved");
-    saveButton.button.removeListener("pointerdown");
+    savedScore = true;
   })
 }
 
@@ -188,7 +232,7 @@ async function renderLeaderboard(): Promise<void> {
   }
 
   // Display another score
-  yCoord = 500;
+  yCoord = 450;
   const index: number = sortedLeaderboard.findIndex(item => item.name === displayName);
   for (let i: number = index - range; i < index + range + 1; i++) {
     try {

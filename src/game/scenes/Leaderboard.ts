@@ -1,7 +1,8 @@
 import {Scene} from 'phaser';
-import {displayPlayer, globalConsts} from '../main.ts';
+import {displayPlayer, escapeOption, globalConsts} from '../main.ts';
 import {formatTime} from '../thatFolder/ThatPlayer.ts';
 import {Button} from '../custom_classes/Button.ts';
+import {ButtonManager} from '../custom_classes/ButtonManager.ts';
 import Text = Phaser.GameObjects.Text;
 
 import {leaderboardEntry} from './GameOver.ts';
@@ -30,6 +31,7 @@ let leaderboardText: Phaser.GameObjects.Text;
 let currentCategory: leaderboardCategory = "default";
 export let sortedLeaderboard: leaderboardEntry[] | undefined;
 let clickedRefresh: number = 0;
+let buttonManager: ButtonManager;
 
 // Full Leaderboard
 export class Leaderboard extends Scene {
@@ -48,7 +50,10 @@ export class Leaderboard extends Scene {
     // Display player
     displayPlayer(scene);
 
-    //  Title
+    // Creates the button manager
+    buttonManager = new ButtonManager(scene);
+
+    // Title
     scene.add.text(50, 50, "Leaderboards", {
       font: "80px pixelFont",
       color: "#ffffff",
@@ -56,7 +61,10 @@ export class Leaderboard extends Scene {
     });
 
     // Back Button
-    new Button(70, 175, 3, "button_back", this.scene.scene, () => this.scene.start("mainMenu"))
+    new Button(70, 175, 3, "button_back", this.scene.scene, () => this.scene.start("mainMenu"), 'B', undefined, buttonManager);
+
+    // Add ESC key handler
+    escapeOption(this.scene.scene);
 
     // Subtitle
     subtitle = scene.add.text(110, 163, "Loading this text", {
@@ -81,7 +89,7 @@ export class Leaderboard extends Scene {
       }
       fetchLeaderboard().then(() => rerenderLeaderboard()); // refresh
       clickedRefresh++;
-    });
+    }, 'R', undefined, buttonManager);
 
     // Sets lines
     if (leaderboardLines.length == 0) {
@@ -114,13 +122,23 @@ export class Leaderboard extends Scene {
       "byPlace": "button_byPlace",
       "byScore": "button_byScore"
     })[category];
-    new Button(categoryX, y, 4.5, imageID, this.scene.scene, () => prompt(category));
+
+    // Assign keyboard shortcuts based on category
+    const keyboardKey: string = ({
+      "default": 'T',
+      "worst": 'W',
+      "byName": 'N',
+      "byPlace": 'P',
+      "byScore": 'S'
+    })[category];
+
+    new Button(categoryX, y, 4.5, imageID, this.scene.scene, () => prompt(category), keyboardKey, undefined, buttonManager);
   }
 }
 
 // On button press. Sometimes input
 function prompt(category: leaderboardCategory): void {
-  // Check if leaderboard is loaded
+  // Check if the leaderboard is loaded
   if (sortedLeaderboard == undefined) {
     alert("The leaderboard could not be loaded\nAnd therefore cannot be sorted");
     return;
@@ -280,7 +298,8 @@ async function renderLeaderboard(): Promise<void> {
           text.setText(formatText(i, thatName, score));
           if (i == nameIndex) text.setColor(selectedColor);
         } catch (e) {
-          text.setText(formatText(i, "xxx", 0));
+          text.setText("-".repeat((i + 1).toString().length) + ". *END*");
+          break;
         }
         line++;
       }
@@ -299,7 +318,8 @@ async function renderLeaderboard(): Promise<void> {
           text.setText(formatText(i, thatName, score));
           if (i == nameIndex) text.setColor(selectedColor);
         } catch (e) {
-          text.setText(formatText(i, "xxx", 0));
+          text.setText("-".repeat((i + 1).toString().length) + ". *END*");
+          break;
         }
         line++;
       }
@@ -307,7 +327,7 @@ async function renderLeaderboard(): Promise<void> {
   }
 
   // Removes "loading leaderboard" text
-  leaderboardText.setText("");
+  leaderboardText.setText(sortedLeaderboard.length == 0 ? "Leaderboard is empty" : "");
 
   // Number of entries
   const entries: number = range > sortedLeaderboard.length ? sortedLeaderboard.length : range;
@@ -317,8 +337,8 @@ async function renderLeaderboard(): Promise<void> {
     "default": "Top " + entries,
     "worst": "Worst " + entries,
     "byName": "Leaderboard at @ " + value,
-    "byPlace": "Leaderboard at " + value + ". place",
-    "byScore": "Leaderboard at score " + formatTime(<number>value), // TODO/NOTE: if minutes are available it goes over the edge of the screen
+    "byPlace": "Leaderboard at " + toOrdinal(<number>value) + " place",
+    "byScore": "Leaderboard at score " + formatTime(<number>value),
   })[currentCategory];
   subtitle.setText(subtitleText);
 }
@@ -375,6 +395,13 @@ function parseFlexibleTime(input: string): number | null {
 // Formates lines
 function formatText(i: number, name: string, score: number): string {
   return `${i + 1}. ${name} - ${formatTime(score)}`;
+}
+
+// Turns 1 -> 1st
+function toOrdinal(n: number): string {
+  const s: string[] = ["th", "st", "nd", "rd"];
+  const v: number = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
 // Sort record/entries

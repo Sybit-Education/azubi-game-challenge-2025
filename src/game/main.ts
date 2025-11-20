@@ -8,6 +8,8 @@ import {Credits} from './scenes/Credits.ts';
 import {Controls} from './scenes/Controls.ts';
 import {ThatGame} from './thatFolder/ThatGame.ts';
 import {Leaderboard} from './scenes/Leaderboard.ts';
+import {get3} from "./thatFolder/ThatPlayer.ts";
+import Gamepad = Phaser.Input.Gamepad.Gamepad;
 import Image = Phaser.GameObjects.Image;
 
 // Config
@@ -31,7 +33,6 @@ export const globalConsts = {
   debug: debugMode,
   pixelFont: pixelFontName,
   apiURL: api,
-  getRandomInt: getRandomInt,
   backgroundSpeed: speed,
   houseSpeed: speed,
   spriteSpeed: speed,
@@ -46,7 +47,11 @@ const config: Phaser.Types.Core.GameConfig = {
   height: gameH, // Height of the game container
   parent: 'game-container', // ID of the div in which it should be displayed
   physics: arcade,
-  input: {keyboard: true, mouse: true,}, // Which inputs are enabled
+  input: {
+    keyboard: true,
+    mouse: true,
+    gamepad: true, // Enable gamepad support
+  },
   render: {
     pixelArt: true, // Pixels are preserved
     antialias: false // Removes jagged edges
@@ -84,8 +89,24 @@ export function displayDebug(scene: Scene): void {
   scene.physics.world.createDebugGraphic();
 }
 
+// Adds a Shortcut to exit the current menu
+export function escapeOption(that: Scene, gamepad?: Gamepad): void {
+  const escKey = that.input.keyboard?.addKey('ESC');
+  escKey?.on('down', () => {
+    that.scene.start('mainMenu');
+  });
+
+  if (gamepad) {
+    if (get3(gamepad)) {
+      that.scene.start('mainMenu');
+      return;
+    }
+  }
+}
+
+
 // Get random Int between to points
-function getRandomInt(min: number, max: number): number {
+export function getRandomInt(min: number, max: number): number {
   const minCeiled: number = Math.ceil(min);
   const maxFloored: number = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)

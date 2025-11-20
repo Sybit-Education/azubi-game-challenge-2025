@@ -1,5 +1,5 @@
 import {Scene} from 'phaser';
-import {globalConsts} from '../main.ts';
+import {getRandomInt, globalConsts} from '../main.ts';
 import {getRandomObstacleType, obstaclePropertiesMap, obstacleType, ThatObstacle} from './ThatObstacle.ts';
 
 // Position type
@@ -29,10 +29,10 @@ export class ThatSection {
   // Constructor
   constructor(currentScene: Scene, pause: boolean, offset: number = 2) {
     this.scene = currentScene;
-    this.randomVoidOut = globalConsts.getRandomInt(this.minVoidout, this.maxVoidout);
+    this.randomVoidOut = getRandomInt(this.minVoidout, this.maxVoidout);
 
     // Gift generation
-    if (globalConsts.getRandomInt(0, this.giftProbability) == 1) {
+    if (getRandomInt(0, this.giftProbability) == 1) {
       const gift = this.generateObstacle(offset - 1, obstacleType.GIFT);
       this.gift = gift;
       this.obstacles.push(gift);
@@ -46,7 +46,7 @@ export class ThatSection {
     );
     // This lines controls if the next should be a break
     this.marker.sprite.setAlpha(
-      !pause ? (globalConsts.getRandomInt(0, this.breakProbability) == 0 ? 0 : 1) : 1
+      !pause ? (getRandomInt(0, this.breakProbability) == 0 ? 0 : 1) : 1
     );
     this.marker.sprite.setVisible(false);
     this.obstacles.push(this.marker);
@@ -56,8 +56,8 @@ export class ThatSection {
       for (let i = 0; i < this.amountObstacle; i++) {
         this.obstacles.push(this.generateObstacle(offset - 1));
       }
-    } else{
-      this.obstacles.push(new ThatObstacle(obstacleType.BREAK,this.scene,30+globalConsts.gameWidth*(offset-1) ))
+    } else {
+      this.obstacles.push(new ThatObstacle(obstacleType.BREAK, this.scene, 30 + globalConsts.gameWidth * (offset - 1)))
     }
 
     // Debug
@@ -83,7 +83,7 @@ export class ThatSection {
     let tries: number = 0;
     while (true) {
       currentPos = {
-        x: globalConsts.getRandomInt(globalConsts.gameWidth * 0.1, globalConsts.gameWidth * 0.9) + offset * globalConsts.gameWidth,
+        x: getRandomInt(globalConsts.gameWidth * 0.1, globalConsts.gameWidth * 0.9) + offset * globalConsts.gameWidth,
         y: property.y()
       };
       let valid: boolean = true;

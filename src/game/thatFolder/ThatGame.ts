@@ -18,6 +18,7 @@ export class ThatGame extends Phaser.Scene {
   ground: ThatGround;
   sections: ThatSection[] = [];
   leaderboardText: Text;
+  jumplsLeft: Text;
   // Collusion
   collisionPlayerAndGround: Phaser.Physics.Arcade.Collider;
 
@@ -98,18 +99,25 @@ export class ThatGame extends Phaser.Scene {
     this.tweens.add({
       targets: infoText,
       alpha: 0,
-      delay: 2500, // start after 2.5s
+      delay: 3500, // start after 2.5s
       duration: 500 // fade-out-duration
     });
 
-    // Removes text from screen
-    this.time.delayedCall(3000, () => infoText.destroy());
+    // Removes text from the screen
+    this.time.delayedCall(4000, () => infoText.destroy());
 
     // Creates leaderboard Text
-    this.leaderboardText = this.add.text(50, globalConsts.gameHeight * 0.955, "", {
-      font: "20px " + globalConsts.pixelFont,
+    this.leaderboardText = this.add.text(globalConsts.gameWidth * 0.02, globalConsts.gameHeight * 0.97, "", {
+      font: "15px " + globalConsts.pixelFont,
       color: "#ffffff",
     });
+
+    // Creates Jumps left Text
+    this.jumplsLeft = this.add.text(globalConsts.gameWidth * 0.98, globalConsts.gameHeight * 0.96, "", {
+      font: "18px " + globalConsts.pixelFont,
+      color: "#ffffff",
+      align: "end",
+    }).setOrigin(1, 0);
 
     // Fetches leaderboard
     fetchLeaderboard().then();
@@ -123,9 +131,12 @@ export class ThatGame extends Phaser.Scene {
     // Move background
     updateMovement();
 
+    // Updates Double jumps left text
+    this.jumplsLeft.setText("Double-Jumps left: " + this.player.jumpLefts);
+
     // Checks and moves sections
     this.sections.forEach(section => {
-      // Checks if marker is outside
+      // Checks if the marker is outside
       if (section.marker.sprite.x < section.randomVoidOut) {
         section.destroyAll();
         this.createSection(section.marker.sprite.alpha);
@@ -181,7 +192,8 @@ export class ThatGame extends Phaser.Scene {
     }
 
     // Saves score
-    localStorage.setItem("score", this.player.score.toString())
+    localStorage.setItem("last.score", this.player.score.toString());
+    localStorage.setItem("last.jumpsLeft", this.player.jumpLefts.toString());
 
     // Switch du different scene
     this.scene.start("gameOver");
