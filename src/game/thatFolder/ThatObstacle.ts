@@ -55,7 +55,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     weight: 100
   },
   [obstacleType.SNOWMAN]: {
-    y: () => globalConsts.gameHeight - 96,
+    y: () => getRandomInt(globalConsts.gameHeight * 0.866, globalConsts.gameHeight * 0.89),
     sprites: ["snowman"],
     width: 6,
     height: 12,
@@ -65,7 +65,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     weight: 100
   },
   [obstacleType.ROCKS]: {
-    y: () => globalConsts.gameHeight - 90,
+    y: () => getRandomInt(globalConsts.gameHeight * 0.87, globalConsts.gameHeight * 0.89),
     sprites: ["stone"],
     width: 164,
     height: 100,

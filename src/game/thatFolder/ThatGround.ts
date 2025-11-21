@@ -1,5 +1,5 @@
 import {Scene} from "phaser";
-import {globalConsts} from '../main.ts';
+import {calculateScale, globalConsts} from '../main.ts';
 
 export class ThatGround {
   // Types
@@ -12,7 +12,7 @@ export class ThatGround {
     this.sprite.setImmovable(false);
     this.sprite.setPushable(false);
     this.sprite.setDepth(0);
-    this.sprite.setScale(13)
+    this.sprite.setScale(calculateScale(13))
     // TODO | Add scroll effect
   }
 }

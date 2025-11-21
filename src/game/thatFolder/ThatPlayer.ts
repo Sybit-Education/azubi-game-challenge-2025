@@ -1,5 +1,5 @@
 import {Scene} from 'phaser';
-import {globalConsts} from '../main.ts';
+import {calculateScale, globalConsts} from '../main.ts';
 import Sprite = Phaser.Physics.Arcade.Sprite;
 import Text = Phaser.GameObjects.Text;
 
@@ -42,11 +42,11 @@ export class ThatPlayer {
   keyRight: Phaser.Input.Keyboard.Key | null | undefined;
 
   // Constructor
-  constructor(currentScene: Scene, startX: number = 100, startY: number = globalConsts.gameHeight - 100) {
+  constructor(currentScene: Scene) {
     this.scene = currentScene;
 
     // Create sprite
-    this.sprite = currentScene.physics.add.sprite(startX, startY, this.spriteID);
+    this.sprite = currentScene.physics.add.sprite(100, globalConsts.gameHeight * 0.9, this.spriteID);
     //this.sprite.setBodySize(32, 64, false); // NOTE: setBodySize und nicht setSize!!! Origin is not in center.
     this.sprite.setOrigin(0, 1); // Bottom left
     this.sprite.setCollideWorldBounds(true);
@@ -54,11 +54,12 @@ export class ThatPlayer {
     this.sprite.setScale(2.25);
 
     // Create Score text
-    this.scoreText = this.scene.add.text(globalConsts.gameWidth * 0.42, 100, this.getScore().toString(), {
+    this.scoreText = this.scene.add.text(globalConsts.gameWidth / 2, 100, this.getScore().toString(), {
       font: "30px " + globalConsts.pixelFont,
       color: "#ffffff",
       align: 'center'
-    }).setOrigin(0, 0);
+    }).setOrigin(0.5, 0)
+      .setScale(calculateScale(1));
 
     // Keybinds
     this.keyUp = currentScene.input.keyboard?.addKey(this.keyIdUp);

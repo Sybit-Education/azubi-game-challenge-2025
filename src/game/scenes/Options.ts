@@ -1,17 +1,13 @@
-import {GameObjects, Scene} from "phaser";
-import {displayPlayer, escapeOption, globalConsts} from "../main";
+import {Scene} from "phaser";
+import {calculateScale, displayPlayer, escapeOption, globalConsts} from "../main";
 import {Button} from "../custom_classes/Button";
 import {ButtonManager} from "../custom_classes/ButtonManager";
 
 export class Options extends Scene {
   // Types
-  background: GameObjects.Image;
-  gameW: number = globalConsts.gameWidth;
-  gameH: number = globalConsts.gameHeight;
   buttonBack: Button;
   buttonSound: Button;
   buttonMusic: Button;
-  player_image: Phaser.GameObjects.Image;
   buttonManager: ButtonManager;
 
   // Constructor
@@ -31,26 +27,46 @@ export class Options extends Scene {
     this.buttonManager = new ButtonManager(this);
 
     // Back button - with keyboard 'B' and gamepad button 1 (B/Circle)
-    this.buttonBack = new Button(this.gameW * 0.5, this.gameH * 0.25, 4, 'button_back', this, () => {
+    this.buttonBack = new Button(globalConsts.gameWidth * 0.05, globalConsts.gameHeight * 0.08, calculateScale(4), 'button_back', this, () => {
       this.scene.start('mainMenu')
     }, 'B', 1, this.buttonManager);
 
-    // Sound: Toggle - with keyboard 'S' and gamepad button 0 (A/X)
-    this.buttonSound = new Button(380, 300, 4, localStorage.getItem("isActive.sound") == "true" ? 'button_soundActive' : 'button_soundMute', this, () => this.toggle("isActive.sound", this.buttonSound), 'S', 0, this.buttonManager);
-
-    // Sound: Label
-    this.player_image = this.add.image(700, 300, 'button_sound');
-    this.player_image.setScale(8);
-
-    // Music: Toggle - with keyboard 'M' and gamepad button 2 (X/Square)
-    this.buttonMusic = new Button(380, 400, 4, localStorage.getItem("isActive.music") == "true" ? 'button_soundActive' : 'button_soundMute', this, () => this.toggle("isActive.music", this.buttonMusic), 'M', 2, this.buttonManager);
-
-    // Music: Label
-    this.player_image = this.add.image(700, 400, 'button_music');
-    this.player_image.setScale(8);
 
     // Add ESC key handler
     escapeOption(this.scene.scene);
+
+    // Sound
+    this.buttonSound = new Button(
+      globalConsts.gameWidth * 0.4,
+      globalConsts.gameHeight * 0.4,
+      calculateScale(3),
+      localStorage.getItem("isActive.sound") == "true" ? 'button_soundActive' : 'button_soundMute',
+      this,
+      () => this.toggle("isActive.sound", this.buttonSound),
+      'S',
+      0,
+      this.buttonManager
+    );
+    this.add.image(globalConsts.gameWidth * 0.48, globalConsts.gameHeight * 0.4, 'button_sound')
+      .setScale(calculateScale(6))
+      .setOrigin(0, 0.5);
+
+    // Music
+    this.buttonMusic = new Button(
+      globalConsts.gameWidth * 0.4,
+      globalConsts.gameHeight * 0.5,
+      calculateScale(3),
+      localStorage.getItem("isActive.music") == "true" ? 'button_soundActive' : 'button_soundMute',
+      this,
+      () => this.toggle("isActive.music", this.buttonMusic),
+      'M',
+      0,
+      this.buttonManager
+    );
+    this.add.image(globalConsts.gameWidth * 0.48, globalConsts.gameHeight * 0.5, 'button_music')
+      .setScale(calculateScale(6))
+      .setOrigin(0, 0.5);
+
   }
 
   // Helper methode

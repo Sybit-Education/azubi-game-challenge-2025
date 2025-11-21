@@ -1,7 +1,7 @@
-import {displayPlayer, escapeOption, globalConsts} from "../main";
-import Text = Phaser.GameObjects.Text;
+import {calculateScale, displayPlayer, escapeOption, globalConsts} from "../main";
 import {Button} from "../custom_classes/Button";
 import {ButtonManager} from "../custom_classes/ButtonManager";
+import Text = Phaser.GameObjects.Text;
 
 // Config
 const scrollSpeed: number = 150;
@@ -44,7 +44,7 @@ export class Credits extends Phaser.Scene {
     this.buttonManager = new ButtonManager(this);
 
     // Back button
-    this.back_button = new Button(globalConsts.gameWidth * 0.15, globalConsts.gameHeight * 0.1, 4, 'button_back', this, () => {
+    this.back_button = new Button(globalConsts.gameWidth * 0.07, globalConsts.gameHeight * 0.1, calculateScale(3), 'button_back', this, () => {
       this.scene.start('mainMenu')
     }, 'B', 0, this.buttonManager);
 
@@ -61,11 +61,12 @@ export class Credits extends Phaser.Scene {
       font: "40px " + font,
       color: roleColor,
       align: 'center'
-    }).setOrigin(0, 0);
+    }).setOrigin(0, 0)
+      .setScale(calculateScale(1));
     this.creditTexts.push(text);
 
     // Space
-    startY += 125;
+    startY += calculateScale(125);
 
     // Generate rows
     for (let role in data) {
@@ -77,7 +78,8 @@ export class Credits extends Phaser.Scene {
         font: "20px " + font,
         color: roleColor,
         align: 'left'
-      }).setOrigin(0, 0);
+      }).setOrigin(0, 0)
+        .setScale(calculateScale(1));
       this.creditTexts.push(roleText);
 
       // Person | right
@@ -86,24 +88,26 @@ export class Credits extends Phaser.Scene {
           font: "20px " + font,
           color: nameColor,
           align: 'right'
-        }).setOrigin(0, 0);
+        }).setOrigin(0, 0)
+          .setScale(calculateScale(1));
         this.creditTexts.push(nameText);
         startY += 40;
       }
 
       // Extra space after a role
-      startY += 50;
+      startY += calculateScale(50);
     }
 
     // Extra space for footer
-    startY += 350;
+    startY += globalConsts.gameHeight * 0.5;
 
     // "Thank you for playing" text
     const footer: Text = this.add.text(gameW * 0.38, startY, "Thank you for playing", {
       font: "30px " + font,
       color: roleColor,
       align: 'center'
-    }).setOrigin(0, 0);
+    }).setOrigin(0, 0)
+      .setScale(calculateScale(1));
     this.creditTexts.push(footer);
 
     // Add ESC key handler
@@ -124,7 +128,7 @@ export class Credits extends Phaser.Scene {
     // All name done
     const last: Phaser.GameObjects.Text = this.creditTexts[this.creditTexts.length - 2];
     if (last == undefined || last.y == undefined) return;
-    if (last.y < -20) {
+    if (last.y < calculateScale(-30)) {
       this.creditTexts.splice(this.creditTexts.length - 1, 1);
       this.time.addEvent({delay: 500, callback: () => this.scene.start("mainMenu"), callbackScope: this, loop: false});
     }

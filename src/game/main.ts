@@ -13,10 +13,9 @@ import Gamepad = Phaser.Input.Gamepad.Gamepad;
 import Image = Phaser.GameObjects.Image;
 
 // Config
-const gameW: number = 1024;
-const gameH: number = 768;
-const santaXPosition: number = 200;
-const santaYPosition: number = 680;
+const big: boolean = true
+const gameW: number = big ? 1920 : 1024; // 1024
+const gameH: number = big ? 1080 : 768; // 768
 const background: number = 0xd3d1fa;
 const debugMode: boolean = false;
 const pixelFontName: string = "pixelFont";
@@ -27,8 +26,6 @@ let speed: number = 1;
 export const globalConsts = {
   gameWidth: gameW,
   gameHeight: gameH,
-  santaX: santaXPosition,
-  santaY: santaYPosition,
   backgroundColor: background,
   debug: debugMode,
   pixelFont: pixelFontName,
@@ -77,9 +74,10 @@ export default function startGame(): void {
 }
 
 // Displays player in the corner
-export function displayPlayer(that: any): void {
-  const player: Image = that.add.image(globalConsts.santaX, globalConsts.santaY, 'player2');
-  player.setScale(4);
+export function displayPlayer(that: Scene): void {
+  const player: Image = that.add.image(10, globalConsts.gameHeight - 10, 'player2');
+  player.setOrigin(0, 1)
+  player.setScale(calculateScale(4));
 }
 
 // Displays debug if enabled
@@ -110,4 +108,15 @@ export function getRandomInt(min: number, max: number): number {
   const minCeiled: number = Math.ceil(min);
   const maxFloored: number = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
+}
+
+// Calculates new scale
+export function calculateScale(
+  refScale: number
+): number {
+  const diagonal = (w: number, h: number) => Math.sqrt(w * w + h * h);
+  const targetDiagonal = diagonal(globalConsts.gameWidth, globalConsts.gameHeight);
+  const refDiagonal = diagonal(1024, 768);
+  const ratio = targetDiagonal / refDiagonal;
+  return parseFloat((refScale * ratio).toFixed(2)); // round to 2 digits
 }

@@ -1,5 +1,5 @@
 import {Scene} from 'phaser';
-import {displayPlayer, globalConsts} from '../main';
+import {calculateScale, displayPlayer, globalConsts} from '../main';
 import {Button} from '../custom_classes/Button';
 import {ButtonManager} from '../custom_classes/ButtonManager';
 
@@ -28,8 +28,9 @@ export class MainMenu extends Scene {
     displayPlayer(this);
 
     // Logo
-    this.logo_image = this.add.image(550, 130, 'logo');
-    this.logo_image.setScale(9);
+    this.logo_image = this.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.15, 'logo');
+    this.logo_image.setScale(calculateScale(9));
+    this.logo_image.setOrigin(0.5, 0.5);
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
@@ -38,15 +39,15 @@ export class MainMenu extends Scene {
     this.buttonManager = new ButtonManager(this);
 
     // Adds buttons
-    this.buttonPlay = new Button(this.gameW * 0.5, this.gameH * 0.36, 8, 'button_play', this, () => this.scene.start('thatGame'), 'P', 0, this.buttonManager);
-    this.buttonOptions = new Button(this.gameW * 0.5, this.gameH * 0.47, 5, 'button_options', this, () => this.scene.start('options'), 'O', 1, this.buttonManager);
-    this.buttonControl = new Button(this.gameW * 0.5, this.gameH * 0.55, 5, 'button_controls', this, () => this.scene.start('controls'), 'T', 2, this.buttonManager);
-    this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.63, 5, 'button_credits', this, () => this.scene.start('credits'), 'C', 3, this.buttonManager);
-    this.buttonLeaderboard = new Button(this.gameW * 0.5, this.gameH * 0.71, 5, "button_leaderboard", this, () => this.scene.start('leaderboard'), 'L', 4, this.buttonManager);
+    this.buttonPlay = new Button(this.gameW * 0.5, this.gameH * 0.36, calculateScale(8), 'button_play', this, () => this.scene.start('thatGame'), 'P', 0, this.buttonManager);
+    this.buttonOptions = new Button(this.gameW * 0.5, this.gameH * 0.47, calculateScale(5), 'button_options', this, () => this.scene.start('options'), 'O', 1, this.buttonManager);
+    this.buttonControl = new Button(this.gameW * 0.5, this.gameH * 0.55, calculateScale(5), 'button_controls', this, () => this.scene.start('controls'), 'T', 2, this.buttonManager);
+    this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.63, calculateScale(5), 'button_credits', this, () => this.scene.start('credits'), 'C', 3, this.buttonManager);
+    this.buttonLeaderboard = new Button(this.gameW * 0.5, this.gameH * 0.71, calculateScale(5), "button_leaderboard", this, () => this.scene.start('leaderboard'), 'L', 4, this.buttonManager);
 
     // Close button (only if opened in a popup)
     if (window.opener != null) {
-      this.buttonClose = new Button(this.gameW * 0.94, this.gameH * 0.07, 4, 'button_close', this, () => window.close(), 'X', 5, this.buttonManager); // This is a website close button
+      this.buttonClose = new Button(this.gameW * 0.94, this.gameH * 0.07, calculateScale(4), 'button_close', this, () => window.close(), 'X', 5, this.buttonManager); // This is a website close button
     }
 
     // Add navigation instructions
@@ -55,6 +56,7 @@ export class MainMenu extends Scene {
       color: "#000000",
       lineSpacing: 3,
       align: 'center'
-    }).setOrigin(0.5);
+    }).setOrigin(0.5)
+      .setScale(calculateScale(1))
   }
 }

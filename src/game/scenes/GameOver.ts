@@ -1,10 +1,10 @@
 import {Scene} from 'phaser';
-import {displayPlayer, globalConsts} from '../main.ts';
+import {calculateScale, displayPlayer, globalConsts} from '../main.ts';
 import {formatTime, get1, get3} from '../thatFolder/ThatPlayer.ts';
 import {Button} from '../custom_classes/Button.ts';
 import {ButtonManager} from '../custom_classes/ButtonManager.ts';
-import Text = Phaser.GameObjects.Text;
 import {fetchLeaderboard, removeEntry, sortedLeaderboard, sortLeaderboard} from './Leaderboard.ts';
+import Text = Phaser.GameObjects.Text;
 import Gamepad = Phaser.Input.Gamepad.Gamepad;
 
 // config
@@ -51,8 +51,9 @@ export class GameOver extends Scene {
     buttonManager = new ButtonManager(scene);
 
     // GameOver Image
-    gameOverImage = this.add.image(512, 250, 'gameOverTitle');
-    gameOverImage.setScale(0.2);
+    gameOverImage = this.add.image(globalConsts.gameWidth / 2, 10, 'gameOverTitle');
+    gameOverImage.setOrigin(0.5, 0)
+    gameOverImage.setScale(14);
 
     // Sets text
     leaderboardText = scene.add.text(500, 290, "", style).setOrigin(0, 0);
@@ -62,21 +63,20 @@ export class GameOver extends Scene {
     score = parseInt(item ? item : "0", 10);
 
     // Game infos
-    new Button(70, 298, 4, "button_yourScore", this.scene.scene).button.setOrigin(0, 0.5);
-    this.add.text(265, 290, formatTime(score), style).setOrigin(0, 0);
+    new Button(globalConsts.gameWidth * 0.04, globalConsts.gameHeight * 0.4, calculateScale(5), "button_yourScore", this.scene.scene).button.setOrigin(0, 0.5);
+    this.add.text(globalConsts.gameWidth * 0.25, globalConsts.gameHeight * 0.39, formatTime(score), style).setOrigin(0, 0).setScale(calculateScale(1));
 
-    new Button(70, 338, 4, "button_jumpsLeft", this.scene.scene).button.setOrigin(0, 0.5);
-    this.add.text(265, 330, localStorage.getItem("last.jumpsLeft") ?? "0", style).setOrigin(0, 0);
+    new Button(globalConsts.gameWidth * 0.04, globalConsts.gameHeight * 0.58, calculateScale(5), "button_jumpsLeft", this.scene.scene).button.setOrigin(0, 0.5);
+    this.add.text(globalConsts.gameWidth * 0.25, globalConsts.gameHeight * 0.57, localStorage.getItem("last.jumpsLeft") ?? "0", style).setOrigin(0, 0).setScale(calculateScale(1));
 
     // Renders leaderboard
     renderLeaderboard().then();
 
-
     // Adds the restart button
-    new Button(globalConsts.gameWidth * 0.8, globalConsts.gameHeight * 0.85, 5, "button_play", scene, () => exit(), 'ENTER', 3, buttonManager).button.setVisible(true);
+    new Button(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.84, calculateScale(5), "button_play", scene, () => exit(), 'ENTER', 3, buttonManager).button.setVisible(true);
 
     // Save score button
-    saveButton = new Button(600, 650, 7, "button_save", scene, () => prompt(), 'S', 1, buttonManager);
+    saveButton = new Button(globalConsts.gameWidth * 0.45, globalConsts.gameHeight * 0.853, calculateScale(8), "button_save", scene, () => prompt(), 'S', 1, buttonManager);
 
     // Add navigation instructions
     scene.add.text(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.92, "Press S or 1 to save", {
@@ -119,7 +119,7 @@ function exit(): void {
 
 // Prompt to save
 function prompt(): void {
-  // Already saved score | TODO | fix me
+  // Already saved score | TODO: fix me | fix what?
   if (savedScore) return;
 
   // Check if the leaderboard is loaded
@@ -129,7 +129,7 @@ function prompt(): void {
   }
 
   // Main prompt
-  let prompt: string | null = window.prompt("please enter your abbreviation");
+  let prompt: string | null = window.prompt("please enter your initials");
 
   // Cancel
   if (prompt == null) return;
@@ -225,22 +225,22 @@ async function renderLeaderboard(): Promise<void> {
   sortLeaderboard();
 
   // Display top 3 leaderboard
-  let yCoord: number = 290;
+  let yCoord: number = globalConsts.gameHeight * 0.33;
   for (let i: number = 0; i <= (sortedLeaderboard.length > 3 ? 3 : sortedLeaderboard.length) - 1; i++) {
-    leaderboardLines.push(scene.add.text(525, yCoord, `${i + 1}. ${sortedLeaderboard[i].name} - ${formatTime(sortedLeaderboard[i].score)}`, style).setColor(sortedLeaderboard[i].name == displayName ? "#000000" : style.color));
-    yCoord += 30;
+    leaderboardLines.push(scene.add.text(globalConsts.gameWidth * 0.5, yCoord, `${i + 1}. ${sortedLeaderboard[i].name} - ${formatTime(sortedLeaderboard[i].score)}`, style).setColor(sortedLeaderboard[i].name == displayName ? "#000000" : style.color).setScale(calculateScale(1)));
+    yCoord += calculateScale(30);
   }
 
   // Display another score
-  yCoord = 450;
+  yCoord = globalConsts.gameHeight * 0.52;
   const index: number = sortedLeaderboard.findIndex(item => item.name === displayName);
   for (let i: number = index - range; i < index + range + 1; i++) {
     try {
-      leaderboardLines.push(scene.add.text(525, yCoord, `${i + 1}. ${sortedLeaderboard[i].name} - ${formatTime(sortedLeaderboard[i].score)}`, style).setColor(sortedLeaderboard[i].name == displayName ? "#000000" : style.color));
+      leaderboardLines.push(scene.add.text(globalConsts.gameWidth * 0.5, yCoord, `${i + 1}. ${sortedLeaderboard[i].name} - ${formatTime(sortedLeaderboard[i].score)}`, style).setColor(sortedLeaderboard[i].name == displayName ? "#000000" : style.color).setScale(calculateScale(1)));
     } catch (e) {
-      leaderboardLines.push(scene.add.text(525, yCoord, `${i + 1 > 0 ? i + 1 : 0}. xxx - ` + formatTime(0), style));
+      leaderboardLines.push(scene.add.text(globalConsts.gameWidth * 0.5, yCoord, `${i + 1 > 0 ? i + 1 : 0}. xxx - ` + formatTime(0), style).setScale(calculateScale(1)));
     }
-    yCoord += 30;
+    yCoord += calculateScale(30);
   }
 
   // Removes "loading leaderboard" text

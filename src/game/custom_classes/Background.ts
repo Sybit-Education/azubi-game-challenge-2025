@@ -1,6 +1,6 @@
 import {Scene} from 'phaser';
+import {calculateScale, globalConsts} from '../main';
 import Image = Phaser.GameObjects.Image;
-import {globalConsts} from '../main';
 
 // Layers enum
 export enum Layer {
@@ -19,22 +19,22 @@ const houseKeys: string[] = ["house1", "house2", "house3", "house4", "church"];
 const layerPropertiesMap: Record<Layer, LayerProperties> = {
   [Layer.FRONT]: {
     delay: 3000,
-    scale: () => 10 + Math.random() * 0.4,
+    scale: () => 6 + Math.random() * 0.4,
     depth: -1,
-    y: () => globalConsts.gameHeight - 64,
+    y: () => globalConsts.gameHeight * 0.92,
     speed: () => 2 * globalConsts.houseSpeed,
-    opacity: 0.925,
+    color: 0x7d807e,
     // Data
     lastHouse: "",
     houses: []
   },
   [Layer.MIDDLE]: {
     delay: 3000,
-    scale: () => 6 + Math.random() * 0.25,
+    scale: () => 4 + Math.random() * 0.25,
     depth: -2,
-    y: () => globalConsts.gameHeight - 58,
-    speed: () =>  1.2 * globalConsts.houseSpeed,
-    opacity: 0.8,
+    y: () => globalConsts.gameHeight * 0.92,
+    speed: () => 1.2 * globalConsts.houseSpeed,
+    color: 0x565756,
     // Data
     lastHouse: "",
     houses: []
@@ -61,7 +61,7 @@ interface LayerProperties {
   depth: number;
   y: () => number;
   speed: () => number;
-  opacity: number;
+  color: number
   // data
   lastHouse: string;
   houses: Phaser.GameObjects.Image[];
@@ -94,13 +94,15 @@ export function spawnHouses(scene: Scene): void {
 function createBackground(): void {
   // Background A
   backgroundA = currentScene.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight / 2.2, backgroundImage);
-  backgroundA.setScale(4.5);
+  backgroundA.setScale(calculateScale(4));
   backgroundA.setDepth(-4);
+  backgroundA.setAlpha(0.7)
 
   // Background B
   backgroundB = currentScene.add.image(globalConsts.gameWidth / 2 + backgroundA.displayWidth, globalConsts.gameHeight / 2.2, backgroundImage);
-  backgroundB.setScale(4.5);
+  backgroundB.setScale(calculateScale(4));
   backgroundB.setDepth(-4);
+  backgroundB.setAlpha(0.7)
 }
 
 
@@ -119,8 +121,8 @@ function spawnHouse(layer: Layer): void {
   const house: Image = currentScene.add.image(globalConsts.gameWidth + 300, layerDetails.y(), houseID);
   house.setOrigin(0.5, 1);
   house.setDepth(layerDetails.depth);
-  house.setScale(layerDetails.scale());
-  house.setAlpha(layerDetails.opacity);
+  house.setScale(calculateScale(layerDetails.scale()));
+  house.setTint(layerDetails.color);
 
   // Adds to array
   layerDetails.houses.push(house);
@@ -135,8 +137,8 @@ export function updateMovement(): void {
 
 // Moves background
 function moveBackground(): void {
-  backgroundA.x -= backgroundSpeed * globalConsts.backgroundSpeed;
   backgroundB.x -= backgroundSpeed * globalConsts.backgroundSpeed;
+  backgroundA.x -= backgroundSpeed * globalConsts.backgroundSpeed;
 
   if (backgroundA.x <= -backgroundA.displayWidth / 2) backgroundA.x = backgroundB.x + backgroundB.displayWidth;
   if (backgroundB.x <= -backgroundB.displayWidth / 2) backgroundB.x = backgroundA.x + backgroundA.displayWidth;
@@ -152,8 +154,9 @@ function moveHouses(houses: Phaser.GameObjects.Image[], speed: number): void {
 
   // Destroys houses when out of bounds
   for (let i = houses.length - 3; i >= 0; i--) {
-    if (houses[i].x < -houses[i].width * 4 - 50) {
-      houses[i].destroy();
+    const house = houses[i];
+    if (house.x < -calculateScale(50 + house.width)) {
+      house.destroy();
       houses.splice(i, 1);
     }
   }

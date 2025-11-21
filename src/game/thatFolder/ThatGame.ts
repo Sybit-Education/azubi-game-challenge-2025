@@ -4,10 +4,10 @@ import {displayDebug, globalConsts} from '../main.ts';
 import {ThatSection} from './ThatSection.ts';
 import {spawnHouses, updateMovement} from '../custom_classes/Background.ts';
 import {generateCode} from '../scenes/GameOver.ts';
-import Sprite = Phaser.Physics.Arcade.Sprite;
 import {obstacleType, ThatObstacle} from './ThatObstacle.ts';
-import Text = Phaser.GameObjects.Text;
 import {fetchLeaderboard, sortedLeaderboard} from '../scenes/Leaderboard.ts';
+import Sprite = Phaser.Physics.Arcade.Sprite;
+import Text = Phaser.GameObjects.Text;
 
 export class ThatGame extends Phaser.Scene {
   // Config
@@ -18,7 +18,7 @@ export class ThatGame extends Phaser.Scene {
   ground: ThatGround;
   sections: ThatSection[] = [];
   leaderboardText: Text;
-  jumplsLeft: Text;
+  jumpsLeft: Text;
   // Collusion
   collisionPlayerAndGround: Phaser.Physics.Arcade.Collider;
 
@@ -57,7 +57,7 @@ export class ThatGame extends Phaser.Scene {
         if (globalConsts.debug) console.log("Speed up");
         globalConsts.backgroundSpeed += 0.01;
         globalConsts.houseSpeed += 0.02;
-        globalConsts.spriteSpeed += 0.03;
+        globalConsts.spriteSpeed += 0.02;
       },
       callbackScope: this,
       loop: true
@@ -113,7 +113,7 @@ export class ThatGame extends Phaser.Scene {
     });
 
     // Creates Jumps left Text
-    this.jumplsLeft = this.add.text(globalConsts.gameWidth * 0.98, globalConsts.gameHeight * 0.96, "", {
+    this.jumpsLeft = this.add.text(globalConsts.gameWidth * 0.98, globalConsts.gameHeight * 0.96, "", {
       font: "18px " + globalConsts.pixelFont,
       color: "#ffffff",
       align: "end",
@@ -132,7 +132,7 @@ export class ThatGame extends Phaser.Scene {
     updateMovement();
 
     // Updates Double jumps left text
-    this.jumplsLeft.setText("Double-Jumps left: " + this.player.jumpLefts);
+    this.jumpsLeft.setText("Double-Jumps left: " + this.player.jumpLefts);
 
     // Checks and moves sections
     this.sections.forEach(section => {

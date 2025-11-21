@@ -1,14 +1,11 @@
-import {displayPlayer, globalConsts} from '../main.ts';
-import Image = Phaser.GameObjects.Image;
+import {calculateScale, displayPlayer, globalConsts} from '../main.ts';
 import {Button} from '../custom_classes/Button.ts';
 import {ButtonManager} from '../custom_classes/ButtonManager.ts';
+import Image = Phaser.GameObjects.Image;
 
 // TODO | add controller controls
 export class Controls extends Phaser.Scene {
   // Config
-  x: number = 425;
-  startY: number = 540;
-  space: number = 35;
   style = {
     font: "25px pixelFont",
     color: "#ffffff",
@@ -16,9 +13,9 @@ export class Controls extends Phaser.Scene {
   };
 
   // Types
+  currentY: number
   keyboardImage: Image;
   back_button: Button;
-  currentY: number = this.startY;
   buttonManager: ButtonManager;
 
   // Constructor
@@ -37,31 +34,27 @@ export class Controls extends Phaser.Scene {
     // Creates the button manager
     this.buttonManager = new ButtonManager(this);
 
-    // Main info
-    this.keyboardImage = this.add.image(512, 400, 'button_keyboard');
-    this.keyboardImage.setScale(0.7);
-
-    // Resets currentY
-    this.currentY = this.startY;
-
-    // Text
-    this.scene.scene.add.text(this.x, this.getY(), "ESC - Exit active Game", this.style).setOrigin(0, 0);
-    this.scene.scene.add.text(this.x, this.getY(), " W  - Jump", this.style).setOrigin(0, 0);
-    this.scene.scene.add.text(this.x, this.getY(), " S  - Sneak", this.style).setOrigin(0, 0);
-    this.scene.scene.add.text(this.x, this.getY(), " A  - Move left", this.style).setOrigin(0, 0);
-    this.scene.scene.add.text(this.x, this.getY(), " D  - Move right", this.style).setOrigin(0, 0);
-
     // Back button
-    this.back_button = new Button(globalConsts.gameWidth * 0.5, globalConsts.gameHeight * 0.25, 4, 'button_back', this, () => {
+    this.back_button = new Button(globalConsts.gameWidth * 0.07, globalConsts.gameHeight * 0.1, calculateScale(3.5), 'button_back', this, () => {
       this.scene.start('mainMenu')
     }, 'B', 3, this.buttonManager);
 
-    // Add navigation instructions
-    this.add.text(globalConsts.gameWidth * 0.5, globalConsts.gameHeight * 0.9, 'Drücke B oder ESC zum Zurückkehren', {
-      font: "16px " + globalConsts.pixelFont,
-      color: "#ffffff",
-      align: 'center'
-    }).setOrigin(0.5);
+    // Main info
+    this.keyboardImage = this.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.15, 'button_keyboard');
+    this.keyboardImage.setScale(calculateScale(0.7));
+    this.keyboardImage.setOrigin(0.5, 0);
+
+    // Resets currentY
+    this.currentY = globalConsts.gameHeight * 0.68;
+    const x = globalConsts.gameWidth * 0.38;
+    const scale = calculateScale(1);
+
+    // Text
+    this.scene.scene.add.text(x, this.getY(), "ESC - Exit active Game", this.style).setOrigin(0, 0).setScale(scale);
+    this.scene.scene.add.text(x, this.getY(), " W  - Jump", this.style).setOrigin(0, 0).setScale(scale);
+    this.scene.scene.add.text(x, this.getY(), " S  - Sneak", this.style).setOrigin(0, 0).setScale(scale);
+    this.scene.scene.add.text(x, this.getY(), " A  - Move left", this.style).setOrigin(0, 0).setScale(scale);
+    this.scene.scene.add.text(x, this.getY(), " D  - Move right", this.style).setOrigin(0, 0).setScale(scale);
 
     // Add ESC key handler
     const escKey = this.input.keyboard?.addKey('ESC');
@@ -72,6 +65,6 @@ export class Controls extends Phaser.Scene {
 
   // Gets y level for text
   getY(): number {
-    return this.currentY += this.space;
+    return this.currentY += calculateScale(31);
   }
 }

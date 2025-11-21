@@ -1,17 +1,14 @@
 import {Scene} from 'phaser';
-import {displayPlayer, escapeOption, globalConsts} from '../main.ts';
+import {calculateScale, displayPlayer, escapeOption, globalConsts} from '../main.ts';
 import {formatTime} from '../thatFolder/ThatPlayer.ts';
 import {Button} from '../custom_classes/Button.ts';
 import {ButtonManager} from '../custom_classes/ButtonManager.ts';
-import Text = Phaser.GameObjects.Text;
-
 import {leaderboardEntry} from './GameOver.ts';
+import Text = Phaser.GameObjects.Text;
 import Image = Phaser.GameObjects.Image;
 
 // config
 const range: number = 15;
-const iconX: number = 150;
-const categoryX: number = 260;
 const refreshLimit: number = 10;
 const mainColor: string = "#ffffff";
 const selectedColor: string = "#000000";
@@ -61,28 +58,34 @@ export class Leaderboard extends Scene {
     });
 
     // Back Button
-    new Button(70, 175, 3, "button_back", this.scene.scene, () => this.scene.start("mainMenu"), 'B', undefined, buttonManager);
+    new Button(70, 175, calculateScale(2.5), "button_back", this.scene.scene, () => this.scene.start("mainMenu"), 'B', undefined, buttonManager);
 
     // Add ESC key handler
     escapeOption(this.scene.scene);
 
     // Subtitle
-    subtitle = scene.add.text(110, 163, "Loading this text", {
+    subtitle = scene.add.text(globalConsts.gameWidth * 0.065, globalConsts.gameHeight * 0.144, "Loading this text", {
       font: "27px pixelFont",
       color: "#ffffff",
       align: 'center'
-    });
+    }).setScale(calculateScale(1));
 
     // Actions
-    this.categoryButton("default", 250); // default/top
-    this.categoryButton("worst", 300); // default/top
-    this.searchIcon(350);
-    this.categoryButton("byName", 350); // Search by name
-    this.searchIcon(400);
-    this.categoryButton("byPlace", 400); // Search by place
-    this.searchIcon(450);
-    this.categoryButton("byScore", 450); // Search by score
-    new Button(categoryX, 500, 4.5, "button_refresh", this.scene.scene, () => {
+    // default/top
+    this.categoryButton("default", globalConsts.gameHeight * 0.25);
+    // worst
+    this.categoryButton("worst", globalConsts.gameHeight * 0.33);
+    // Search by name
+    this.searchIcon(globalConsts.gameHeight * 0.41);
+    this.categoryButton("byName", globalConsts.gameHeight * 0.41);
+    // Search by place
+    this.searchIcon(globalConsts.gameHeight * 0.49);
+    this.categoryButton("byPlace", globalConsts.gameHeight * 0.49);
+    // Search by score
+    this.searchIcon(globalConsts.gameHeight * 0.57);
+    this.categoryButton("byScore", globalConsts.gameHeight * 0.57);
+    // Refresh
+    new Button(globalConsts.gameWidth * 0.15, globalConsts.gameHeight * 0.65, calculateScale(4.5), "button_refresh", this.scene.scene, () => {
       if (clickedRefresh > refreshLimit) {
         alert("STOP! That´s ENOUGH");
         return;
@@ -93,15 +96,17 @@ export class Leaderboard extends Scene {
 
     // Sets lines
     if (leaderboardLines.length == 0) {
-      let yCord: number = 220;
+      let yCord: number = globalConsts.gameHeight * 0.22;
       for (let j: number = 0; j < range; j++) {
-        leaderboardLines.push(scene.add.text(490, yCord, "", style));
-        yCord += 35;
+        leaderboardLines.push(scene.add.text(globalConsts.gameWidth * 0.44, yCord, "", style).setScale(calculateScale(1)));
+        yCord += calculateScale(32);
       }
     }
 
     // Sets text
-    leaderboardText = scene.add.text(510, 450, "", style).setOrigin(0, 0);
+    leaderboardText = scene.add.text(globalConsts.gameWidth * 0.39, globalConsts.gameHeight / 2, "", style)
+      .setOrigin(0, 0.5)
+      .setScale(calculateScale(1));
 
     // Renders leaderboard
     fetchLeaderboard().then(() => renderLeaderboard());
@@ -109,8 +114,8 @@ export class Leaderboard extends Scene {
 
   // Search icon constructor
   searchIcon(y: number): void {
-    const image: Image = this.add.image(iconX, y, "button_search");
-    image.setScale(2.5);
+    const image: Image = this.add.image(globalConsts.gameWidth * 0.05, y, "button_search");
+    image.setScale(calculateScale(2.5));
   }
 
   // Category button constructor
@@ -132,7 +137,7 @@ export class Leaderboard extends Scene {
       "byScore": 'S'
     })[category];
 
-    new Button(categoryX, y, 4.5, imageID, this.scene.scene, () => prompt(category), keyboardKey, undefined, buttonManager);
+    new Button(globalConsts.gameWidth * 0.15, y, calculateScale(4.5), imageID, this.scene.scene, () => prompt(category), keyboardKey, undefined, buttonManager);
   }
 }
 
@@ -217,8 +222,7 @@ function prompt(category: leaderboardCategory): void {
 // Clears and renders scoreboard
 function rerenderLeaderboard(): void {
   clearsLeaderboardLine();
-  renderLeaderboard().then(() => {
-  });
+  renderLeaderboard().then();
 }
 
 // Resets scoreboard lines
@@ -397,7 +401,7 @@ function formatText(i: number, name: string, score: number): string {
   return `${i + 1}. ${name} - ${formatTime(score)}`;
 }
 
-// Turns 1 -> 1st
+// Turns "1." to 1st
 function toOrdinal(n: number): string {
   const s: string[] = ["th", "st", "nd", "rd"];
   const v: number = n % 100;
