@@ -13,7 +13,7 @@ export enum Layer {
 const layers: Layer[] = [Layer.FRONT, Layer.MIDDLE, /*Layer.BACK*/];
 
 // Config
-const backgroundImage: string = "gameBackground3";
+const backgroundImage: string = "gameBackground";
 const backgroundSpeed: number = 1;
 const houseKeys: string[] = ["house1", "house2", "house3", "house4", "church"];
 const layerPropertiesMap: Record<Layer, LayerProperties> = {
@@ -93,14 +93,16 @@ export function spawnHouses(scene: Scene): void {
 // Create Background
 function createBackground(): void {
   // Background A
-  backgroundA = currentScene.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight / 2.2, backgroundImage);
-  backgroundA.setScale(calculateScale(4));
+  backgroundA = currentScene.add.image(0, 0, backgroundImage);
+  backgroundA.setScale(calculateScale(3.75));
+  backgroundA.setOrigin(1, 0);
   backgroundA.setDepth(-4);
   backgroundA.setAlpha(0.7)
 
   // Background B
-  backgroundB = currentScene.add.image(globalConsts.gameWidth / 2 + backgroundA.displayWidth, globalConsts.gameHeight / 2.2, backgroundImage);
-  backgroundB.setScale(calculateScale(4));
+  backgroundB = currentScene.add.image(backgroundA.displayWidth, 0, backgroundImage);
+  backgroundB.setScale(calculateScale(3.75));
+  backgroundB.setOrigin(1, 0)
   backgroundB.setDepth(-4);
   backgroundB.setAlpha(0.7)
 }
@@ -118,8 +120,8 @@ function spawnHouse(layer: Layer): void {
   }
 
   // Places image
-  const house: Image = currentScene.add.image(globalConsts.gameWidth + 300, layerDetails.y(), houseID);
-  house.setOrigin(0.5, 1);
+  const house: Image = currentScene.add.image(globalConsts.gameWidth + calculateScale(300), layerDetails.y(), houseID);
+  house.setOrigin(1, 1);
   house.setDepth(layerDetails.depth);
   house.setScale(calculateScale(layerDetails.scale()));
   house.setTint(layerDetails.color);
@@ -140,8 +142,8 @@ function moveBackground(): void {
   backgroundB.x -= backgroundSpeed * globalConsts.backgroundSpeed;
   backgroundA.x -= backgroundSpeed * globalConsts.backgroundSpeed;
 
-  if (backgroundA.x <= -backgroundA.displayWidth / 2) backgroundA.x = backgroundB.x + backgroundB.displayWidth;
-  if (backgroundB.x <= -backgroundB.displayWidth / 2) backgroundB.x = backgroundA.x + backgroundA.displayWidth;
+  if (backgroundA.x - backgroundA.displayWidth <= -backgroundA.displayWidth) backgroundA.x = backgroundB.x + 3 + backgroundB.displayWidth;
+  if (backgroundB.x - backgroundB.displayWidth <= -backgroundB.displayWidth) backgroundB.x = backgroundA.x + 3   + backgroundA.displayWidth;
 }
 
 
@@ -155,7 +157,7 @@ function moveHouses(houses: Phaser.GameObjects.Image[], speed: number): void {
   // Destroys houses when out of bounds
   for (let i = houses.length - 3; i >= 0; i--) {
     const house = houses[i];
-    if (house.x < -calculateScale(50 + house.width)) {
+    if (house.x < 0) {
       house.destroy();
       houses.splice(i, 1);
     }

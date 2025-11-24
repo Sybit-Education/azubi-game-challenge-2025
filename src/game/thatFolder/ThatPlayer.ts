@@ -46,7 +46,7 @@ export class ThatPlayer {
     this.scene = currentScene;
 
     // Create sprite
-    this.sprite = currentScene.physics.add.sprite(100, globalConsts.gameHeight * 0.9, this.spriteID);
+    this.sprite = currentScene.physics.add.sprite(100, globalConsts.gameHeight - 110, this.spriteID);
     //this.sprite.setBodySize(32, 64, false); // NOTE: setBodySize und nicht setSize!!! Origin is not in center.
     this.sprite.setOrigin(0, 1); // Bottom left
     this.sprite.setCollideWorldBounds(true);

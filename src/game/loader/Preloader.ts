@@ -37,9 +37,7 @@ export class Preloader extends Scene {
     this.load.image("house2", "house2.png");
     this.load.image("house3", "house3.png");
     this.load.image("house4", "house4.png");
-    this.load.image("gameBackground", "image1.png");
-    this.load.image("gameBackground2", "image2.png");
-    this.load.image("gameBackground3", "image3.png");
+    this.load.image("gameBackground", "image4.png");
 
     // Music
     this.load.setPath('sound')
