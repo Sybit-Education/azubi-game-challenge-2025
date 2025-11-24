@@ -72,11 +72,14 @@ export class GameOver extends Scene {
     // Renders leaderboard
     renderLeaderboard().then();
 
+    // Save score button
+    saveButton = new Button(globalConsts.gameWidth * 0.45, globalConsts.gameHeight * 0.853, calculateScale(8), "button_save", scene, () => prompt(), 'S', 1, buttonManager);
+
     // Adds the restart button
     new Button(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.84, calculateScale(5), "button_play", scene, () => exit(), 'ENTER', 3, buttonManager).button.setVisible(true);
 
-    // Save score button
-    saveButton = new Button(globalConsts.gameWidth * 0.45, globalConsts.gameHeight * 0.853, calculateScale(8), "button_save", scene, () => prompt(), 'S', 1, buttonManager);
+    // To leaderboard menu
+    new Button(globalConsts.gameWidth * 0.85, globalConsts.gameHeight * 0.84, calculateScale(4), "button_leaderboard", scene, () => this.scene.start("leaderboard"), 'ENTER', 3, buttonManager).button.setVisible(true);
 
     // Add navigation instructions
     scene.add.text(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.92, "Press S or 1 to save", {
@@ -114,7 +117,7 @@ export class GameOver extends Scene {
 
 // Exit to the main Menu
 function exit(): void {
-  window.location.reload();
+  scene.scene.start("mainMenu")
 }
 
 // Prompt to save

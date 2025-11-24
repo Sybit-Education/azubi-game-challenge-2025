@@ -1,6 +1,6 @@
 import {ThatPlayer} from './ThatPlayer.ts';
 import {ThatGround} from './ThatGround.ts';
-import {displayDebug, globalConsts} from '../main.ts';
+import {calculateScale, displayDebug, globalConsts, resetSpeed} from '../main.ts';
 import {ThatSection} from './ThatSection.ts';
 import {spawnHouses, updateMovement} from '../custom_classes/Background.ts';
 import {generateCode} from '../scenes/GameOver.ts';
@@ -40,7 +40,7 @@ export class ThatGame extends Phaser.Scene {
     this.player.setScore(0);
     this.player.setGifts(0);
 
-    // Timer
+    // Playtime-Timer
     this.time.addEvent({
       delay: 100,
       callback: () => {
@@ -50,7 +50,10 @@ export class ThatGame extends Phaser.Scene {
       loop: true
     });
 
-    //Timer
+    // Resets speed
+    resetSpeed();
+
+    // Speed-Timer
     this.time.addEvent({
       delay: 1000,
       callback: () => {
@@ -86,14 +89,15 @@ export class ThatGame extends Phaser.Scene {
 
     // Display a note that you can collect gifts when starting the game
     const infoText: Text = this.add.text(
-      this.cameras.main.centerX, globalConsts.gameHeight * 0.25,
+      globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.25,
       "Collect the gifts to double Jump!",
       {
         font: "22px " + globalConsts.pixelFont,
         color: "#ffffff",
         fontStyle: "bold"
       }
-    ).setOrigin(0.5);
+    ).setOrigin(0.5)
+      .setScale(calculateScale(1));
 
     // Fade-out
     this.tweens.add({
@@ -191,9 +195,15 @@ export class ThatGame extends Phaser.Scene {
       section.destroyAll();
     }
 
+    // clears sections
+    this.sections = [];
+
     // Saves score
     localStorage.setItem("last.score", this.player.score.toString());
     localStorage.setItem("last.jumpsLeft", this.player.jumpLefts.toString());
+
+    // Stops scene
+    this.scene.stop(this.scene.key)
 
     // Switch du different scene
     this.scene.start("gameOver");

@@ -120,3 +120,10 @@ export function calculateScale(
   const ratio = targetDiagonal / refDiagonal;
   return parseFloat((refScale * ratio).toFixed(2)); // round to 2 digits
 }
+
+// Resets speeds to default
+export function resetSpeed(): void {
+  globalConsts.backgroundSpeed = speed;
+  globalConsts.houseSpeed = speed;
+  globalConsts.spriteSpeed = speed;
+}

@@ -122,9 +122,13 @@ export class ThatSection {
 
   // Destroys all obstacles
   destroyAll(): void {
+    this.marker.sprite.destroy(false)
     for (let obstacle of this.obstacles) {
       obstacle.sprite.body?.destroy();
       obstacle.sprite.destroy(true);
     }
+
+    // Clears array
+    this.obstacles = [];
   }
 }
