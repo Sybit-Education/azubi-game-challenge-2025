@@ -32,6 +32,9 @@ export class ThatGame extends Phaser.Scene {
     // Displays debug
     displayDebug(this.scene.scene);
 
+    // Resets music
+    this.sound.stopAll()
+
     // Plays music if wanted
     if (localStorage.getItem("isActive.music") == "true") this.sound.play('gameMusic');
 

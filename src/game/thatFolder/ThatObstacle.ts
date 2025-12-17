@@ -35,7 +35,7 @@ interface obstacleProperties {
 // Settings for every obstacle
 export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   [obstacleType.BIRDBLUE]: {
-    y: () => getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.8),
+    y: () => getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.822),
     sprites: ["birdBlue"],
     width: 16,
     height: 6,
@@ -45,7 +45,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     weight: 100
   },
   [obstacleType.BIRDPINK]: {
-    y: () => getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.8),
+    y: () => getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.822),
     sprites: ["birdPink"],
     width: 16,
     height: 6,
@@ -55,7 +55,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     weight: 100
   },
   [obstacleType.SNOWMAN]: {
-    y: () => getRandomInt(globalConsts.gameHeight * 0.866, globalConsts.gameHeight * 0.89),
+    y: () => getRandomInt(globalConsts.gameHeight * 0.871, globalConsts.gameHeight * 0.89),
     sprites: ["snowman"],
     width: 6,
     height: 12,
@@ -65,7 +65,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
     weight: 100
   },
   [obstacleType.ROCKS]: {
-    y: () => getRandomInt(globalConsts.gameHeight * 0.87, globalConsts.gameHeight * 0.89),
+    y: () => getRandomInt(globalConsts.gameHeight * 0.874, globalConsts.gameHeight * 0.89),
     sprites: ["stone"],
     width: 164,
     height: 100,

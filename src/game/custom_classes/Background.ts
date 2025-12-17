@@ -142,8 +142,8 @@ function moveBackground(): void {
   backgroundB.x -= backgroundSpeed * globalConsts.backgroundSpeed;
   backgroundA.x -= backgroundSpeed * globalConsts.backgroundSpeed;
 
-  if (backgroundA.x - backgroundA.displayWidth <= -backgroundA.displayWidth) backgroundA.x = backgroundB.x + 3 + backgroundB.displayWidth;
-  if (backgroundB.x - backgroundB.displayWidth <= -backgroundB.displayWidth) backgroundB.x = backgroundA.x + 3   + backgroundA.displayWidth;
+  if (backgroundA.x - backgroundA.displayWidth <= -backgroundA.displayWidth) backgroundA.x = backgroundB.x + backgroundB.displayWidth;
+  if (backgroundB.x - backgroundB.displayWidth <= -backgroundB.displayWidth) backgroundB.x = backgroundA.x + backgroundA.displayWidth;
 }
 
 

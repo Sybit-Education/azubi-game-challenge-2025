@@ -15,7 +15,7 @@ export class ThatSection {
   readonly breakProbability: number = 25;
   readonly giftProbability: number = 3;
   readonly postionOverflowLimit: number = 100;
-  readonly obstaclePadding: number = 120;
+  readonly obstaclePadding: number = 150;
   readonly maxVoidout: number = -200;
   readonly minVoidout: number = -10;
 

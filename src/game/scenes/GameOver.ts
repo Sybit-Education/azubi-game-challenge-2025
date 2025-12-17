@@ -29,6 +29,7 @@ let leaderboardIsLoaded: boolean = false;
 let savedScore: boolean = false;
 let buttonManager: ButtonManager;
 let gamePad: Gamepad;
+let backBlocker: boolean
 
 // Scene class
 export class GameOver extends Scene {
@@ -68,6 +69,13 @@ export class GameOver extends Scene {
 
     new Button(globalConsts.gameWidth * 0.04, globalConsts.gameHeight * 0.58, calculateScale(5), "button_jumpsLeft", this.scene.scene).button.setOrigin(0, 0.5);
     this.add.text(globalConsts.gameWidth * 0.25, globalConsts.gameHeight * 0.57, localStorage.getItem("last.jumpsLeft") ?? "0", style).setOrigin(0, 0).setScale(calculateScale(1));
+
+    // Resets Saved Button
+    savedScore = false;
+    name = undefined;
+
+    // Sets blocker
+    backBlocker = true;
 
     // Renders leaderboard
     renderLeaderboard().then();
@@ -109,8 +117,11 @@ export class GameOver extends Scene {
 
     // 3 -> back
     if (get3(gamePad)) {
+      if (backBlocker) return;
       exit();
       return
+    } else {
+      if (backBlocker) backBlocker = false
     }
   }
 }
@@ -190,7 +201,7 @@ function prompt(): void {
 function clearsLeaderboardLine(): void {
   // Clears array
   for (let i: number = 0; i < leaderboardLines.length; i++) {
-    leaderboardLines[i].destroy(true);
+    leaderboardLines[i]?.destroy(true);
     delete leaderboardLines[i];
   }
 
