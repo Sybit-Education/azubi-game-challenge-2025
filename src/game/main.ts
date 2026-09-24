@@ -19,7 +19,6 @@ const gameH: number = big ? 1080 : 768; // 768
 const background: number = 0xd3d1fa;
 const debugMode: boolean = false;
 const pixelFontName: string = "pixelFont";
-const api: string | undefined = undefined; // "http://localhost:3000"; // Dont forget the http(s) | undefined -> localstorage
 const speed: number = 1;
 
 // Global variables
@@ -29,7 +28,6 @@ export const globalConsts = {
   backgroundColor: background,
   debug: debugMode,
   pixelFont: pixelFontName,
-  apiURL: api,
   backgroundSpeed: speed,
   houseSpeed: speed,
   spriteSpeed: speed,
@@ -54,7 +52,6 @@ const config: Phaser.Types.Core.GameConfig = {
     antialias: false, // Removes jagged edges
   },
   scene: [
-    // All scenes
     // Loader
     Boot,
     Preloader,
