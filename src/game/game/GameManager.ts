@@ -1,22 +1,23 @@
-import {ThatPlayer} from './ThatPlayer.ts';
-import {ThatGround} from './ThatGround.ts';
+import {ThatPlayer} from './Player.ts';
+import {CustomGround} from './Ground.ts';
 import {calculateScale, displayDebug, globalConsts, resetSpeed} from '../main.ts';
-import {ThatSection} from './ThatSection.ts';
-import {spawnHouses, updateMovement} from '../custom_classes/Background.ts';
+import {CustomSection} from './Section.ts';
+import {spawnHouses, updateMovement} from './Background.ts';
 import {generateCode} from '../scenes/GameOver.ts';
-import {obstacleType, ThatObstacle} from './ThatObstacle.ts';
+import {obstacleType, CustomObstacle} from './Obstacle.ts';
 import {fetchLeaderboard, sortedLeaderboard} from '../scenes/Leaderboard.ts';
 import Sprite = Phaser.Physics.Arcade.Sprite;
 import Text = Phaser.GameObjects.Text;
+import { Scene } from 'phaser';
 
-export class ThatGame extends Phaser.Scene {
+export class GameManager extends Scene {
   // Config
   displayTop: number = 0.25; // Percentage [0-1] are possible too
 
   // Types
   player: ThatPlayer;
-  ground: ThatGround;
-  sections: ThatSection[] = [];
+  ground: CustomGround;
+  sections: CustomSection[] = [];
   leaderboardText: Text;
   jumpsLeft: Text;
   // Collusion
@@ -24,7 +25,7 @@ export class ThatGame extends Phaser.Scene {
 
   // Constructor
   constructor() {
-    super("thatGame");
+    super('thatGame');
   }
 
   // Create
@@ -33,10 +34,10 @@ export class ThatGame extends Phaser.Scene {
     displayDebug(this.scene.scene);
 
     // Resets music
-    this.sound.stopAll()
+    this.sound.stopAll();
 
     // Plays music if wanted
-    if (localStorage.getItem("isActive.music") == "true") this.sound.play('gameMusic');
+    if (localStorage.getItem('isActive.music') == 'true') this.sound.play('gameMusic');
 
     // Creates player
     this.player = new ThatPlayer(this.scene.scene);
@@ -60,17 +61,17 @@ export class ThatGame extends Phaser.Scene {
     this.time.addEvent({
       delay: 1000,
       callback: () => {
-        if (globalConsts.debug) console.log("Speed up");
+        if (globalConsts.debug) console.log('Speed up');
         globalConsts.backgroundSpeed += 0.01;
         globalConsts.houseSpeed += 0.02;
         globalConsts.spriteSpeed += 0.02;
       },
       callbackScope: this,
       loop: true
-    })
+    });
 
     // Creates Ground
-    this.ground = new ThatGround(this.scene.scene);
+    this.ground = new CustomGround(this.scene.scene);
 
     // Spawn houses
     spawnHouses(this.scene.scene);
@@ -84,7 +85,7 @@ export class ThatGame extends Phaser.Scene {
 
     // creates key for leaderboard
     generateCode().then(key => {
-      if (key) localStorage.setItem("key", key);
+      if (key) localStorage.setItem('key', key);
     });
 
     // End game on ESC
@@ -93,11 +94,11 @@ export class ThatGame extends Phaser.Scene {
     // Display a note that you can collect gifts when starting the game
     const infoText: Text = this.add.text(
       globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.25,
-      "Collect the gifts to double Jump!",
+      'Collect the gifts to double Jump!',
       {
-        font: "22px " + globalConsts.pixelFont,
-        color: "#ffffff",
-        fontStyle: "bold"
+        font: '22px ' + globalConsts.pixelFont,
+        color: '#ffffff',
+        fontStyle: 'bold'
       }
     ).setOrigin(0.5)
       .setScale(calculateScale(1));
@@ -114,16 +115,16 @@ export class ThatGame extends Phaser.Scene {
     this.time.delayedCall(4000, () => infoText.destroy());
 
     // Creates leaderboard Text
-    this.leaderboardText = this.add.text(globalConsts.gameWidth * 0.02, globalConsts.gameHeight * 0.97, "", {
-      font: "15px " + globalConsts.pixelFont,
-      color: "#ffffff",
+    this.leaderboardText = this.add.text(globalConsts.gameWidth * 0.02, globalConsts.gameHeight * 0.97, '', {
+      font: '15px ' + globalConsts.pixelFont,
+      color: '#ffffff',
     });
 
     // Creates Jumps left Text
-    this.jumpsLeft = this.add.text(globalConsts.gameWidth * 0.98, globalConsts.gameHeight * 0.96, "", {
-      font: "18px " + globalConsts.pixelFont,
-      color: "#ffffff",
-      align: "end",
+    this.jumpsLeft = this.add.text(globalConsts.gameWidth * 0.98, globalConsts.gameHeight * 0.96, '', {
+      font: '18px ' + globalConsts.pixelFont,
+      color: '#ffffff',
+      align: 'end',
     }).setOrigin(1, 0);
 
     // Fetches leaderboard
@@ -139,7 +140,7 @@ export class ThatGame extends Phaser.Scene {
     updateMovement();
 
     // Updates Double jumps left text
-    this.jumpsLeft.setText("Double-Jumps left: " + this.player.jumpLefts);
+    this.jumpsLeft.setText('Double-Jumps left: ' + this.player.jumpLefts);
 
     // Checks and moves sections
     this.sections.forEach(section => {
@@ -152,7 +153,7 @@ export class ThatGame extends Phaser.Scene {
       }
 
       // Moves all obstacles
-      section.updateMovement()
+      section.updateMovement();
     });
 
     // Top x display
@@ -163,22 +164,22 @@ export class ThatGame extends Phaser.Scene {
 
       // Display
       if (this.displayTop > 1) { // Normal
-        if (rank != -1 && rank <= this.displayTop) this.leaderboardText.setText("You´re top " + (rank + 1));
+        if (rank != -1 && rank <= this.displayTop) this.leaderboardText.setText('You´re top ' + (rank + 1));
       } else { // Percentage
         const topPercent: number = (1 - (sortedLeaderboard.length - rank) / sortedLeaderboard.length) * 100; // Get %
-        if (topPercent == 0) this.leaderboardText.setText("You´re top 1"); // Best player
-        else if (rank != -1 && topPercent <= this.displayTop * 100) this.leaderboardText.setText("You´re top " + topPercent.toFixed(2) + "%");
+        if (topPercent == 0) this.leaderboardText.setText('You´re top 1'); // Best player
+        else if (rank != -1 && topPercent <= this.displayTop * 100) this.leaderboardText.setText('You´re top ' + topPercent.toFixed(2) + '%');
       }
     }
   }
 
   // This creates a new section
   createSection(alpha: number, offset: number = 2): void {
-    const thatSection: ThatSection = new ThatSection(this.scene.scene, alpha == 0, offset);
+    const thatSection: CustomSection = new CustomSection(this.scene.scene, alpha == 0, offset);
     this.sections.push(thatSection);
     const obstacles: Sprite[] = [];
-    const gift: ThatObstacle | undefined = thatSection.gift;
-    for (let obstacle of thatSection.obstacles) if (obstacle.type != obstacleType.GIFT) obstacles.push(obstacle.sprite)
+    const gift: CustomObstacle | undefined = thatSection.gift;
+    for (const obstacle of thatSection.obstacles) if (obstacle.type != obstacleType.GIFT) obstacles.push(obstacle.sprite);
     // collision player and harmful obstacles
     this.physics.add.collider(this.player.sprite, obstacles, () => {
     }, () => this.gameOver());
@@ -194,7 +195,7 @@ export class ThatGame extends Phaser.Scene {
     this.game.pause();
 
     // Should destroy every obstacle
-    for (let section of this.sections) {
+    for (const section of this.sections) {
       section.destroyAll();
     }
 
@@ -202,14 +203,14 @@ export class ThatGame extends Phaser.Scene {
     this.sections = [];
 
     // Saves score
-    localStorage.setItem("last.score", this.player.score.toString());
-    localStorage.setItem("last.jumpsLeft", this.player.jumpLefts.toString());
+    localStorage.setItem('last.score', this.player.score.toString());
+    localStorage.setItem('last.jumpsLeft', this.player.jumpLefts.toString());
 
     // Stops scene
-    this.scene.stop(this.scene.key)
+    this.scene.stop(this.scene.key);
 
     // Switch du different scene
-    this.scene.start("gameOver");
+    this.scene.start('gameOver');
 
     // Unpauses game
     this.game.resume();

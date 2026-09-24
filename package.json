@@ -1,6 +1,6 @@
 {
   "name": "azubi-game-challenge-2025",
-  "description": "A Phaser 3 TypeScript Game.",
+  "description": "A Phaser 4 (orgially 3) TypeScript Game.",
   "version": "1.0.0",
   "repository": {
     "type": "git",
@@ -8,9 +8,11 @@
   },
   "author": "Sybit GmbH",
   "homepage": "https://github.com/Sybit-Education/azubi-game-challenge-2025#readme",
+  "bugs": "https://github.com/Sybit-Education/azubi-game-challenge-2025/issues",
+  "license": "MIT",
   "scripts": {
-    "dev": "node log.js dev & vite --config vite/config.dev.mjs --host",
-    "build": "node log.js build & vite build --config vite/config.prod.mjs",
+    "dev": "vite --config vite/config.dev.mjs --host",
+    "build": "vite build --config vite/config.prod.mjs",
     "dev-nolog": "vite --config vite/config.dev.mjs",
     "build-nolog": "vite build --config vite/config.prod.mjs",
     "server": "tsx server/server.ts",
@@ -18,19 +20,20 @@
     "lint:fix": "eslint . --ext .ts --fix"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
-    "eslint": "^8.56.0",
-    "typescript": "~5.9.2",
-    "vite": "^7.1.12"
+    "@typescript-eslint/eslint-plugin": "^8.70.1",
+    "@typescript-eslint/parser": "^8.70.1",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "typescript": "~6.0",
+    "typescript-eslint": "^8.70.1",
+    "vite": "^8.3.0"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "phaser": "^3.90.0",
-    "terser": "^5.44.0",
-    "tsx": "^4.20.6"
+    "cors": "^2.8.6",
+    "phaser": "^4.2.1",
+    "terser": "^5.51.2",
+    "tsx": "^4.23.15"
   }
 }

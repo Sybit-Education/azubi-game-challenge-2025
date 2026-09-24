@@ -1,14 +1,14 @@
 import {Scene} from 'phaser';
 import {calculateScale, displayPlayer, globalConsts} from '../main';
-import {Button} from '../custom_classes/Button';
-import {ButtonManager} from '../custom_classes/ButtonManager';
+import {Button} from '../util/Button';
+import {ButtonManager} from '../util/ButtonManager';
 
 export class MainMenu extends Scene {
-  // Types
+  // Variables
   background: Phaser.Cameras.Scene2D.Camera;
+  logo_image: Phaser.GameObjects.Image;
   gameW: number = globalConsts.gameWidth;
   gameH: number = globalConsts.gameHeight;
-  logo_image: Phaser.GameObjects.Image;
   buttonPlay: Button;
   buttonOptions: Button;
   buttonControl: Button;
@@ -43,7 +43,7 @@ export class MainMenu extends Scene {
     this.buttonOptions = new Button(this.gameW * 0.5, this.gameH * 0.47, calculateScale(5), 'button_options', this, () => this.scene.start('options'), 'O', 1, this.buttonManager);
     this.buttonControl = new Button(this.gameW * 0.5, this.gameH * 0.55, calculateScale(5), 'button_controls', this, () => this.scene.start('controls'), 'T', 2, this.buttonManager);
     this.buttonCredits = new Button(this.gameW * 0.5, this.gameH * 0.63, calculateScale(5), 'button_credits', this, () => this.scene.start('credits'), 'C', 3, this.buttonManager);
-    this.buttonLeaderboard = new Button(this.gameW * 0.5, this.gameH * 0.71, calculateScale(5), "button_leaderboard", this, () => this.scene.start('leaderboard'), 'L', 4, this.buttonManager);
+    this.buttonLeaderboard = new Button(this.gameW * 0.5, this.gameH * 0.71, calculateScale(5), 'button_leaderboard', this, () => this.scene.start('leaderboard'), 'L', 4, this.buttonManager);
 
     // Close button (only if opened in a popup)
     if (window.opener != null) {
@@ -52,11 +52,11 @@ export class MainMenu extends Scene {
 
     // Add navigation instructions
     this.add.text(this.gameW * 0.67, this.gameH * 0.9, 'Navigation: Arrow keys, Tab, Space\nor Gamepad Stick and 2', {
-      font: "16px " + globalConsts.pixelFont,
-      color: "#000000",
+      font: '16px ' + globalConsts.pixelFont,
+      color: '#000000',
       lineSpacing: 3,
       align: 'center'
     }).setOrigin(0.5)
-      .setScale(calculateScale(1))
+      .setScale(calculateScale(1));
   }
 }

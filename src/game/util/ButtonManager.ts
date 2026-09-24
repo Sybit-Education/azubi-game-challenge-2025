@@ -1,6 +1,6 @@
-import {Button} from "./Button";
-import {Scene} from "phaser";
-import {get2} from '../thatFolder/ThatPlayer.ts';
+import {Button} from './Button.ts';
+import {Scene} from 'phaser';
+import {get2} from '../game/Player.ts';
 
 export class ButtonManager {
   private buttons: Button[] = [];
@@ -15,6 +15,7 @@ export class ButtonManager {
   private lastSpaceKeyState: boolean = false;
   private blocker: boolean = true;
 
+  // Constructor
   constructor(scene: Scene) {
     this.scene = scene;
 

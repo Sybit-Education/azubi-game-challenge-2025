@@ -1,0 +1,20 @@
+import {Scene} from 'phaser';
+import { calculateScale, globalConsts } from '../main.ts';
+import Phaser from 'phaser';
+
+export class CustomGround {
+  // Types
+  sprite: Phaser.Physics.Arcade.Sprite;
+
+  // Constructor
+  constructor(currentScene: Scene) {
+    // Creates sprite
+    this.sprite = currentScene.physics.add.sprite(globalConsts.gameWidth / 2, globalConsts.gameHeight - 108, 'ground');
+    this.sprite.setOrigin(0.5, 0);
+    this.sprite.setImmovable(false);
+    this.sprite.setPushable(false);
+    this.sprite.setDepth(0);
+    this.sprite.setScale(calculateScale(13));
+    // TODO | Add scroll effect
+  }
+}
