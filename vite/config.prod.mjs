@@ -1,8 +1,8 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 const phasermsg = () => {
   return {
-    name: 'phasermsg',
+    name: "phasermsg",
     buildStart() {
       process.stdout.write(`Building for production...\n`);
     },
@@ -12,36 +12,36 @@ const phasermsg = () => {
       process.stdout.write(`${line}\n${msg}\n${line}\n`);
 
       process.stdout.write(`✨ Done ✨\n`);
-    }
-  }
-}
+    },
+  };
+};
 
 export default defineConfig({
-  base: './',
-  logLevel: 'warning',
+  base: "./",
+  logLevel: "warning",
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          phaser: ['phaser']
-        }
-      }
+        manualChunks(id) {
+          if (id.includes("node_modules/phaser")) {
+            return "phaser";
+          }
+        },
+      },
     },
-    minify: 'terser',
+    minify: "terser",
     terserOptions: {
       compress: {
-        passes: 2
+        passes: 2,
       },
       mangle: true,
       format: {
-        comments: false
-      }
-    }
+        comments: false,
+      },
+    },
   },
   server: {
-    port: 8080
+    port: 8080,
   },
-  plugins: [
-    phasermsg()
-  ]
+  plugins: [phasermsg()],
 });

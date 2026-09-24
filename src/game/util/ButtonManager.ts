@@ -1,6 +1,6 @@
-import {Button} from "./Button";
+import {Button} from "./Button.ts";
 import {Scene} from "phaser";
-import {get2} from '../thatFolder/ThatPlayer.ts';
+import {get2} from "../game/Player.ts";
 
 export class ButtonManager {
   private buttons: Button[] = [];
@@ -15,14 +15,15 @@ export class ButtonManager {
   private lastSpaceKeyState: boolean = false;
   private blocker: boolean = true;
 
+  // Constructor
   constructor(scene: Scene) {
     this.scene = scene;
 
     // Add update event to check for navigation inputs
-    this.scene.events.on('update', this.update, this);
+    this.scene.events.on("update", this.update, this);
 
     // Clean up when the scene is shutdown
-    this.scene.events.once('shutdown', this.destroy, this);
+    this.scene.events.once("shutdown", this.destroy, this);
   }
 
   // Adds Button
@@ -45,12 +46,12 @@ export class ButtonManager {
     if (this.buttons.length === 0) return;
 
     // Check keyboard Tab navigation
-    const tabKey = this.scene.input.keyboard?.addKey('TAB');
-    const spaceKey = this.scene.input.keyboard?.addKey('SPACE');
-    const upKey = this.scene.input.keyboard?.addKey('UP');
-    const downKey = this.scene.input.keyboard?.addKey('DOWN');
-    const leftKey = this.scene.input.keyboard?.addKey('LEFT');
-    const rightKey = this.scene.input.keyboard?.addKey('RIGHT');
+    const tabKey = this.scene.input.keyboard?.addKey("TAB");
+    const spaceKey = this.scene.input.keyboard?.addKey("SPACE");
+    const upKey = this.scene.input.keyboard?.addKey("UP");
+    const downKey = this.scene.input.keyboard?.addKey("DOWN");
+    const leftKey = this.scene.input.keyboard?.addKey("LEFT");
+    const rightKey = this.scene.input.keyboard?.addKey("RIGHT");
 
     // Check for Enter/Space keys to activate the focused button
     if (spaceKey?.isDown && !this.lastSpaceKeyState) {
@@ -64,7 +65,7 @@ export class ButtonManager {
       const tabDown: boolean = tabKey.isDown;
       if (tabDown && !this.lastKeyboardTabState) {
         // Tab was just pressed
-        const shiftKey = this.scene.input.keyboard?.addKey('SHIFT');
+        const shiftKey = this.scene.input.keyboard?.addKey("SHIFT");
         this.navigateButtons(shiftKey?.isDown ? -1 : 1);
       }
       this.lastKeyboardTabState = tabDown;
@@ -139,7 +140,7 @@ export class ButtonManager {
   }
 
   destroy(): void {
-    this.scene.events.off('update', this.update, this);
+    this.scene.events.off("update", this.update, this);
     this.buttons = [];
   }
 }

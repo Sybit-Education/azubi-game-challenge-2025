@@ -1,20 +1,25 @@
-import {Scene} from 'phaser';
-import {calculateScale, displayPlayer, globalConsts} from '../main.ts';
-import {formatTime, get1, get3} from '../thatFolder/ThatPlayer.ts';
-import {Button} from '../custom_classes/Button.ts';
-import {ButtonManager} from '../custom_classes/ButtonManager.ts';
-import {fetchLeaderboard, removeEntry, sortedLeaderboard, sortLeaderboard} from './Leaderboard.ts';
+import { Scene } from "phaser";
+import { calculateScale, displayPlayer, globalConsts } from "../main.ts";
+import { formatTime, get1, get3 } from "../game/Player.ts";
+import { Button } from "../util/Button.ts";
+import { ButtonManager } from "../util/ButtonManager.ts";
+import {
+  fetchLeaderboard,
+  removeEntry,
+  sortedLeaderboard,
+  sortLeaderboard,
+} from "./Leaderboard.ts";
 import Text = Phaser.GameObjects.Text;
 import Gamepad = Phaser.Input.Gamepad.Gamepad;
 
 // config
 const range: number = 2;
-export type leaderboardEntry = { name: string, score: number };
+export type leaderboardEntry = { name: string; score: number };
 const style = {
   font: "20px pixelFont",
   color: "#ffffff",
-  align: 'center'
-}
+  align: "center",
+};
 
 // Variables
 let name: string | undefined = undefined;
@@ -29,14 +34,13 @@ let leaderboardIsLoaded: boolean = false;
 let savedScore: boolean = false;
 let buttonManager: ButtonManager;
 let gamePad: Gamepad;
-let backBlocker: boolean
+let backBlocker: boolean;
 
 // Scene class
 export class GameOver extends Scene {
-
   // Constructor
   constructor() {
-    super('gameOver');
+    super("gameOver");
   }
 
   create(): void {
@@ -52,8 +56,12 @@ export class GameOver extends Scene {
     buttonManager = new ButtonManager(scene);
 
     // GameOver Image
-    gameOverImage = this.add.image(globalConsts.gameWidth / 2, 10, 'gameOverTitle');
-    gameOverImage.setOrigin(0.5, 0)
+    gameOverImage = this.add.image(
+      globalConsts.gameWidth / 2,
+      10,
+      "gameOverTitle",
+    );
+    gameOverImage.setOrigin(0.5, 0);
     gameOverImage.setScale(14);
 
     // Sets text
@@ -64,11 +72,39 @@ export class GameOver extends Scene {
     score = parseInt(item ? item : "0", 10);
 
     // Game infos
-    new Button(globalConsts.gameWidth * 0.04, globalConsts.gameHeight * 0.4, calculateScale(5), "button_yourScore", this.scene.scene).button.setOrigin(0, 0.5);
-    this.add.text(globalConsts.gameWidth * 0.25, globalConsts.gameHeight * 0.39, formatTime(score), style).setOrigin(0, 0).setScale(calculateScale(1));
+    new Button(
+      globalConsts.gameWidth * 0.04,
+      globalConsts.gameHeight * 0.4,
+      calculateScale(5),
+      "button_yourScore",
+      this.scene.scene,
+    ).button.setOrigin(0, 0.5);
+    this.add
+      .text(
+        globalConsts.gameWidth * 0.25,
+        globalConsts.gameHeight * 0.39,
+        formatTime(score),
+        style,
+      )
+      .setOrigin(0, 0)
+      .setScale(calculateScale(1));
 
-    new Button(globalConsts.gameWidth * 0.04, globalConsts.gameHeight * 0.58, calculateScale(5), "button_jumpsLeft", this.scene.scene).button.setOrigin(0, 0.5);
-    this.add.text(globalConsts.gameWidth * 0.25, globalConsts.gameHeight * 0.57, localStorage.getItem("last.jumpsLeft") ?? "0", style).setOrigin(0, 0).setScale(calculateScale(1));
+    new Button(
+      globalConsts.gameWidth * 0.04,
+      globalConsts.gameHeight * 0.58,
+      calculateScale(5),
+      "button_jumpsLeft",
+      this.scene.scene,
+    ).button.setOrigin(0, 0.5);
+    this.add
+      .text(
+        globalConsts.gameWidth * 0.25,
+        globalConsts.gameHeight * 0.57,
+        localStorage.getItem("last.jumpsLeft") ?? "0",
+        style,
+      )
+      .setOrigin(0, 0)
+      .setScale(calculateScale(1));
 
     // Resets Saved Button
     savedScore = false;
@@ -81,26 +117,70 @@ export class GameOver extends Scene {
     renderLeaderboard().then();
 
     // Save score button
-    saveButton = new Button(globalConsts.gameWidth * 0.45, globalConsts.gameHeight * 0.853, calculateScale(8), "button_save", scene, () => prompt(), 'S', 1, buttonManager);
+    saveButton = new Button(
+      globalConsts.gameWidth * 0.45,
+      globalConsts.gameHeight * 0.853,
+      calculateScale(8),
+      "button_save",
+      scene,
+      () => prompt(),
+      "S",
+      1,
+      buttonManager,
+    );
 
     // Adds the restart button
-    new Button(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.84, calculateScale(5), "button_play", scene, () => exit(), 'ENTER', 3, buttonManager).button.setVisible(true);
+    new Button(
+      globalConsts.gameWidth * 0.67,
+      globalConsts.gameHeight * 0.84,
+      calculateScale(5),
+      "button_play",
+      scene,
+      () => exit(),
+      "ENTER",
+      3,
+      buttonManager,
+    ).button.setVisible(true);
 
     // To leaderboard menu
-    new Button(globalConsts.gameWidth * 0.85, globalConsts.gameHeight * 0.84, calculateScale(4), "button_leaderboard", scene, () => this.scene.start("leaderboard"), 'ENTER', 3, buttonManager).button.setVisible(true);
+    new Button(
+      globalConsts.gameWidth * 0.85,
+      globalConsts.gameHeight * 0.84,
+      calculateScale(4),
+      "button_leaderboard",
+      scene,
+      () => this.scene.start("leaderboard"),
+      "ENTER",
+      3,
+      buttonManager,
+    ).button.setVisible(true);
 
     // Add navigation instructions
-    scene.add.text(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.92, "Press S or 1 to save", {
-      font: "16px " + globalConsts.pixelFont,
-      color: "#ffffff",
-      align: 'center'
-    }).setOrigin(0.5);
+    scene.add
+      .text(
+        globalConsts.gameWidth * 0.67,
+        globalConsts.gameHeight * 0.92,
+        "Press S or 1 to save",
+        {
+          font: "16px " + globalConsts.pixelFont,
+          color: "#ffffff",
+          align: "center",
+        },
+      )
+      .setOrigin(0.5);
 
-    scene.add.text(globalConsts.gameWidth * 0.67, globalConsts.gameHeight * 0.95, "Press ENTER or 3 to restart", {
-      font: "16px " + globalConsts.pixelFont,
-      color: "#ffffff",
-      align: 'center'
-    }).setOrigin(0.5);
+    scene.add
+      .text(
+        globalConsts.gameWidth * 0.67,
+        globalConsts.gameHeight * 0.95,
+        "Press ENTER or 3 to restart",
+        {
+          font: "16px " + globalConsts.pixelFont,
+          color: "#ffffff",
+          align: "center",
+        },
+      )
+      .setOrigin(0.5);
 
     // Sets gamepad
     if (this.input.gamepad && this.input.gamepad.gamepads.length > 0) {
@@ -119,16 +199,16 @@ export class GameOver extends Scene {
     if (get3(gamePad)) {
       if (backBlocker) return;
       exit();
-      return
+      return;
     } else {
-      if (backBlocker) backBlocker = false
+      if (backBlocker) backBlocker = false;
     }
   }
 }
 
 // Exit to the main Menu
 function exit(): void {
-  scene.scene.start("mainMenu")
+  scene.scene.start("mainMenu");
 }
 
 // Prompt to save
@@ -138,7 +218,9 @@ function prompt(): void {
 
   // Check if the leaderboard is loaded
   if (!leaderboardIsLoaded) {
-    alert("The leaderboard could not be loaded\nAnd therefore no score can be uploaded");
+    alert(
+      "The leaderboard could not be loaded\nAnd therefore no score can be uploaded",
+    );
     return;
   }
 
@@ -167,35 +249,42 @@ function prompt(): void {
   name = prompt;
 
   // Main fetch
-  saveLeaderboard(prompt, localStorage.getItem("key"), score).then(response => {
-    if (response == undefined) {
-      alert("Upload to leaderboard failed");
-      return;
-    }
+  saveLeaderboard(prompt, score).then(
+    (response) => {
+      if (response == undefined) {
+        alert("Upload to leaderboard failed");
+        return;
+      }
 
-    // Isn´t okay
-    if (!response.ok) {
-      alert("Something went wrong while uploading your score to the leaderboard: " + response.status + " - " + response.statusText);
-      return;
-    }
+      // Isn´t okay
+      if (!response.ok) {
+        alert(
+          "Something went wrong while uploading your score to the leaderboard: " +
+            response.status +
+            " - " +
+            response.statusText,
+        );
+        return;
+      }
 
-    // Same/better score already reached
-    if (response.status == 208) {
-      alert("Same/Better score for this name already exists")
-      return;
-    }
+      // Same/better score already reached
+      if (response.status == 208) {
+        alert("Same/Better score for this name already exists");
+        return;
+      }
 
-    // Feedback
-    alert("Your score has been successfully uploaded");
+      // Feedback
+      alert("Your score has been successfully uploaded");
 
-    // Removes and rerenders leaderboard
-    clearsLeaderboardLine();
-    renderLeaderboard().then();
+      // Removes and rerenders leaderboard
+      clearsLeaderboardLine();
+      renderLeaderboard().then();
 
-    // Disables button
-    saveButton.setImage("button_saved");
-    savedScore = true;
-  })
+      // Disables button
+      saveButton.setImage("button_saved");
+      savedScore = true;
+    },
+  );
 }
 
 function clearsLeaderboardLine(): void {
@@ -232,7 +321,7 @@ async function renderLeaderboard(): Promise<void> {
   // adds yourself
   sortedLeaderboard.push({
     name: displayName,
-    score: score
+    score: score,
   });
 
   // sort
@@ -240,19 +329,58 @@ async function renderLeaderboard(): Promise<void> {
 
   // Display top 3 leaderboard
   let yCoord: number = globalConsts.gameHeight * 0.33;
-  for (let i: number = 0; i <= (sortedLeaderboard.length > 3 ? 3 : sortedLeaderboard.length) - 1; i++) {
-    leaderboardLines.push(scene.add.text(globalConsts.gameWidth * 0.5, yCoord, `${i + 1}. ${sortedLeaderboard[i].name} - ${formatTime(sortedLeaderboard[i].score)}`, style).setColor(sortedLeaderboard[i].name == displayName ? "#000000" : style.color).setScale(calculateScale(1)));
+  for (
+    let i: number = 0;
+    i <= (sortedLeaderboard.length > 3 ? 3 : sortedLeaderboard.length) - 1;
+    i++
+  ) {
+    leaderboardLines.push(
+      scene.add
+        .text(
+          globalConsts.gameWidth * 0.5,
+          yCoord,
+          `${i + 1}. ${sortedLeaderboard[i].name} - ${formatTime(sortedLeaderboard[i].score)}`,
+          style,
+        )
+        .setColor(
+          sortedLeaderboard[i].name == displayName ? "#000000" : style.color,
+        )
+        .setScale(calculateScale(1)),
+    );
     yCoord += calculateScale(30);
   }
 
   // Display another score
   yCoord = globalConsts.gameHeight * 0.52;
-  const index: number = sortedLeaderboard.findIndex(item => item.name === displayName);
+  const index: number = sortedLeaderboard.findIndex(
+    (item) => item.name === displayName,
+  );
   for (let i: number = index - range; i < index + range + 1; i++) {
     try {
-      leaderboardLines.push(scene.add.text(globalConsts.gameWidth * 0.5, yCoord, `${i + 1}. ${sortedLeaderboard[i].name} - ${formatTime(sortedLeaderboard[i].score)}`, style).setColor(sortedLeaderboard[i].name == displayName ? "#000000" : style.color).setScale(calculateScale(1)));
-    } catch (e) {
-      leaderboardLines.push(scene.add.text(globalConsts.gameWidth * 0.5, yCoord, `${i + 1 > 0 ? i + 1 : 0}. xxx - ` + formatTime(0), style).setScale(calculateScale(1)));
+      leaderboardLines.push(
+        scene.add
+          .text(
+            globalConsts.gameWidth * 0.5,
+            yCoord,
+            `${i + 1}. ${sortedLeaderboard[i].name} - ${formatTime(sortedLeaderboard[i].score)}`,
+            style,
+          )
+          .setColor(
+            sortedLeaderboard[i].name == displayName ? "#000000" : style.color,
+          )
+          .setScale(calculateScale(1)),
+      );
+    } catch {
+      leaderboardLines.push(
+        scene.add
+          .text(
+            globalConsts.gameWidth * 0.5,
+            yCoord,
+            `${i + 1 > 0 ? i + 1 : 0}. xxx - ` + formatTime(0),
+            style,
+          )
+          .setScale(calculateScale(1)),
+      );
     }
     yCoord += calculateScale(30);
   }
@@ -267,54 +395,24 @@ async function renderLeaderboard(): Promise<void> {
   removeEntry("YOU");
 }
 
-// [GET] a new key
-export async function generateCode(): Promise<string | undefined> {
-  // Local-storage
-  if (globalConsts.apiURL == undefined) return;
-
-  // Main fetch
-  try {
-    const response: Response = await fetch(globalConsts.apiURL + "/newCode", {method: "GET"});
-    const result: any = await response.json();
-    return result.code;
-  } catch (e) {
-    return undefined;
-  }
-}
-
 // [POST] new score
-async function saveLeaderboard(name: string, key: string | null, value: number): Promise<Response | undefined> {
-  // Local-storage
-  if (globalConsts.apiURL == undefined) {
-    const oldEntry: leaderboardEntry | undefined = getEntryByName(name);
-    if (oldEntry && oldEntry.score > value) return new Response(JSON.stringify({success: false}), {status: 208}); // Better score exists
-    sortedLeaderboard?.push({name: name, score: value}); // Adds entry
-    sortedLeaderboard?.filter(entry => entry.name !== "YOU"); // Removes YOU
-    localStorage.setItem("leaderboard", JSON.stringify(sortedLeaderboard, null, 0))
-    return new Response(JSON.stringify({success: true}), {status: 200});
-  }
-
-  // Request info
-  try {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    // Main fetch
-    return await fetch(globalConsts.apiURL + "/leaderboard", {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify({
-        "name": name,
-        "score": value,
-        "code": key
-      }),
-    });
-  } catch (e) {
-    return undefined;
-  }
+async function saveLeaderboard(
+  name: string,
+  value: number,
+): Promise<Response | undefined> {
+  const oldEntry: leaderboardEntry | undefined = getEntryByName(name);
+  if (oldEntry && oldEntry.score > value)
+    return new Response(JSON.stringify({ success: false }), { status: 208 }); // Better score exists
+  sortedLeaderboard?.push({ name: name, score: value }); // Adds entry
+  sortedLeaderboard?.filter((entry) => entry.name !== "YOU"); // Removes YOU
+  localStorage.setItem(
+    "leaderboard",
+    JSON.stringify(sortedLeaderboard, null, 0),
+  );
+  return new Response(JSON.stringify({ success: true }), { status: 200 });
 }
 
 // Gets leaderboard entry by name
 function getEntryByName(name: string): leaderboardEntry | undefined {
-  return sortedLeaderboard?.find(entry => entry.name === name);
+  return sortedLeaderboard?.find((entry) => entry.name === name);
 }

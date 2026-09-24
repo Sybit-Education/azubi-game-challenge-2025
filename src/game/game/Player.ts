@@ -1,5 +1,5 @@
-import {Scene} from 'phaser';
-import {calculateScale, globalConsts} from '../main.ts';
+import { Scene } from "phaser";
+import { calculateScale, globalConsts } from "../main.ts";
 import Sprite = Phaser.Physics.Arcade.Sprite;
 import Text = Phaser.GameObjects.Text;
 
@@ -10,9 +10,9 @@ export class ThatPlayer {
   sneakGravity: number = 3000;
 
   // Textures
-  spriteID: string = "player2"
+  spriteID: string = "player2";
   sneakingID: string = "playerSneaking2";
-  ground: Phaser.Types.Physics.Arcade.ArcadeColliderType
+  ground: Phaser.Types.Physics.Arcade.ArcadeColliderType;
   // Keys
   keyIdUp: string = "W";
   keyIdDown: string = "S";
@@ -46,19 +46,25 @@ export class ThatPlayer {
     this.scene = currentScene;
 
     // Create sprite
-    this.sprite = currentScene.physics.add.sprite(100, globalConsts.gameHeight - 110, this.spriteID);
-    //this.sprite.setBodySize(32, 64, false); // NOTE: setBodySize und nicht setSize!!! Origin is not in center.
+    this.sprite = currentScene.physics.add.sprite(
+      100,
+      globalConsts.gameHeight - 110,
+      this.spriteID,
+    );
+    // NOTE: setBodySize und nicht setSize!!! Origin is not in center.
     this.sprite.setOrigin(0, 1); // Bottom left
     this.sprite.setCollideWorldBounds(true);
     this.sprite.setGravityY(this.normalGravity);
     this.sprite.setScale(2.25);
 
     // Create Score text
-    this.scoreText = this.scene.add.text(globalConsts.gameWidth / 2, 100, this.getScore().toString(), {
-      font: "30px " + globalConsts.pixelFont,
-      color: "#ffffff",
-      align: 'center'
-    }).setOrigin(0.5, 0)
+    this.scoreText = this.scene.add
+      .text(globalConsts.gameWidth / 2, 100, this.getScore().toString(), {
+        font: "30px " + globalConsts.pixelFont,
+        color: "#ffffff",
+        align: "center",
+      })
+      .setOrigin(0.5, 0)
       .setScale(calculateScale(1));
 
     // Keybinds
@@ -74,30 +80,40 @@ export class ThatPlayer {
   // Setup gamepad detection
   setupGamepad(): void {
     // Check if gamepad is already connected
-    if (this.scene.input.gamepad && this.scene.input.gamepad.gamepads.length > 0) {
+    if (
+      this.scene.input.gamepad &&
+      this.scene.input.gamepad.gamepads.length > 0
+    ) {
       this.gamepad = this.scene.input.gamepad.getPad(0);
     }
 
     // Listen for gamepad connection
-    this.scene.input.gamepad?.on('connected', (pad: Phaser.Input.Gamepad.Gamepad) => {
-      console.log('Gamepad connected:', pad.id);
-      this.gamepad = pad;
-    });
+    this.scene.input.gamepad?.on(
+      "connected",
+      (pad: Phaser.Input.Gamepad.Gamepad) => {
+        console.log("Gamepad connected:", pad.id);
+        this.gamepad = pad;
+      },
+    );
 
     // Listen for gamepad disconnection
-    this.scene.input.gamepad?.on('disconnected', (pad: Phaser.Input.Gamepad.Gamepad) => {
-      console.log('Gamepad disconnected:', pad.id);
-      if (this.gamepad === pad) {
-        this.gamepad = null;
-      }
-    });
+    this.scene.input.gamepad?.on(
+      "disconnected",
+      (pad: Phaser.Input.Gamepad.Gamepad) => {
+        console.log("Gamepad disconnected:", pad.id);
+        if (this.gamepad === pad) {
+          this.gamepad = null;
+        }
+      },
+    );
   }
 
-  // Score
+  // Get score
   getScore(): number {
     return this.score;
   }
 
+  // Sets score
   setScore(newScore: number): void {
     // Sets scores
     this.score = newScore;
@@ -106,45 +122,66 @@ export class ThatPlayer {
     this.scoreText.setText(formatTime(newScore));
   }
 
+  // Increases score
   increaseScore(plusScore: number): void {
     this.setScore(this.getScore() + plusScore);
   }
 
-  // Gift
+  // Get gift count
   getGifts(): number {
     return this.gifts;
   }
 
+  // Sets gifts
   setGifts(gifts: number): void {
     this.gifts = gifts;
   }
 
+  // Increases gift count
   increaseGifts(plusGifts: number): void {
     this.setGifts(this.getGifts() + plusGifts);
   }
 
+  // Gets double jumps left
   getJumpsLeft(): number {
     return this.jumpLefts;
   }
 
+  // Sets jumps left
   setJumpLefts(jumps: number): void {
     this.jumpLefts = jumps;
   }
 
+  // Increases double jumps left
   increaseJump(): void {
     this.setJumpLefts(this.getJumpsLeft() + 1);
   }
 
   // Updates movement
   updateMovement(): void {
-    if (this.keyUp == undefined || this.keyDown == undefined || this.keyLeft == undefined || this.keyRight == undefined) return;
+    if (
+      this.keyUp == undefined ||
+      this.keyDown == undefined ||
+      this.keyLeft == undefined ||
+      this.keyRight == undefined
+    )
+      return;
     const isOnGround: boolean | undefined = this.sprite.body?.touching.down;
 
     // Check input from the keyboard or gamepad
-    const isLeftDown = this.keyLeft.isDown || (this.gamepad && (this.gamepad.left || this.gamepad.leftStick.x < -0.5));
-    const isRightDown = this.keyRight.isDown || (this.gamepad && (this.gamepad.right || this.gamepad.leftStick.x > 0.5));
-    const isUpDown = this.keyUp.isDown || (this.gamepad && (this.gamepad.up || get2(this.gamepad)));
-    const isDownDown = this.keyDown.isDown || (this.gamepad && (get3(this.gamepad) /*|| this.gamepad.leftStick.y > 0.5*/));
+    const isLeftDown =
+      this.keyLeft.isDown ||
+      (this.gamepad && (this.gamepad.left || this.gamepad.leftStick.x < -0.5));
+    const isRightDown =
+      this.keyRight.isDown ||
+      (this.gamepad && (this.gamepad.right || this.gamepad.leftStick.x > 0.5));
+    const isUpDown =
+      this.keyUp.isDown ||
+      (this.gamepad && (this.gamepad.up || get2(this.gamepad)));
+    const isDownDown =
+      this.keyDown.isDown ||
+      (this.gamepad &&
+        get3(this.gamepad)) /*|| this.gamepad.leftStick.y > 0.5*/;
 
     // Apply direction
     if (isRightDown) {
@@ -165,7 +202,9 @@ export class ThatPlayer {
     }
 
     this.sprite.body?.setSize();
-    this.sprite.setGravityY(!isOnGround && isDownDown ? this.sneakGravity : this.normalGravity);
+    this.sprite.setGravityY(
+      !isOnGround && isDownDown ? this.sneakGravity : this.normalGravity,
+    );
 
     // Returns if sneaking
     if (this.isSneaking) return;
@@ -180,14 +219,19 @@ export class ThatPlayer {
 
     // Detect double jump
     const justPressedJump = isUpDown && !this.wasJumpKeyDownLastFrame;
-    if (!isOnGround && justPressedJump && this.jumpLefts > 0 && this.jumpTimeleft <= 0) {
+    if (
+      !isOnGround &&
+      justPressedJump &&
+      this.jumpLefts > 0 &&
+      this.jumpTimeleft <= 0
+    ) {
       this.sprite.setVelocityY(-500); // Boost
       this.jumpLefts--;
     }
 
     // Jump-hold mechanic
     if (this.jumpTimeleft > 0 && isUpDown) {
-      const velocity: number = (this.jumpTimeleft) / 1000 + 1;
+      const velocity: number = this.jumpTimeleft / 1000 + 1;
       this.jumpTimeleft -= this.scene.game.loop.delta;
       const current: number = this.sprite.body?.velocity.y ?? 0;
       this.sprite.setVelocityY(current * velocity);
@@ -210,7 +254,7 @@ export function formatTime(milliseconds: number): string {
   if (minutes > 0) result += `${minutes}m `;
   if (seconds > 0 || minutes > 0) result += `${seconds}s `;
   if (ms != 0) result += `${ms}ms`;
-  else result += "000ms"
+  else result += "000ms";
   return result.trim();
 }
 

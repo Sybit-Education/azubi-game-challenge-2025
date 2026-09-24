@@ -1,4 +1,4 @@
-import {Scene} from 'phaser';
+import {Scene} from "phaser";
 
 export class Boot extends Scene {
 
@@ -10,7 +10,7 @@ export class Boot extends Scene {
   // Load global assets
   preload(): void {
     // Font
-    this.load.font("pixelFont", "PressStart2P.ttf", "truetype")
+    this.load.font("pixelFont", "PressStart2P.ttf", "truetype");
 
     // Hud
     this.load.setPath("hud");
@@ -50,7 +50,7 @@ export class Boot extends Scene {
 
   // Loading done: load theme elements
   create(): void {
-    this.scene.start('preloader-main');
+    this.scene.start("preloader-main");
   }
 }
 
@@ -58,5 +58,5 @@ export class Boot extends Scene {
 export function start(scene: Phaser.Scenes.ScenePlugin): void {
 
   // Switch to main menu
-  scene.start('mainMenu');
+  scene.start("mainMenu");
 }

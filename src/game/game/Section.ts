@@ -1,6 +1,7 @@
-import {Scene} from 'phaser';
-import {getRandomInt, globalConsts} from '../main.ts';
-import {getRandomObstacleType, obstaclePropertiesMap, obstacleType, ThatObstacle} from './ThatObstacle.ts';
+import {Scene} from "phaser";
+import {getRandomInt, globalConsts} from "../main.ts";
+import {getRandomObstacleType, obstaclePropertiesMap, obstacleType, CustomObstacle} from "./Obstacle.ts";
+import Phaser from "phaser";
 
 // Position type
 type position = {
@@ -8,7 +9,7 @@ type position = {
   y: number;
 };
 
-export class ThatSection {
+export class CustomSection {
   // Config
   readonly speed: number = -200;
   readonly amountObstacle: number = 3;
@@ -21,9 +22,9 @@ export class ThatSection {
 
   // Variables
   scene: Scene;
-  obstacles: ThatObstacle[] = [];
-  marker: ThatObstacle;
-  gift: ThatObstacle | undefined;
+  obstacles: CustomObstacle[] = [];
+  marker: CustomObstacle;
+  gift: CustomObstacle | undefined;
   randomVoidOut: number;
 
   // Constructor
@@ -39,7 +40,7 @@ export class ThatSection {
     }
 
     // Marker
-    this.marker = new ThatObstacle(
+    this.marker = new CustomObstacle(
       obstacleType.MARKER,
       this.scene,
       globalConsts.gameWidth * offset,
@@ -57,7 +58,7 @@ export class ThatSection {
         this.obstacles.push(this.generateObstacle(offset - 1));
       }
     } else {
-      this.obstacles.push(new ThatObstacle(obstacleType.BREAK, this.scene, 30 + globalConsts.gameWidth * (offset - 1)))
+      this.obstacles.push(new CustomObstacle(obstacleType.BREAK, this.scene, 30 + globalConsts.gameWidth * (offset - 1)));
     }
 
     // Debug
@@ -73,7 +74,7 @@ export class ThatSection {
   generateObstacle(offset: number, inputType?: obstacleType) {
     const type: obstacleType = inputType ?? getRandomObstacleType(); // gets random type
     const position: position = this.getRandomPosition(type, offset); // Gets random y and x
-    return new ThatObstacle(type, this.scene, position.x, position.y);
+    return new CustomObstacle(type, this.scene, position.x, position.y);
   }
 
   // This methode generates a suitable postion for provided obsatcle type. Checks paddings
@@ -87,7 +88,7 @@ export class ThatSection {
         y: property.y()
       };
       let valid: boolean = true;
-      for (let obstacle of this.obstacles) {
+      for (const obstacle of this.obstacles) {
         if (!this.checkCoords(currentPos, {x: obstacle.x, y: obstacle.y})) valid = false; // to close
       }
       if (globalConsts.debug) console.log("valid: " + valid);
@@ -110,7 +111,7 @@ export class ThatSection {
 
   // Moves all obstacles
   updateMovement(): void {
-    for (let obstacle of this.obstacles) {
+    for (const obstacle of this.obstacles) {
       if (obstacle.sprite.body == undefined) {
         //console.log(obstacle); // this is like an error. because the body shouldn´t and isn´t null
         continue;
@@ -122,8 +123,8 @@ export class ThatSection {
 
   // Destroys all obstacles
   destroyAll(): void {
-    this.marker.sprite.destroy(false)
-    for (let obstacle of this.obstacles) {
+    this.marker.sprite.destroy(false);
+    for (const obstacle of this.obstacles) {
       obstacle.sprite.body?.destroy();
       obstacle.sprite.destroy(true);
     }

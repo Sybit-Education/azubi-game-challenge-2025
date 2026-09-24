@@ -1,5 +1,6 @@
 import {Scene} from "phaser";
-import {getRandomInt, globalConsts} from '../main.ts';
+import { getRandomInt, globalConsts } from "../main.ts";
+import Phaser from "phaser";
 
 // Every obstacle
 export enum obstacleType {
@@ -118,7 +119,7 @@ export function getRandomObstacleType(): obstacleType {
 }
 
 // Class
-export class ThatObstacle {
+export class CustomObstacle {
   x: number;
   y: number;
   image: string;
@@ -126,6 +127,7 @@ export class ThatObstacle {
   sprite: Phaser.Physics.Arcade.Sprite;
   type: obstacleType;
 
+  // Constructor
   constructor(type: obstacleType, currentScene: Scene, x: number, y?: number) {
     this.x = x;
     this.scene = currentScene;
@@ -141,6 +143,7 @@ export class ThatObstacle {
     this.sprite = this.scene.physics.add.sprite(this.x, this.y, this.image);
     this.sprite.setAlpha(type == obstacleType.MARKER ? 0 : 1);
 
+    // Not a marker
     if (type != obstacleType.MARKER) {
       this.sprite.setBodySize(props.width, props.height);
       this.sprite.setScale(props.scale);

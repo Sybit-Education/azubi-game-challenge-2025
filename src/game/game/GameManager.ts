@@ -1,22 +1,22 @@
-import {ThatPlayer} from './ThatPlayer.ts';
-import {ThatGround} from './ThatGround.ts';
-import {calculateScale, displayDebug, globalConsts, resetSpeed} from '../main.ts';
-import {ThatSection} from './ThatSection.ts';
-import {spawnHouses, updateMovement} from '../custom_classes/Background.ts';
-import {generateCode} from '../scenes/GameOver.ts';
-import {obstacleType, ThatObstacle} from './ThatObstacle.ts';
-import {fetchLeaderboard, sortedLeaderboard} from '../scenes/Leaderboard.ts';
+import {ThatPlayer} from "./Player.ts";
+import {CustomGround} from "./Ground.ts";
+import {calculateScale, displayDebug, globalConsts, resetSpeed} from "../main.ts";
+import {CustomSection} from "./Section.ts";
+import {spawnHouses, updateMovement} from "./Background.ts";
+import {obstacleType, CustomObstacle} from "./Obstacle.ts";
+import {fetchLeaderboard, sortedLeaderboard} from "../scenes/Leaderboard.ts";
 import Sprite = Phaser.Physics.Arcade.Sprite;
 import Text = Phaser.GameObjects.Text;
+import { Scene } from "phaser";
 
-export class ThatGame extends Phaser.Scene {
+export class GameManager extends Scene {
   // Config
   displayTop: number = 0.25; // Percentage [0-1] are possible too
 
   // Types
   player: ThatPlayer;
-  ground: ThatGround;
-  sections: ThatSection[] = [];
+  ground: CustomGround;
+  sections: CustomSection[] = [];
   leaderboardText: Text;
   jumpsLeft: Text;
   // Collusion
@@ -33,10 +33,10 @@ export class ThatGame extends Phaser.Scene {
     displayDebug(this.scene.scene);
 
     // Resets music
-    this.sound.stopAll()
+    this.sound.stopAll();
 
     // Plays music if wanted
-    if (localStorage.getItem("isActive.music") == "true") this.sound.play('gameMusic');
+    if (localStorage.getItem("isActive.music") == "true") this.sound.play("gameMusic");
 
     // Creates player
     this.player = new ThatPlayer(this.scene.scene);
@@ -67,10 +67,10 @@ export class ThatGame extends Phaser.Scene {
       },
       callbackScope: this,
       loop: true
-    })
+    });
 
     // Creates Ground
-    this.ground = new ThatGround(this.scene.scene);
+    this.ground = new CustomGround(this.scene.scene);
 
     // Spawn houses
     spawnHouses(this.scene.scene);
@@ -82,13 +82,8 @@ export class ThatGame extends Phaser.Scene {
     // Collision
     this.collisionPlayerAndGround = this.physics.add.collider(this.player.sprite, this.ground.sprite);
 
-    // creates key for leaderboard
-    generateCode().then(key => {
-      if (key) localStorage.setItem("key", key);
-    });
-
     // End game on ESC
-    this.input.keyboard?.on('keydown-ESC', this.gameOver, this);
+    this.input.keyboard?.on("keydown-ESC", this.gameOver, this);
 
     // Display a note that you can collect gifts when starting the game
     const infoText: Text = this.add.text(
@@ -152,7 +147,7 @@ export class ThatGame extends Phaser.Scene {
       }
 
       // Moves all obstacles
-      section.updateMovement()
+      section.updateMovement();
     });
 
     // Top x display
@@ -174,11 +169,11 @@ export class ThatGame extends Phaser.Scene {
 
   // This creates a new section
   createSection(alpha: number, offset: number = 2): void {
-    const thatSection: ThatSection = new ThatSection(this.scene.scene, alpha == 0, offset);
+    const thatSection: CustomSection = new CustomSection(this.scene.scene, alpha == 0, offset);
     this.sections.push(thatSection);
     const obstacles: Sprite[] = [];
-    const gift: ThatObstacle | undefined = thatSection.gift;
-    for (let obstacle of thatSection.obstacles) if (obstacle.type != obstacleType.GIFT) obstacles.push(obstacle.sprite)
+    const gift: CustomObstacle | undefined = thatSection.gift;
+    for (const obstacle of thatSection.obstacles) if (obstacle.type != obstacleType.GIFT) obstacles.push(obstacle.sprite);
     // collision player and harmful obstacles
     this.physics.add.collider(this.player.sprite, obstacles, () => {
     }, () => this.gameOver());
@@ -194,7 +189,7 @@ export class ThatGame extends Phaser.Scene {
     this.game.pause();
 
     // Should destroy every obstacle
-    for (let section of this.sections) {
+    for (const section of this.sections) {
       section.destroyAll();
     }
 
@@ -206,7 +201,7 @@ export class ThatGame extends Phaser.Scene {
     localStorage.setItem("last.jumpsLeft", this.player.jumpLefts.toString());
 
     // Stops scene
-    this.scene.stop(this.scene.key)
+    this.scene.stop(this.scene.key);
 
     // Switch du different scene
     this.scene.start("gameOver");

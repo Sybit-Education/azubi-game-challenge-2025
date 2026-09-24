@@ -1,5 +1,5 @@
-import {Scene} from 'phaser';
-import {start} from './Boot.ts';
+import {Scene} from "phaser";
+import {start} from "./Boot.ts";
 
 export class Preloader extends Scene {
 
@@ -40,7 +40,7 @@ export class Preloader extends Scene {
     this.load.image("gameBackground", "image4.png");
 
     // Music
-    this.load.setPath('sound')
+    this.load.setPath("sound");
     this.load.audio("gameMusic", "main8Bit.wav");
     this.load.audio("gameMusic1m", "1m8Bit.wav");
     this.load.audio("gameMusic30s", "30s8Bit.wav");

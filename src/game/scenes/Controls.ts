@@ -1,19 +1,20 @@
-import {calculateScale, displayPlayer, globalConsts} from '../main.ts';
-import {Button} from '../custom_classes/Button.ts';
-import {ButtonManager} from '../custom_classes/ButtonManager.ts';
+import {calculateScale, displayPlayer, globalConsts} from "../main.ts";
+import {Button} from "../util/Button.ts";
+import {ButtonManager} from "../util/ButtonManager.ts";
 import Image = Phaser.GameObjects.Image;
+import { Scene } from "phaser";
 
 // TODO | add controller controls
-export class Controls extends Phaser.Scene {
+export class Controls extends Scene {
   // Config
   style = {
     font: "25px pixelFont",
     color: "#ffffff",
-    align: 'center'
+    align: "center"
   };
 
   // Types
-  currentY: number
+  currentY: number;
   keyboardImage: Image;
   back_button: Button;
   buttonManager: ButtonManager;
@@ -35,12 +36,12 @@ export class Controls extends Phaser.Scene {
     this.buttonManager = new ButtonManager(this);
 
     // Back button
-    this.back_button = new Button(globalConsts.gameWidth * 0.07, globalConsts.gameHeight * 0.1, calculateScale(3.5), 'button_back', this, () => {
-      this.scene.start('mainMenu')
-    }, 'B', 3, this.buttonManager);
+    this.back_button = new Button(globalConsts.gameWidth * 0.07, globalConsts.gameHeight * 0.1, calculateScale(3.5), "button_back", this, () => {
+      this.scene.start("mainMenu");
+    }, "B", 3, this.buttonManager);
 
     // Main info
-    this.keyboardImage = this.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.15, 'button_keyboard');
+    this.keyboardImage = this.add.image(globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.15, "button_keyboard");
     this.keyboardImage.setScale(calculateScale(0.7));
     this.keyboardImage.setOrigin(0.5, 0);
 
@@ -57,9 +58,9 @@ export class Controls extends Phaser.Scene {
     this.scene.scene.add.text(x, this.getY(), " D  - Move right", this.style).setOrigin(0, 0).setScale(scale);
 
     // Add ESC key handler
-    const escKey = this.input.keyboard?.addKey('ESC');
-    escKey?.on('down', () => {
-      this.scene.start('mainMenu');
+    const escKey = this.input.keyboard?.addKey("ESC");
+    escKey?.on("down", () => {
+      this.scene.start("mainMenu");
     });
   }
 
