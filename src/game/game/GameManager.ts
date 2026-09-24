@@ -3,7 +3,6 @@ import {CustomGround} from "./Ground.ts";
 import {calculateScale, displayDebug, globalConsts, resetSpeed} from "../main.ts";
 import {CustomSection} from "./Section.ts";
 import {spawnHouses, updateMovement} from "./Background.ts";
-import {generateCode} from "../scenes/GameOver.ts";
 import {obstacleType, CustomObstacle} from "./Obstacle.ts";
 import {fetchLeaderboard, sortedLeaderboard} from "../scenes/Leaderboard.ts";
 import Sprite = Phaser.Physics.Arcade.Sprite;
@@ -82,11 +81,6 @@ export class GameManager extends Scene {
 
     // Collision
     this.collisionPlayerAndGround = this.physics.add.collider(this.player.sprite, this.ground.sprite);
-
-    // creates key for leaderboard
-    generateCode().then(key => {
-      if (key) localStorage.setItem("key", key);
-    });
 
     // End game on ESC
     this.input.keyboard?.on("keydown-ESC", this.gameOver, this);

@@ -513,20 +513,7 @@ export function sortLeaderboard(): void {
 
 // [GET] the current leaderboard
 export async function fetchLeaderboard(): Promise<void> {
-  // Local-storage
-  if (globalConsts.apiURL == undefined) {
-    sortedLeaderboard = sort(getLeaderboardFromLocalStorage()); // sort and set
-    return;
-  }
-
-  try {
-    const res: Response = await fetch(globalConsts.apiURL + "/leaderboard", {
-      method: "GET",
-    });
-    if (!res.ok) throw new Error(`HTTP ERROR ${res.status}`);
-  } catch {
-    sortedLeaderboard = undefined;
-  }
+  sortedLeaderboard = sort(getLeaderboardFromLocalStorage()); // sort and set
 }
 
 function getLeaderboardFromLocalStorage(): Record<string, number> {
