@@ -47,7 +47,7 @@ export default defineConfig([
       semi: ["error", "always"],
       quotes: [
         "warn",
-        "single",
+        "double",
         {
           allowTemplateLiterals: true,
         },

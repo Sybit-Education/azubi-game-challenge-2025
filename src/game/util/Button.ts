@@ -1,6 +1,6 @@
-import { GameObjects, Scene, Input } from 'phaser';
-import { ButtonManager } from './ButtonManager';
-import Phaser from 'phaser';
+import { GameObjects, Scene, Input } from "phaser";
+import { ButtonManager } from "./ButtonManager";
+import Phaser from "phaser";
 import Gamepad = Phaser.Input.Gamepad.Gamepad;
 
 export class Button {
@@ -47,30 +47,30 @@ export class Button {
     this.button.setScale(scale, scale);
 
     // On hover
-    this.button.on('pointerover', () => {
+    this.button.on("pointerover", () => {
       this.setFocus(true);
     });
 
     // On unhover
-    this.button.on('pointerout', () => {
+    this.button.on("pointerout", () => {
       this.setFocus(false);
     });
 
     // Calls function that is provided
-    this.button.on('pointerdown', () => this.activate());
+    this.button.on("pointerdown", () => this.activate());
 
     // Setup keyboard key if provided
     if (keyboardKey) {
       this.keyboardKey = this.scene.input.keyboard?.addKey(keyboardKey);
 
       // Add update event to the scene to check for key press
-      this.scene.events.on('update', this.checkKeyboardInput, this);
+      this.scene.events.on("update", this.checkKeyboardInput, this);
     }
 
     // Set up gamepad check if needed
     if (gamepadButtonIndex !== undefined) {
       this.gamepadCheckActive = true;
-      this.scene.events.on('update', this.checkGamepadInput, this);
+      this.scene.events.on("update", this.checkGamepadInput, this);
     }
 
     // Register with the button manager if provided
@@ -131,8 +131,8 @@ export class Button {
   // On destroy
   destroy(): void {
     // Clean up event listeners
-    this.scene.events.off('update', this.checkKeyboardInput, this);
-    this.scene.events.off('update', this.checkGamepadInput, this);
+    this.scene.events.off("update", this.checkKeyboardInput, this);
+    this.scene.events.off("update", this.checkGamepadInput, this);
     this.button.destroy();
   }
 }

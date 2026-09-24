@@ -1,14 +1,14 @@
-import {calculateScale, displayPlayer, escapeOption, globalConsts} from '../main';
-import {Button} from '../util/Button';
-import {ButtonManager} from '../util/ButtonManager';
+import {calculateScale, displayPlayer, escapeOption, globalConsts} from "../main";
+import {Button} from "../util/Button";
+import {ButtonManager} from "../util/ButtonManager";
 import Text = Phaser.GameObjects.Text;
-import { Scene } from 'phaser';
+import { Scene } from "phaser";
 
 // Config
 const scrollSpeed: number = 150;
-const roleColor: string = '#000000';
-const nameColor: string = '#000000';
-const jsonPath: string = '/creditsConfig.json';
+const roleColor: string = "#000000";
+const nameColor: string = "#000000";
+const jsonPath: string = "/creditsConfig.json";
 
 export class Credits extends Scene {
   // Types
@@ -18,12 +18,12 @@ export class Credits extends Scene {
 
   // Constructor
   constructor() {
-    super('credits');
+    super("credits");
   }
 
   // Preloader
   preload(): void {
-    this.load.json('creditsData', jsonPath);
+    this.load.json("creditsData", jsonPath);
   }
 
   // Create
@@ -35,7 +35,7 @@ export class Credits extends Scene {
     const gameW: number = globalConsts.gameWidth;
     const gameH: number = globalConsts.gameHeight;
     const font: string = globalConsts.pixelFont;
-    const data = this.cache.json.get('creditsData');
+    const data = this.cache.json.get("creditsData");
 
     // Background
     this.cameras.main.setBackgroundColor(globalConsts.backgroundColor);
@@ -44,9 +44,9 @@ export class Credits extends Scene {
     this.buttonManager = new ButtonManager(this);
 
     // Back button
-    this.back_button = new Button(globalConsts.gameWidth * 0.07, globalConsts.gameHeight * 0.1, calculateScale(3), 'button_back', this, () => {
-      this.scene.start('mainMenu');
-    }, 'B', 0, this.buttonManager);
+    this.back_button = new Button(globalConsts.gameWidth * 0.07, globalConsts.gameHeight * 0.1, calculateScale(3), "button_back", this, () => {
+      this.scene.start("mainMenu");
+    }, "B", 0, this.buttonManager);
 
     // Variables
     this.creditTexts = [];
@@ -57,10 +57,10 @@ export class Credits extends Scene {
     let startY: number = gameH;
 
     // Title | NOTE: I hate you
-    const text: Text = this.add.text(gameW * 0.42, startY, 'SyRun: Team', {
-      font: '40px ' + font,
+    const text: Text = this.add.text(gameW * 0.42, startY, "SyRun: Team", {
+      font: "40px " + font,
       color: roleColor,
-      align: 'center'
+      align: "center"
     }).setOrigin(0, 0)
       .setScale(calculateScale(1));
     this.creditTexts.push(text);
@@ -75,9 +75,9 @@ export class Credits extends Scene {
 
       // Roles | left
       const roleText: Text = this.add.text(leftX, startY, this.capitalize(role), {
-        font: '20px ' + font,
+        font: "20px " + font,
         color: roleColor,
-        align: 'left'
+        align: "left"
       }).setOrigin(0, 0)
         .setScale(calculateScale(1));
       this.creditTexts.push(roleText);
@@ -85,9 +85,9 @@ export class Credits extends Scene {
       // Person | right
       for (const name of names) {
         const nameText: Text = this.add.text(rightX, startY, name, {
-          font: '20px ' + font,
+          font: "20px " + font,
           color: nameColor,
-          align: 'right'
+          align: "right"
         }).setOrigin(0, 0)
           .setScale(calculateScale(1));
         this.creditTexts.push(nameText);
@@ -102,10 +102,10 @@ export class Credits extends Scene {
     startY += globalConsts.gameHeight * 0.5;
 
     // "Thank you for playing" text
-    const footer: Text = this.add.text(gameW * 0.38, startY, 'Thank you for playing', {
-      font: '30px ' + font,
+    const footer: Text = this.add.text(gameW * 0.38, startY, "Thank you for playing", {
+      font: "30px " + font,
       color: roleColor,
-      align: 'center'
+      align: "center"
     }).setOrigin(0, 0)
       .setScale(calculateScale(1));
     this.creditTexts.push(footer);
@@ -114,8 +114,8 @@ export class Credits extends Scene {
     escapeOption(this.scene.scene);
 
     // Onclick: MainMenu (keep for mouse users)
-    this.input.once('pointerdown', () => {
-      this.scene.start('mainMenu');
+    this.input.once("pointerdown", () => {
+      this.scene.start("mainMenu");
     });
   }
 
@@ -131,7 +131,7 @@ export class Credits extends Scene {
     if (last == undefined || last.y == undefined) return;
     if (last.y < calculateScale(-30)) {
       this.creditTexts.splice(this.creditTexts.length - 1, 1);
-      this.time.addEvent({delay: 500, callback: () => this.scene.start('mainMenu'), callbackScope: this, loop: false});
+      this.time.addEvent({delay: 500, callback: () => this.scene.start("mainMenu"), callbackScope: this, loop: false});
     }
   }
 

@@ -1,14 +1,14 @@
-import {ThatPlayer} from './Player.ts';
-import {CustomGround} from './Ground.ts';
-import {calculateScale, displayDebug, globalConsts, resetSpeed} from '../main.ts';
-import {CustomSection} from './Section.ts';
-import {spawnHouses, updateMovement} from './Background.ts';
-import {generateCode} from '../scenes/GameOver.ts';
-import {obstacleType, CustomObstacle} from './Obstacle.ts';
-import {fetchLeaderboard, sortedLeaderboard} from '../scenes/Leaderboard.ts';
+import {ThatPlayer} from "./Player.ts";
+import {CustomGround} from "./Ground.ts";
+import {calculateScale, displayDebug, globalConsts, resetSpeed} from "../main.ts";
+import {CustomSection} from "./Section.ts";
+import {spawnHouses, updateMovement} from "./Background.ts";
+import {generateCode} from "../scenes/GameOver.ts";
+import {obstacleType, CustomObstacle} from "./Obstacle.ts";
+import {fetchLeaderboard, sortedLeaderboard} from "../scenes/Leaderboard.ts";
 import Sprite = Phaser.Physics.Arcade.Sprite;
 import Text = Phaser.GameObjects.Text;
-import { Scene } from 'phaser';
+import { Scene } from "phaser";
 
 export class GameManager extends Scene {
   // Config
@@ -25,7 +25,7 @@ export class GameManager extends Scene {
 
   // Constructor
   constructor() {
-    super('thatGame');
+    super("thatGame");
   }
 
   // Create
@@ -37,7 +37,7 @@ export class GameManager extends Scene {
     this.sound.stopAll();
 
     // Plays music if wanted
-    if (localStorage.getItem('isActive.music') == 'true') this.sound.play('gameMusic');
+    if (localStorage.getItem("isActive.music") == "true") this.sound.play("gameMusic");
 
     // Creates player
     this.player = new ThatPlayer(this.scene.scene);
@@ -61,7 +61,7 @@ export class GameManager extends Scene {
     this.time.addEvent({
       delay: 1000,
       callback: () => {
-        if (globalConsts.debug) console.log('Speed up');
+        if (globalConsts.debug) console.log("Speed up");
         globalConsts.backgroundSpeed += 0.01;
         globalConsts.houseSpeed += 0.02;
         globalConsts.spriteSpeed += 0.02;
@@ -85,20 +85,20 @@ export class GameManager extends Scene {
 
     // creates key for leaderboard
     generateCode().then(key => {
-      if (key) localStorage.setItem('key', key);
+      if (key) localStorage.setItem("key", key);
     });
 
     // End game on ESC
-    this.input.keyboard?.on('keydown-ESC', this.gameOver, this);
+    this.input.keyboard?.on("keydown-ESC", this.gameOver, this);
 
     // Display a note that you can collect gifts when starting the game
     const infoText: Text = this.add.text(
       globalConsts.gameWidth / 2, globalConsts.gameHeight * 0.25,
-      'Collect the gifts to double Jump!',
+      "Collect the gifts to double Jump!",
       {
-        font: '22px ' + globalConsts.pixelFont,
-        color: '#ffffff',
-        fontStyle: 'bold'
+        font: "22px " + globalConsts.pixelFont,
+        color: "#ffffff",
+        fontStyle: "bold"
       }
     ).setOrigin(0.5)
       .setScale(calculateScale(1));
@@ -115,16 +115,16 @@ export class GameManager extends Scene {
     this.time.delayedCall(4000, () => infoText.destroy());
 
     // Creates leaderboard Text
-    this.leaderboardText = this.add.text(globalConsts.gameWidth * 0.02, globalConsts.gameHeight * 0.97, '', {
-      font: '15px ' + globalConsts.pixelFont,
-      color: '#ffffff',
+    this.leaderboardText = this.add.text(globalConsts.gameWidth * 0.02, globalConsts.gameHeight * 0.97, "", {
+      font: "15px " + globalConsts.pixelFont,
+      color: "#ffffff",
     });
 
     // Creates Jumps left Text
-    this.jumpsLeft = this.add.text(globalConsts.gameWidth * 0.98, globalConsts.gameHeight * 0.96, '', {
-      font: '18px ' + globalConsts.pixelFont,
-      color: '#ffffff',
-      align: 'end',
+    this.jumpsLeft = this.add.text(globalConsts.gameWidth * 0.98, globalConsts.gameHeight * 0.96, "", {
+      font: "18px " + globalConsts.pixelFont,
+      color: "#ffffff",
+      align: "end",
     }).setOrigin(1, 0);
 
     // Fetches leaderboard
@@ -140,7 +140,7 @@ export class GameManager extends Scene {
     updateMovement();
 
     // Updates Double jumps left text
-    this.jumpsLeft.setText('Double-Jumps left: ' + this.player.jumpLefts);
+    this.jumpsLeft.setText("Double-Jumps left: " + this.player.jumpLefts);
 
     // Checks and moves sections
     this.sections.forEach(section => {
@@ -164,11 +164,11 @@ export class GameManager extends Scene {
 
       // Display
       if (this.displayTop > 1) { // Normal
-        if (rank != -1 && rank <= this.displayTop) this.leaderboardText.setText('You´re top ' + (rank + 1));
+        if (rank != -1 && rank <= this.displayTop) this.leaderboardText.setText("You´re top " + (rank + 1));
       } else { // Percentage
         const topPercent: number = (1 - (sortedLeaderboard.length - rank) / sortedLeaderboard.length) * 100; // Get %
-        if (topPercent == 0) this.leaderboardText.setText('You´re top 1'); // Best player
-        else if (rank != -1 && topPercent <= this.displayTop * 100) this.leaderboardText.setText('You´re top ' + topPercent.toFixed(2) + '%');
+        if (topPercent == 0) this.leaderboardText.setText("You´re top 1"); // Best player
+        else if (rank != -1 && topPercent <= this.displayTop * 100) this.leaderboardText.setText("You´re top " + topPercent.toFixed(2) + "%");
       }
     }
   }
@@ -203,14 +203,14 @@ export class GameManager extends Scene {
     this.sections = [];
 
     // Saves score
-    localStorage.setItem('last.score', this.player.score.toString());
-    localStorage.setItem('last.jumpsLeft', this.player.jumpLefts.toString());
+    localStorage.setItem("last.score", this.player.score.toString());
+    localStorage.setItem("last.jumpsLeft", this.player.jumpLefts.toString());
 
     // Stops scene
     this.scene.stop(this.scene.key);
 
     // Switch du different scene
-    this.scene.start('gameOver');
+    this.scene.start("gameOver");
 
     // Unpauses game
     this.game.resume();

@@ -1,7 +1,7 @@
-import {Scene} from 'phaser';
-import {getRandomInt, globalConsts} from '../main.ts';
-import {getRandomObstacleType, obstaclePropertiesMap, obstacleType, CustomObstacle} from './Obstacle.ts';
-import Phaser from 'phaser';
+import {Scene} from "phaser";
+import {getRandomInt, globalConsts} from "../main.ts";
+import {getRandomObstacleType, obstaclePropertiesMap, obstacleType, CustomObstacle} from "./Obstacle.ts";
+import Phaser from "phaser";
 
 // Position type
 type position = {
@@ -63,7 +63,7 @@ export class CustomSection {
 
     // Debug
     if (globalConsts.debug) {
-      console.log('Section spawned:', {
+      console.log("Section spawned:", {
         obstacleCount: this.obstacles.length - 1, // Because the marker still counts
         pause
       });
@@ -91,11 +91,11 @@ export class CustomSection {
       for (const obstacle of this.obstacles) {
         if (!this.checkCoords(currentPos, {x: obstacle.x, y: obstacle.y})) valid = false; // to close
       }
-      if (globalConsts.debug) console.log('valid: ' + valid);
+      if (globalConsts.debug) console.log("valid: " + valid);
       if (valid) break;
       tries++;
       if (tries >= this.postionOverflowLimit) {
-        console.warn('StackOverlow');
+        console.warn("StackOverlow");
         break;
       }
     }
@@ -105,7 +105,7 @@ export class CustomSection {
   // This checks coords
   checkCoords(pos1: position, pos2: position): boolean {
     const distanceSquared: number = Phaser.Math.Distance.BetweenPointsSquared(pos1, pos2) / 1000;
-    if (globalConsts.debug) console.log('|' + distanceSquared);
+    if (globalConsts.debug) console.log("|" + distanceSquared);
     return distanceSquared >= this.obstaclePadding;
   }
 

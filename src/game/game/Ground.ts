@@ -1,6 +1,6 @@
-import {Scene} from 'phaser';
-import { calculateScale, globalConsts } from '../main.ts';
-import Phaser from 'phaser';
+import {Scene} from "phaser";
+import { calculateScale, globalConsts } from "../main.ts";
+import Phaser from "phaser";
 
 export class CustomGround {
   // Types
@@ -9,7 +9,7 @@ export class CustomGround {
   // Constructor
   constructor(currentScene: Scene) {
     // Creates sprite
-    this.sprite = currentScene.physics.add.sprite(globalConsts.gameWidth / 2, globalConsts.gameHeight - 108, 'ground');
+    this.sprite = currentScene.physics.add.sprite(globalConsts.gameWidth / 2, globalConsts.gameHeight - 108, "ground");
     this.sprite.setOrigin(0.5, 0);
     this.sprite.setImmovable(false);
     this.sprite.setPushable(false);

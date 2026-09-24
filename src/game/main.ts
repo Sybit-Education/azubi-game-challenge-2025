@@ -1,14 +1,14 @@
-import { Boot } from './loader/Boot.ts';
-import { GameOver } from './scenes/GameOver';
-import { MainMenu } from './scenes/MainMenu';
-import { AUTO, Game, Scene } from 'phaser';
-import { Preloader } from './loader/Preloader.ts';
-import { Options } from './scenes/Options.ts';
-import { Credits } from './scenes/Credits.ts';
-import { Controls } from './scenes/Controls.ts';
-import { GameManager } from './game/GameManager.ts';
-import { Leaderboard } from './scenes/Leaderboard.ts';
-import { get3 } from './game/Player.ts';
+import { Boot } from "./loader/Boot.ts";
+import { GameOver } from "./scenes/GameOver";
+import { MainMenu } from "./scenes/MainMenu";
+import { AUTO, Game, Scene } from "phaser";
+import { Preloader } from "./loader/Preloader.ts";
+import { Options } from "./scenes/Options.ts";
+import { Credits } from "./scenes/Credits.ts";
+import { Controls } from "./scenes/Controls.ts";
+import { GameManager } from "./game/GameManager.ts";
+import { Leaderboard } from "./scenes/Leaderboard.ts";
+import { get3 } from "./game/Player.ts";
 import Gamepad = Phaser.Input.Gamepad.Gamepad;
 import Image = Phaser.GameObjects.Image;
 
@@ -18,7 +18,7 @@ const gameW: number = big ? 1920 : 1024; // 1024
 const gameH: number = big ? 1080 : 768; // 768
 const background: number = 0xd3d1fa;
 const debugMode: boolean = false;
-const pixelFontName: string = 'pixelFont';
+const pixelFontName: string = "pixelFont";
 const api: string | undefined = undefined; // "http://localhost:3000"; // Dont forget the http(s) | undefined -> localstorage
 const speed: number = 1;
 
@@ -37,12 +37,12 @@ export const globalConsts = {
 
 // Config for Game
 // Docs: https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
-const arcade: Phaser.Types.Core.PhysicsConfig = { default: 'arcade' };
+const arcade: Phaser.Types.Core.PhysicsConfig = { default: "arcade" };
 const config: Phaser.Types.Core.GameConfig = {
   type: AUTO,
   width: gameW, // Width of the game container
   height: gameH, // Height of the game container
-  parent: 'game-container', // ID of the div in which it should be displayed
+  parent: "game-container", // ID of the div in which it should be displayed
   physics: arcade,
   input: {
     keyboard: true,
@@ -79,7 +79,7 @@ export function displayPlayer(that: Scene): void {
   const player: Image = that.add.image(
     10,
     globalConsts.gameHeight - 10,
-    'player2',
+    "player2",
   );
   player.setOrigin(0, 1);
   player.setScale(calculateScale(4));
@@ -94,14 +94,14 @@ export function displayDebug(scene: Scene): void {
 
 // Adds a Shortcut to exit the current menu
 export function escapeOption(that: Scene, gamepad?: Gamepad): void {
-  const escKey = that.input.keyboard?.addKey('ESC');
-  escKey?.on('down', () => {
-    that.scene.start('mainMenu');
+  const escKey = that.input.keyboard?.addKey("ESC");
+  escKey?.on("down", () => {
+    that.scene.start("mainMenu");
   });
 
   if (gamepad) {
     if (get3(gamepad)) {
-      that.scene.start('mainMenu');
+      that.scene.start("mainMenu");
       return;
     }
   }

@@ -1,7 +1,7 @@
-import {Scene} from 'phaser';
-import {calculateScale, displayPlayer, escapeOption, globalConsts} from '../main';
-import {Button} from '../util/Button';
-import {ButtonManager} from '../util/ButtonManager';
+import {Scene} from "phaser";
+import {calculateScale, displayPlayer, escapeOption, globalConsts} from "../main";
+import {Button} from "../util/Button";
+import {ButtonManager} from "../util/ButtonManager";
 
 export class Options extends Scene {
   // Types
@@ -12,7 +12,7 @@ export class Options extends Scene {
 
   // Constructor
   constructor() {
-    super('options');
+    super("options");
   }
 
   // Create method
@@ -27,9 +27,9 @@ export class Options extends Scene {
     this.buttonManager = new ButtonManager(this);
 
     // Back button - with keyboard 'B' and gamepad button 1 (B/Circle)
-    this.buttonBack = new Button(globalConsts.gameWidth * 0.05, globalConsts.gameHeight * 0.08, calculateScale(4), 'button_back', this, () => {
-      this.scene.start('mainMenu');
-    }, 'B', 1, this.buttonManager);
+    this.buttonBack = new Button(globalConsts.gameWidth * 0.05, globalConsts.gameHeight * 0.08, calculateScale(4), "button_back", this, () => {
+      this.scene.start("mainMenu");
+    }, "B", 1, this.buttonManager);
 
     // Add ESC key handler
     escapeOption(this.scene.scene);
@@ -39,14 +39,14 @@ export class Options extends Scene {
       globalConsts.gameWidth * 0.4,
       globalConsts.gameHeight * 0.4,
       calculateScale(3),
-      localStorage.getItem('isActive.sound') == 'true' ? 'button_soundActive' : 'button_soundMute',
+      localStorage.getItem("isActive.sound") == "true" ? "button_soundActive" : "button_soundMute",
       this,
-      () => this.toggle('isActive.sound', this.buttonSound),
-      'S',
+      () => this.toggle("isActive.sound", this.buttonSound),
+      "S",
       0,
       this.buttonManager
     );
-    this.add.image(globalConsts.gameWidth * 0.48, globalConsts.gameHeight * 0.4, 'button_sound')
+    this.add.image(globalConsts.gameWidth * 0.48, globalConsts.gameHeight * 0.4, "button_sound")
       .setScale(calculateScale(6))
       .setOrigin(0, 0.5);
 
@@ -55,14 +55,14 @@ export class Options extends Scene {
       globalConsts.gameWidth * 0.4,
       globalConsts.gameHeight * 0.5,
       calculateScale(3),
-      localStorage.getItem('isActive.music') == 'true' ? 'button_soundActive' : 'button_soundMute',
+      localStorage.getItem("isActive.music") == "true" ? "button_soundActive" : "button_soundMute",
       this,
-      () => this.toggle('isActive.music', this.buttonMusic),
-      'M',
+      () => this.toggle("isActive.music", this.buttonMusic),
+      "M",
       0,
       this.buttonManager
     );
-    this.add.image(globalConsts.gameWidth * 0.48, globalConsts.gameHeight * 0.5, 'button_music')
+    this.add.image(globalConsts.gameWidth * 0.48, globalConsts.gameHeight * 0.5, "button_music")
       .setScale(calculateScale(6))
       .setOrigin(0, 0.5);
 
@@ -70,7 +70,7 @@ export class Options extends Scene {
 
   // Helper methode
   toggle(localStorageKey: string, button: Button): void {
-    button.setImage(localStorage.getItem(localStorageKey) == 'true' ? 'button_soundMute' : 'button_soundActive');
-    localStorage.setItem(localStorageKey, (localStorage.getItem(localStorageKey) != 'true').toString());
+    button.setImage(localStorage.getItem(localStorageKey) == "true" ? "button_soundMute" : "button_soundActive");
+    localStorage.setItem(localStorageKey, (localStorage.getItem(localStorageKey) != "true").toString());
   }
 }

@@ -1,16 +1,16 @@
-import {Scene} from 'phaser';
-import { getRandomInt, globalConsts } from '../main.ts';
-import Phaser from 'phaser';
+import {Scene} from "phaser";
+import { getRandomInt, globalConsts } from "../main.ts";
+import Phaser from "phaser";
 
 // Every obstacle
 export enum obstacleType {
-  BIRDBLUE = 'BIRDBLUE',
-  BIRDPINK = 'BIRDPINK',
-  SNOWMAN = 'SNOWMAN',
-  ROCKS = 'ROCKS',
-  MARKER = 'MARKER',
-  GIFT = 'GIFT',
-  BREAK = 'BREAK',
+  BIRDBLUE = "BIRDBLUE",
+  BIRDPINK = "BIRDPINK",
+  SNOWMAN = "SNOWMAN",
+  ROCKS = "ROCKS",
+  MARKER = "MARKER",
+  GIFT = "GIFT",
+  BREAK = "BREAK",
 }
 
 // Every obstacle that can be randomly generated
@@ -37,7 +37,7 @@ interface obstacleProperties {
 export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   [obstacleType.BIRDBLUE]: {
     y: () => getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.822),
-    sprites: ['birdBlue'],
+    sprites: ["birdBlue"],
     width: 16,
     height: 6,
     offsetX: 8,
@@ -47,7 +47,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   },
   [obstacleType.BIRDPINK]: {
     y: () => getRandomInt(globalConsts.gameHeight * 0.4, globalConsts.gameHeight * 0.822),
-    sprites: ['birdPink'],
+    sprites: ["birdPink"],
     width: 16,
     height: 6,
     offsetX: 6,
@@ -57,7 +57,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   },
   [obstacleType.SNOWMAN]: {
     y: () => getRandomInt(globalConsts.gameHeight * 0.871, globalConsts.gameHeight * 0.89),
-    sprites: ['snowman'],
+    sprites: ["snowman"],
     width: 6,
     height: 12,
     offsetX: 4,
@@ -67,7 +67,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   },
   [obstacleType.ROCKS]: {
     y: () => getRandomInt(globalConsts.gameHeight * 0.874, globalConsts.gameHeight * 0.89),
-    sprites: ['stone'],
+    sprites: ["stone"],
     width: 164,
     height: 100,
     offsetX: 50,
@@ -77,7 +77,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   },
   [obstacleType.MARKER]: {
     y: () => globalConsts.gameHeight,
-    sprites: [''],
+    sprites: [""],
     width: 0,
     height: 0,
     offsetX: 0,
@@ -87,7 +87,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   },
   [obstacleType.GIFT]: {
     y: () => getRandomInt(globalConsts.gameHeight * 0.6, globalConsts.gameHeight * 0.8),
-    sprites: ['gift1', 'gift2', 'gift3', 'gift4'],
+    sprites: ["gift1", "gift2", "gift3", "gift4"],
     width: 18,
     height: 18,
     offsetX: 6,
@@ -97,7 +97,7 @@ export const obstaclePropertiesMap: Record<obstacleType, obstacleProperties> = {
   },
   [obstacleType.BREAK]: {
     y: () => globalConsts.gameHeight - 90,
-    sprites: ['sign'],
+    sprites: ["sign"],
     width: 164,
     height: 100,
     offsetX: 90,

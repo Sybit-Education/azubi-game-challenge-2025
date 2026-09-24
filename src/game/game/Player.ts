@@ -1,5 +1,5 @@
-import { Scene } from 'phaser';
-import { calculateScale, globalConsts } from '../main.ts';
+import { Scene } from "phaser";
+import { calculateScale, globalConsts } from "../main.ts";
 import Sprite = Phaser.Physics.Arcade.Sprite;
 import Text = Phaser.GameObjects.Text;
 
@@ -10,14 +10,14 @@ export class ThatPlayer {
   sneakGravity: number = 3000;
 
   // Textures
-  spriteID: string = 'player2';
-  sneakingID: string = 'playerSneaking2';
+  spriteID: string = "player2";
+  sneakingID: string = "playerSneaking2";
   ground: Phaser.Types.Physics.Arcade.ArcadeColliderType;
   // Keys
-  keyIdUp: string = 'W';
-  keyIdDown: string = 'S';
-  keyIdLeft: string = 'A';
-  keyIdRight: string = 'D';
+  keyIdUp: string = "W";
+  keyIdDown: string = "S";
+  keyIdLeft: string = "A";
+  keyIdRight: string = "D";
   // Jumping
   maxJumpTime: number = 180;
   startVelocity: number = -250;
@@ -60,9 +60,9 @@ export class ThatPlayer {
     // Create Score text
     this.scoreText = this.scene.add
       .text(globalConsts.gameWidth / 2, 100, this.getScore().toString(), {
-        font: '30px ' + globalConsts.pixelFont,
-        color: '#ffffff',
-        align: 'center',
+        font: "30px " + globalConsts.pixelFont,
+        color: "#ffffff",
+        align: "center",
       })
       .setOrigin(0.5, 0)
       .setScale(calculateScale(1));
@@ -89,18 +89,18 @@ export class ThatPlayer {
 
     // Listen for gamepad connection
     this.scene.input.gamepad?.on(
-      'connected',
+      "connected",
       (pad: Phaser.Input.Gamepad.Gamepad) => {
-        console.log('Gamepad connected:', pad.id);
+        console.log("Gamepad connected:", pad.id);
         this.gamepad = pad;
       },
     );
 
     // Listen for gamepad disconnection
     this.scene.input.gamepad?.on(
-      'disconnected',
+      "disconnected",
       (pad: Phaser.Input.Gamepad.Gamepad) => {
-        console.log('Gamepad disconnected:', pad.id);
+        console.log("Gamepad disconnected:", pad.id);
         if (this.gamepad === pad) {
           this.gamepad = null;
         }
@@ -250,11 +250,11 @@ export function formatTime(milliseconds: number): string {
   const seconds: number = Math.floor((milliseconds % 60000) / 1000);
   const ms: number = milliseconds % 1000;
 
-  let result: string = '';
+  let result: string = "";
   if (minutes > 0) result += `${minutes}m `;
   if (seconds > 0 || minutes > 0) result += `${seconds}s `;
   if (ms != 0) result += `${ms}ms`;
-  else result += '000ms';
+  else result += "000ms";
   return result.trim();
 }
 

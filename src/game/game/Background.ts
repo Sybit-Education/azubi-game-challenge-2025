@@ -1,12 +1,12 @@
-import { Scene } from 'phaser';
-import { calculateScale, globalConsts } from '../main';
-import Phaser from 'phaser';
+import { Scene } from "phaser";
+import { calculateScale, globalConsts } from "../main";
+import Phaser from "phaser";
 import Image = Phaser.GameObjects.Image;
 
 // Layers enum
 export enum Layer {
-  FRONT = 'FRONT',
-  MIDDLE = 'MIDDLE',
+  FRONT = "FRONT",
+  MIDDLE = "MIDDLE",
   // BACK = "BACK"
 }
 
@@ -14,9 +14,9 @@ export enum Layer {
 const layers: Layer[] = [Layer.FRONT, Layer.MIDDLE /*Layer.BACK*/];
 
 // Config
-const backgroundImage: string = 'gameBackground';
+const backgroundImage: string = "gameBackground";
 const backgroundSpeed: number = 1;
-const houseKeys: string[] = ['house1', 'house2', 'house3', 'house4', 'church'];
+const houseKeys: string[] = ["house1", "house2", "house3", "house4", "church"];
 const layerPropertiesMap: Record<Layer, LayerProperties> = {
   [Layer.FRONT]: {
     delay: 3000,
@@ -26,7 +26,7 @@ const layerPropertiesMap: Record<Layer, LayerProperties> = {
     speed: () => 2 * globalConsts.houseSpeed,
     color: 0x7d807e,
     // Data
-    lastHouse: '',
+    lastHouse: "",
     houses: [],
   },
   [Layer.MIDDLE]: {
@@ -37,7 +37,7 @@ const layerPropertiesMap: Record<Layer, LayerProperties> = {
     speed: () => 1.2 * globalConsts.houseSpeed,
     color: 0x565756,
     // Data
-    lastHouse: '',
+    lastHouse: "",
     houses: [],
   },
   /* [Layer.BACK]: {
